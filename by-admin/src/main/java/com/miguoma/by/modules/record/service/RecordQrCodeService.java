@@ -1,11 +1,14 @@
- package com.miguoma.by.modules.record.service;
-
-import com.miguoma.by.common.base.service.BaseService;
-import com.miguoma.by.modules.record.entity.RecordQrCode;
+package com.miguoma.by.modules.record.service;
 
 import java.util.List;
 
- /**
+import com.miguoma.by.common.base.page.PageVO;
+import com.miguoma.by.common.base.service.BaseService;
+import com.miguoma.by.modules.record.entity.RecordQrCode;
+import com.miguoma.by.modules.record.query.RecordQrCodeQuery;
+import com.miguoma.by.modules.record.vo.RecordQrCodeVO;
+
+/**
  * 二维码关联服务接口
  * 提供二维码关联相关的业务操作
  *
@@ -13,10 +16,19 @@ import java.util.List;
  */
 public interface RecordQrCodeService extends BaseService<RecordQrCode> {
 
-     /**
-      *     * 根据二维码集合获取二维码关联集合
-      * @param qrCodeList
-      * @return
-      */
-     List<RecordQrCode> listByQrCode(List<String> qrCodeList);
- } 
+    /**
+     * 根据二维码集合获取二维码关联集合
+     * 
+     * @param qrCodeList
+     * @return
+     */
+    List<RecordQrCode> listByQrCode(List<String> qrCodeList);
+
+    /**
+     * 分页查询
+     * 
+     * @param recordQrCodeQuery 查询条件
+     * @return 分页结果
+     */
+    PageVO<RecordQrCodeVO> pageVO(RecordQrCodeQuery recordQrCodeQuery);
+}

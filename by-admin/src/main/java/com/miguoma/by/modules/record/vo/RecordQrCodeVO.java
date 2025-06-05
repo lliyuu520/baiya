@@ -1,6 +1,7 @@
 package com.miguoma.by.modules.record.vo;
 
 import com.miguoma.by.modules.record.entity.RecordQrCode;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -13,6 +14,13 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class RecordQrCodeVO extends RecordQrCode {
-   
+    /**
+     * 成品订单号
+     */
+    private String finishedOrderNo;
 
-} 
+    /**
+     * 半成品订单号
+     */
+    private String semiFinishedOrderNo;
+}

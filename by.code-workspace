@@ -1,15 +1,11 @@
 {
 	"folders": [
 		{
-			"name": "cursor",
-			"path": "cursor"
-		},
-		{
-			"name": "baiya-admin",
+			"name": "by-admin",
 			"path": "by-admin"
 		},
 		{
-			"name": "baiya-ui",
+			"name": "by-ui",
 			"path": "by-ui"
 		}
 	],
@@ -23,8 +19,7 @@
 		"files.autoSaveDelay": 1000,
 		"java.configuration.updateBuildConfiguration": "automatic",
 		"java.compile.nullAnalysis.mode": "automatic",
-		"java.jdt.ls.vmargs": "-XX:+UseParallelGC -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -Dsun.zip.disableMemoryMapping=true -Xmx2G -Xms100m -Xlog:disable",
-		"powershell.cwd": "cursor"
+		"java.jdt.ls.vmargs": "-XX:+UseParallelGC -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -Dsun.zip.disableMemoryMapping=true -Xmx2G -Xms100m -Xlog:disable"
 	},
 	"launch": {
 		"configurations": [
@@ -34,14 +29,14 @@
 				"request": "launch",
 				"mainClass": "com.miguoma.by.ByAdminApplication",
 				"projectName": "by-admin",
-				"cwd": "${workspaceFolder}"
+				"cwd": "${workspaceFolder:by-admin}"
 			},
 			{
 				"type": "node-terminal",
 				"name": "启动前端",
 				"request": "launch",
-				"command": "cd ../by-ui && yarn run dev",
-				"cwd": "${workspaceFolder}"
+				"command": "yarn run dev",
+				"cwd": "${workspaceFolder:by-ui}"
 			}
 		]
 	}

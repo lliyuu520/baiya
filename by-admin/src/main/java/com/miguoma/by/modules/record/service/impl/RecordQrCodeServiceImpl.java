@@ -1,16 +1,22 @@
 package com.miguoma.by.modules.record.service.impl;
 
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.miguoma.by.common.base.page.PageVO;
 import com.miguoma.by.common.base.service.impl.BaseServiceImpl;
 import com.miguoma.by.modules.record.entity.RecordQrCode;
 import com.miguoma.by.modules.record.mapper.RecordQrCodeMapper;
+import com.miguoma.by.modules.record.query.RecordQrCodeQuery;
 import com.miguoma.by.modules.record.service.RecordQrCodeService;
+import com.miguoma.by.modules.record.vo.RecordQrCodeVO;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 /**
  * 二维码关联服务实现类 实现二维码关联相关的业务操作
@@ -20,8 +26,8 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class RecordQrCodeServiceImpl extends BaseServiceImpl<RecordQrCodeMapper, RecordQrCode> implements RecordQrCodeService {
-
+public class RecordQrCodeServiceImpl extends BaseServiceImpl<RecordQrCodeMapper, RecordQrCode>
+        implements RecordQrCodeService {
 
     /**
      * * 根据二维码集合获取二维码关联集合
@@ -31,8 +37,21 @@ public class RecordQrCodeServiceImpl extends BaseServiceImpl<RecordQrCodeMapper,
      */
     @Override
     public List<RecordQrCode> listByQrCode(List<String> qrCodeList) {
-        final LambdaQueryWrapper<RecordQrCode> lambdaQuery = Wrappers.lambdaQuery();
+        final LambdaQueryWrapper<RecordQrCode> lambdaQuery = Wrappers.lambdaQuery(RecordQrCode.class);
         lambdaQuery.in(RecordQrCode::getCode, qrCodeList);
         return list(lambdaQuery);
+    }
+
+    /**
+     * 分页查询
+     * 
+     * @param recordQrCodeQuery 查询条件
+     * @return 分页结果
+     */
+    @Override
+    public PageVO<RecordQrCodeVO> pageVO(RecordQrCodeQuery recordQrCodeQuery) {
+        final IPage<RecordQrCodeVO> recordQrCodeVOIPage = baseMapper.pageVO(getPage(recordQrCodeQuery),
+                recordQrCodeQuery);
+        return PageVO.of(recordQrCodeVOIPage);
     }
 }

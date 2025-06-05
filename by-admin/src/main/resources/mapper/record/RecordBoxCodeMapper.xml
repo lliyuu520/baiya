@@ -1,4 +1,28 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.miguoma.by.modules.core.mapper.RecordBoxCodeMapper">
+<mapper namespace="com.miguoma.by.modules.record.mapper.RecordBoxCodeMapper">
+    <select id="pageVO" resultType="com.miguoma.by.modules.record.vo.RecordBoxCodeVO">
+        select
+        a.id id,
+        a.code code,
+        a.UPLOAD_DATE_TIME uploadDateTime,
+        a.PULL_DATE_TIME pullDateTime,
+        a.PULL_TYPE pullType,
+        b.ORDER_NO finishedOrderNo,
+        c.ORDER_NO semi_finishedOrderNo,
+        a.crib_code cribCode
+
+        from record_box_code a
+        inner join production_order b on a.finished_product_order_id = b.id
+        inner join production_order c on a.semi_finished_product_order_id = c.id
+        <where>
+            <if test="query.code != null and query.code != ''">
+                a.code = #{query.code}
+            </if>
+        </where>
+
+        order by a.id desc
+
+
+    </select>
 </mapper>

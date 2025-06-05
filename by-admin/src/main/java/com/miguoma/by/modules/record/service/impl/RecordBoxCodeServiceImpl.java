@@ -1,11 +1,15 @@
 package com.miguoma.by.modules.record.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.miguoma.by.common.base.page.PageVO;
 import com.miguoma.by.common.base.service.impl.BaseServiceImpl;
 import com.miguoma.by.modules.record.entity.RecordBoxCode;
 import com.miguoma.by.modules.record.mapper.RecordBoxCodeMapper;
+import com.miguoma.by.modules.record.query.RecordBoxCodeQuery;
 import com.miguoma.by.modules.record.service.RecordBoxCodeService;
+import com.miguoma.by.modules.record.vo.RecordBoxCodeVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -37,13 +41,24 @@ public class RecordBoxCodeServiceImpl extends BaseServiceImpl<RecordBoxCodeMappe
     /**
      * * 根据箱码集合获取二维码关联集合
      *
-     * @param boxCodeList1
+     * @param boxCodeList
      * @return
      */
     @Override
-    public List<RecordBoxCode> listByBoxCode(List<String> boxCodeList1) {
+    public List<RecordBoxCode> listByBoxCode(List<String> boxCodeList) {
         final LambdaQueryWrapper<RecordBoxCode> lambdaQuery = Wrappers.lambdaQuery(RecordBoxCode.class);
-        lambdaQuery.in(RecordBoxCode::getCode, boxCodeList1);
+        lambdaQuery.in(RecordBoxCode::getCode, boxCodeList);
         return list(lambdaQuery);
+    }
+
+    /**
+     * 分页查询
+     * @param recordBoxCodeQuery
+     * @return
+     */
+    @Override
+    public PageVO<RecordBoxCodeVO> pageVO(RecordBoxCodeQuery recordBoxCodeQuery) {
+        final IPage<RecordBoxCodeVO> recordBoxCodeVOIPage = baseMapper.pageVO(getPage(recordBoxCodeQuery), recordBoxCodeQuery);
+        return PageVO.of(recordBoxCodeVOIPage);
     }
 }

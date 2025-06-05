@@ -1,7 +1,10 @@
  package com.miguoma.by.modules.record.service;
 
+import com.miguoma.by.common.base.page.PageVO;
 import com.miguoma.by.common.base.service.BaseService;
 import com.miguoma.by.modules.record.entity.RecordBoxCode;
+import com.miguoma.by.modules.record.query.RecordBoxCodeQuery;
+import com.miguoma.by.modules.record.vo.RecordBoxCodeVO;
 
 import java.util.List;
 
@@ -23,8 +26,15 @@ public interface RecordBoxCodeService extends BaseService<RecordBoxCode> {
 
      /**
       *      * 根据箱码集合获取二维码关联集合
-      * @param boxCodeList1
+      * @param boxCodeList
       * @return
       */
-     List<RecordBoxCode> listByBoxCode(List<String> boxCodeList1);
+     List<RecordBoxCode> listByBoxCode(List<String> boxCodeList);
+    /**
+     * 分页查询
+     * @param recordBoxCodeQuery
+     * @return
+     */
+
+     PageVO<RecordBoxCodeVO> pageVO(RecordBoxCodeQuery recordBoxCodeQuery);
  } 
