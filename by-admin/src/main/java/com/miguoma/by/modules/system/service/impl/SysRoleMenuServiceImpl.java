@@ -1,0 +1,97 @@
+package com.miguoma.by.modules.system.service.impl;
+
+import cn.hutool.core.collection.CollUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.miguoma.by.common.base.service.impl.BaseServiceImpl;
+import com.miguoma.by.modules.system.entity.SysRoleMenu;
+import com.miguoma.by.modules.system.mapper.SysRoleMenuMapper;
+import com.miguoma.by.modules.system.service.SysRoleMenuService;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
+
+/**
+ * 角色与菜单对应关系
+ *
+ * @author lliyuu520 lliyuu520@gmail.com
+ */
+@Service
+public class SysRoleMenuServiceImpl extends BaseServiceImpl<SysRoleMenuMapper, SysRoleMenu>
+        implements SysRoleMenuService {
+
+    /**
+     * 保存或更新角色菜单关系
+     * 
+     * @param roleId 角色ID
+     * @param menuIdList 菜单ID列表
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void saveOrUpdate(Long roleId, List<Long> menuIdList) {
+        // 数据库菜单ID列表
+        List<Long> dbMenuIdList = getMenuIdList(roleId);
+
+        // 需要新增的菜单ID
+        Collection<Long> insertMenuIdList = CollUtil.subtract(menuIdList, dbMenuIdList);
+        if (CollUtil.isNotEmpty(insertMenuIdList)) {
+            // 将菜单ID转换为SysRoleMenu实体对象
+            List<SysRoleMenu> menuList = insertMenuIdList.stream().map(menuId -> {
+                SysRoleMenu entity = new SysRoleMenu();
+                entity.setMenuId(menuId);
+                entity.setRoleId(roleId);
+                return entity;
+            }).collect(Collectors.toList());
+
+            // 批量新增
+            saveBatch(menuList);
+        }
+
+        // 需要删除的菜单ID
+        Collection<Long> deleteMenuIdList = CollUtil.subtract(dbMenuIdList, menuIdList);
+        if (CollUtil.isNotEmpty(deleteMenuIdList)) {
+            // 构建删除条件
+            LambdaQueryWrapper<SysRoleMenu> queryWrapper = new LambdaQueryWrapper<>();
+            // 删除指定角色下的指定菜单关系
+            remove(queryWrapper.eq(SysRoleMenu::getRoleId, roleId).in(SysRoleMenu::getMenuId, deleteMenuIdList));
+        }
+    }
+
+    /**
+     * 根据角色ID获取菜单ID列表
+     * 
+     * @param roleId 角色ID
+     * @return 菜单ID列表
+     */
+    @Override
+    public List<Long> getMenuIdList(Long roleId) {
+        return baseMapper.getMenuIdList(roleId);
+    }
+
+    /**
+     * 根据角色ID删除角色菜单关系
+     * 
+     * @param id 角色ID
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteByRoleId(Long id) {
+        // 删除指定角色的所有菜单关系
+        remove(new LambdaQueryWrapper<SysRoleMenu>().eq(SysRoleMenu::getRoleId, id));
+    }
+
+    /**
+     * 根据菜单ID删除角色菜单关系
+     * 
+     * @param menuId 菜单ID
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteByMenuId(Long menuId) {
+        // 删除包含指定菜单的所有角色关系
+        remove(new LambdaQueryWrapper<SysRoleMenu>().eq(SysRoleMenu::getMenuId, menuId));
+    }
+
+}

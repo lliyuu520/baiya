@@ -1,0 +1,31 @@
+package com.miguoma.by.modules.system.mapper;
+
+import com.miguoma.by.common.base.mapper.IBaseMapper;
+import com.miguoma.by.modules.system.entity.SysRoleMenu;
+import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+import java.util.Set;
+
+/**
+ * 角色与菜单对应关系
+ *
+ * @author lliyuu520 lliyuu520@gmail.com
+ */
+@Repository
+public interface SysRoleMenuMapper extends IBaseMapper<SysRoleMenu> {
+
+    /**
+     * 根据角色ID，获取菜单ID列表
+     */
+    List<Long> getMenuIdList(@Param("roleId") Long roleId);
+
+    /**
+     * 根据角色ID，获取接口ID列表
+     *
+     * @param roleId
+     * @return
+     */
+    Set<String> getInterfaceMenuIdList(@Param("roleId") Long roleId);
+}

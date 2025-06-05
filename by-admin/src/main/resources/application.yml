@@ -1,0 +1,60 @@
+server:
+    port: 8080
+spring:
+    application:
+        name: by-admin
+    main:
+        banner-mode: off
+    jackson:
+        time-zone: GMT+8
+    datasource:
+        driver-class-name: oracle.jdbc.OracleDriver
+        url: jdbc:oracle:thin:@//localhost:1521/ORCLPDB1
+        username: by_admin
+        password: by_admin_123456
+    data:
+        redis:
+            database: 1
+            host: localhost
+            port: 6379
+            timeout: 6000ms
+            client-type: LETTUCE
+            password: Redis@200722
+
+# mybatis-plus配置
+mybatis-plus:
+    mapper-locations: classpath*:mapper/**/*.xml
+    type-aliases-package: com.miguoma.by.modules.*.entity
+    global-config:
+        db-config:
+            id-type: ASSIGN_ID
+            logic-delete-field: deleted
+            logic-delete-value: 1
+            logic-not-delete-value: 0
+            table-underline: true
+    configuration:
+        map-underscore-to-camel-case: true
+        cache-enabled: false
+        call-setters-on-nulls: true
+        jdbc-type-for-null: "null"
+
+sa-token:
+    token-name: Authorization
+    timeout: 2592000
+    active-timeout: -1
+    is-concurrent: false
+    is-share: false
+    token-style: simple-uuid
+    is-log: false
+    is-print: false
+    max-login-count: -1
+signature:
+    # 是否启用签名验证
+    enabled: true
+    # 应用配置，格式：app_id: app_secret
+    apps:
+        # 示例应用1
+        app_baiya: 'izJUsLLWiggiSDHPeGn4SuUlYX7mWKuB'
+        app_baiya_prod: 'md55gb3xOrX2MENE8WDB9mHjRzbyg8pl'
+        # 可以添加更多应用配置
+        # app_id_3: "secret_key_3"

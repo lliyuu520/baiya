@@ -1,0 +1,39 @@
+package com.miguoma.by.modules.system.mapper;
+
+import java.util.List;
+
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.miguoma.by.modules.system.entity.SysCodeRuleDetail;
+
+/**
+ * 编码规则明细Mapper接口
+ */
+@Mapper
+public interface SysCodeRuleDetailMapper extends BaseMapper<SysCodeRuleDetail> {
+    /**
+     * 根据规则ID查询编码规则明细
+     * 
+     * @param ruleId 规则ID
+     * @return
+     */
+    default List<SysCodeRuleDetail> selectListByRuleIdSAndType(Long ruleId, String type) {
+        final LambdaQueryWrapper<SysCodeRuleDetail> lambdaQuery = Wrappers.lambdaQuery();
+        lambdaQuery.eq(SysCodeRuleDetail::getRuleId, ruleId)
+                .eq(SysCodeRuleDetail::getRuleType, type)
+                .orderByAsc(SysCodeRuleDetail::getWeight);
+        return selectList(lambdaQuery);
+    }
+
+    /**
+     * 批量插入规则详情
+     *
+     * @param details 规则详情列表
+     * @return 影响行数
+     */
+    int insertBatch(@Param("list") List<SysCodeRuleDetail> details);
+}
