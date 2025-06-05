@@ -1,9 +1,8 @@
 {
 	"folders": [
-		
 		{
 			"name": "cursor",
-			"path": ".cursor"
+			"path": "cursor"
 		},
 		{
 			"name": "baiya-admin",
@@ -24,8 +23,8 @@
 		"files.autoSaveDelay": 1000,
 		"java.configuration.updateBuildConfiguration": "automatic",
 		"java.compile.nullAnalysis.mode": "automatic",
-		"typescript.tsdk": "by-ui/node_modules/typescript/lib",
-		"typescript.enablePromptUseWorkspaceTsdk": true
+		"java.jdt.ls.vmargs": "-XX:+UseParallelGC -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -Dsun.zip.disableMemoryMapping=true -Xmx2G -Xms100m -Xlog:disable",
+		"powershell.cwd": "cursor"
 	},
 	"launch": {
 		"configurations": [
@@ -34,7 +33,8 @@
 				"name": "启动后端",
 				"request": "launch",
 				"mainClass": "com.miguoma.by.ByAdminApplication",
-				"projectName": "by-admin"
+				"projectName": "by-admin",
+				"cwd": "${workspaceFolder}"
 			},
 			{
 				"type": "node-terminal",

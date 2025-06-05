@@ -1,0 +1,48 @@
+{
+    "folders": [
+        {
+            "name": "cursor",
+            "path": "../cursor"
+        },
+        {
+            "name": "baiya-admin",
+            "path": "../by-admin"
+        },
+        {
+            "name": "baiya-ui",
+            "path": "../by-ui"
+        }
+    ],
+    "settings": {
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.codeActionsOnSave": {
+            "source.fixAll.eslint": "explicit"
+        },
+        "files.autoSave": "afterDelay",
+        "files.autoSaveDelay": 1000,
+        "java.configuration.updateBuildConfiguration": "automatic",
+        "java.compile.nullAnalysis.mode": "automatic",
+        "typescript.tsdk": "../by-ui/node_modules/typescript/lib",
+        "typescript.enablePromptUseWorkspaceTsdk": true
+    },
+    "launch": {
+        "configurations": [
+            {
+                "type": "java",
+                "name": "启动后端",
+                "request": "launch",
+                "mainClass": "com.miguoma.by.ByAdminApplication",
+                "projectName": "by-admin",
+                "cwd": "${workspaceFolder:baiya-admin}"
+            },
+            {
+                "type": "node-terminal",
+                "name": "启动前端",
+                "request": "launch",
+                "command": "yarn run dev",
+                "cwd": "${workspaceFolder:baiya-ui}"
+            }
+        ]
+    }
+}
