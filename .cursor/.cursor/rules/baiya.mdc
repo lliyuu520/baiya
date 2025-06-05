@@ -1,0 +1,51 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Baiya 项目配置
+
+## 项目结构
+- 后端项目 (by-admin)
+  - Java 源代码
+  - Maven 配置
+  - Spring Boot 应用
+- 前端项目 (by-ui)
+  - TypeScript 源代码
+  - Vue 组件
+  - Vite 配置
+
+## 开发规范
+### 后端规范
+- 遵循 Java 代码规范
+- 使用 Spring Boot 最佳实践
+- 遵循 RESTful API 设计规范
+
+### 前端规范
+- 使用 TypeScript 严格模式
+- 遵循 Vue 3 组合式 API 规范
+- 使用 ESLint 和 Prettier 进行代码格式化
+
+## 文件规则
+### 包含文件
+- Java 源文件 (*.java)
+- TypeScript 文件 (*.ts)
+- Vue 组件 (*.vue)
+- JavaScript 文件 (*.js)
+- 配置文件 (*.json, *.yml, *.yaml, *.xml)
+- 文档文件 (*.md)
+
+### 排除文件
+- node_modules/
+- target/
+- .git/
+- .idea/
+- logs/
+- 构建产物
+- 临时文件
+
+## 自动应用规则
+- 代码格式化
+- 代码检查
+- 依赖管理
+- 构建配置
