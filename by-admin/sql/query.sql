@@ -1,1 +1,0 @@
-update PRODUCTION_PRODUCT_CATEGORY set PARENT_CODE =null where PARENT_CODE='null';

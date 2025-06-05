@@ -1,5 +1,10 @@
 {
 	"folders": [
+		
+		{
+			"name": "cursor",
+			"path": ".cursor"
+		},
 		{
 			"name": "baiya-admin",
 			"path": "by-admin"
