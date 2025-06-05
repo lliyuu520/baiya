@@ -55,4 +55,32 @@ public class RecordBagCodeServiceImpl extends BaseServiceImpl<RecordBagCodeMappe
                 recordBagCodeQuery);
         return PageVO.of(recordBagCodeVOIPage);
     }
+
+    /**
+     * 查询成品数量
+     *
+     * @param finishedProductionOrderId 成品生产订单ID
+     * @return 成品数量
+     */
+    @Override
+    public Long getCountByFinishedProductionOrderId(Long finishedProductionOrderId) {
+        final LambdaQueryWrapper<RecordBagCode> lambdaQuery = Wrappers.lambdaQuery(RecordBagCode.class);
+        lambdaQuery.eq(RecordBagCode::getFinishedProductOrderId, finishedProductionOrderId);
+        lambdaQuery.isNotNull(RecordBagCode::getUploadDateTime);
+        return count(lambdaQuery);
+    }
+
+    /**
+     * 查询半成品数量
+     *
+     * @param semiFinishedProductionOrderId 半成品生产订单ID
+     * @return 半成品数量
+     */
+    @Override
+    public Long getCountBySemiFinishedProductionOrderId(Long semiFinishedProductionOrderId) {
+        final LambdaQueryWrapper<RecordBagCode> lambdaQuery = Wrappers.lambdaQuery(RecordBagCode.class);
+        lambdaQuery.eq(RecordBagCode::getSemiFinishedProductOrderId, semiFinishedProductionOrderId);
+        lambdaQuery.isNotNull(RecordBagCode::getUploadDateTime);
+        return count(lambdaQuery);
+    }
 }

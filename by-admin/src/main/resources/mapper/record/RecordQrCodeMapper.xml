@@ -4,13 +4,11 @@
     <select id="pageVO" resultType="com.miguoma.by.modules.record.vo.RecordQrCodeVO">
         select a.id id,
                a.code code,
-               a.UPLOAD_DATE_TIME uploadDateTime,
-               a.PULL_DATE_TIME pullDateTime,
-        a.PULL_TYPE pullType,
-        b.ORDER_NO finishedOrderNo,
-        c.ORDER_NO semiFinishedOrderNo,
-        a.code code,
-        a.box_code boxCode 
+               a.upload_date_time uploadDateTime,
+               a.pull_date_time pullDateTime,
+               b.order_no finishedOrderNo,
+               c.order_no semiFinishedOrderNo,
+               a.box_code boxCode 
         from record_qr_code a
             inner join production_order b on a.finished_product_order_id = b.id
             inner join production_order c on a.semi_finished_product_order_id = c.id

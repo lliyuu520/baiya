@@ -81,4 +81,8 @@ public class ProductionOrder extends BaseEntity {
      * 箱号
      */
     private Integer boxNo;
+    /**
+     * 产品类型
+     */
+    private String productType;
 }

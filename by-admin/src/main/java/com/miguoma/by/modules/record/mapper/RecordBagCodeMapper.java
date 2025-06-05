@@ -1,9 +1,11 @@
 package com.miguoma.by.modules.record.mapper;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.miguoma.by.common.base.mapper.IBaseMapper;
 import com.miguoma.by.modules.record.entity.RecordBagCode;
 import com.miguoma.by.modules.record.query.RecordBagCodeQuery;
@@ -25,4 +27,6 @@ public interface RecordBagCodeMapper extends IBaseMapper<RecordBagCode> {
      * @return 分页结果
      */
     IPage<RecordBagCodeVO> pageVO(IPage<RecordBagCode> page, @Param("query") RecordBagCodeQuery query);
+
+
 }

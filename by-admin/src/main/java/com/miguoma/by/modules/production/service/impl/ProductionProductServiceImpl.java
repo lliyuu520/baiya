@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.miguoma.by.common.base.page.PageVO;
 import com.miguoma.by.common.base.service.impl.BaseServiceImpl;
+import com.miguoma.by.common.enums.ProductTypeEnum;
 import com.miguoma.by.modules.erp.dto.ErpProductDTO;
 import com.miguoma.by.modules.production.convert.ProductionProductConvert;
 import com.miguoma.by.modules.production.dto.ProductionProductDTO;
@@ -70,14 +71,7 @@ public class ProductionProductServiceImpl extends BaseServiceImpl<ProductionProd
         if (StrUtil.isNotBlank(categoryCode)) {
             wrapper.eq(ProductionProduct::getCategoryCode, categoryCode);
         }
-//        if (StrUtil.equals("10", code)) {
-//            return "FINISHED_PRODUCT";
-//        }
-//        if (StrUtil.equals("15", code)) {
-//            return "SEMI_FINISHED_PRODUCT";
-//        }
-        wrapper.in(ProductionProduct::getProductType, CollUtil.toList("FINISHED_PRODUCT","SEMI_FINISHED_PRODUCT"));
-        
+        wrapper.in(ProductionProduct::getProductType, CollUtil.toList(ProductTypeEnum.FINISHED_PRODUCT.getCode(),ProductTypeEnum.SEMI_FINISHED_PRODUCT.getCode()));
         wrapper.orderByDesc(ProductionProduct::getId);
         return wrapper;
     }

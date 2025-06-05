@@ -31,4 +31,20 @@ public interface RecordBagCodeService extends BaseService<RecordBagCode> {
      * @return 分页结果
      */
     PageVO<RecordBagCodeVO> pageVO(RecordBagCodeQuery recordBagCodeQuery);
+
+    /**
+     * 查询成品条数
+     * 
+     * @param finishedProductionOrderId 成品生产订单ID
+     * @return 成品条数
+     */
+    Long getCountByFinishedProductionOrderId(Long finishedProductionOrderId);
+
+    /**
+     * 查询半成品数量
+     *
+     * @param semiFinishedProductionOrderId 半成品生产订单ID
+     * @return 半成品数量
+     */
+    Long getCountBySemiFinishedProductionOrderId(Long semiFinishedProductionOrderId);
 }

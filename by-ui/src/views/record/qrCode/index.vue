@@ -21,10 +21,8 @@
 					{{ scope.row.pullDateTime ? scope.row.pullDateTime.replace('T', ' ') : '' }}
 				</template>
 			</el-table-column>
-			<el-table-column align="center" header-align="center" label="拉码类型" prop="pullType"></el-table-column>
 			<el-table-column align="center" header-align="center" label="成品订单号" prop="finishedOrderNo"></el-table-column>
 			<el-table-column align="center" header-align="center" label="半成品订单号" prop="semiFinishedOrderNo"></el-table-column>
-			<el-table-column align="center" header-align="center" label="袋码" prop="bagCode"></el-table-column>
 			<el-table-column align="center" header-align="center" label="箱码" prop="boxCode"></el-table-column>
 		</el-table>
 		<el-pagination

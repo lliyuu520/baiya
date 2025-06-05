@@ -53,11 +53,11 @@ public class ProductionOrderVO extends ProductionOrder {
      */
     private String productSpec;
 
-    /**
-     * 产品类型
-     * FINISHED_PRODUCT 成品
-     * SEMI_FINISHED_PRODUCT 半成品
-     */
-    private String  productType;
+    /** 件码数量 */
+    private Long boxCodeCount;
+    /** 袋码数量 */
+    private Long bagCodeCount;
+    /** 二维码数量 */
+    private Long qrCodeCount;
 
 }

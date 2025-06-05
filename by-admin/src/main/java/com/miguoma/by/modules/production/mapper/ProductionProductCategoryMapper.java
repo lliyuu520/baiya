@@ -3,6 +3,7 @@ package com.miguoma.by.modules.production.mapper;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.miguoma.by.common.enums.ProductTypeEnum;
 import org.springframework.stereotype.Repository;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -65,12 +66,11 @@ public interface ProductionProductCategoryMapper extends IBaseMapper<ProductionP
         // 检查当前分类编码
         final String code = productionProductCategory.getCode();
         if (StrUtil.equals("10", code)) {
-            return "FINISHED_PRODUCT";
+            return ProductTypeEnum.FINISHED_PRODUCT.getCode();
         }
         if (StrUtil.equals("15", code)) {
-            return "SEMI_FINISHED_PRODUCT";
+            return ProductTypeEnum.SEMI_FINISHED_PRODUCT.getCode();
         }
-
         // 递归查询父级分类
         final String parentCode = productionProductCategory.getParentCode();
         if (StrUtil.isBlank(parentCode)) {

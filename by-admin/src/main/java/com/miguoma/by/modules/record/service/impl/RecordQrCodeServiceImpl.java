@@ -54,4 +54,32 @@ public class RecordQrCodeServiceImpl extends BaseServiceImpl<RecordQrCodeMapper,
                 recordQrCodeQuery);
         return PageVO.of(recordQrCodeVOIPage);
     }
+
+    /**
+     * 查询成品数量
+     *
+     * @param finishedProductionOrderId 成品生产订单ID
+     * @return 成品数量
+     */
+    @Override
+    public Long getCountByFinishedProductionOrderId(Long finishedProductionOrderId) {
+        final LambdaQueryWrapper<RecordQrCode> lambdaQuery = Wrappers.lambdaQuery(RecordQrCode.class);
+        lambdaQuery.eq(RecordQrCode::getFinishedProductOrderId, finishedProductionOrderId);
+        lambdaQuery.isNotNull(RecordQrCode::getUploadDateTime);
+        return count(lambdaQuery);
+    }
+
+    /**
+     * 查询半成品数量
+     *
+     * @param semiFinishedProductionOrderId 半成品生产订单ID
+     * @return 半成品数量
+     */
+    @Override
+    public Long getCountBySemiFinishedProductionOrderId(Long semiFinishedProductionOrderId) {
+        final LambdaQueryWrapper<RecordQrCode> lambdaQuery = Wrappers.lambdaQuery(RecordQrCode.class);
+        lambdaQuery.eq(RecordQrCode::getSemiFinishedProductOrderId, semiFinishedProductionOrderId);
+        lambdaQuery.isNotNull(RecordQrCode::getUploadDateTime);
+        return count(lambdaQuery);
+    }
 }

@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.miguoma.by.common.base.page.PageVO;
 import com.miguoma.by.common.base.service.impl.BaseServiceImpl;
 import com.miguoma.by.common.cache.QrCodeCache;
+import com.miguoma.by.common.enums.ProductTypeEnum;
 import com.miguoma.by.common.exception.BaseException;
 import com.miguoma.by.common.utils.WebBase62;
 import com.miguoma.by.modules.client.dto.PullCodeDTO;
@@ -63,7 +64,6 @@ public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderM
     private final RecordBoxCodeService recordBoxCodeService;
     private final RecordQrCodeService recordQrCodeService;
     private final RecordBagCodeService recordBagCodeService;
-    private final ProductionProductCategoryMapper productionProductCategoryMapper;
     private final ProductionShiftMapper productionShiftMapper;
     private final ProductionTeamMapper productionTeamMapper;
 
@@ -76,6 +76,23 @@ public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderM
     @Override
     public PageVO<ProductionOrderVO> pageVO(ProductionOrderQuery query) {
         IPage<ProductionOrderVO> page = baseMapper.pageVO(getPage(query), query);
+
+        final List<ProductionOrderVO> records = page.getRecords();
+        records.forEach(m -> {
+            final Long id = m.getId();
+            final String productType = m.getProductType();
+            if (StrUtil.equals(ProductTypeEnum.FINISHED_PRODUCT.getCode(),productType)) {
+                m.setBoxCodeCount(recordBoxCodeService.getCountByFinishedProductionOrderId(id));
+                m.setBagCodeCount(recordBagCodeService.getCountByFinishedProductionOrderId(id));
+                m.setQrCodeCount(recordQrCodeService.getCountByFinishedProductionOrderId(id));
+            }
+            if (StrUtil.equals(ProductTypeEnum.SEMI_FINISHED_PRODUCT.getCode(),productType)) {
+                m.setBoxCodeCount(recordBoxCodeService.getCountBySemiFinishedProductionOrderId(id));
+                m.setBagCodeCount(recordBagCodeService.getCountBySemiFinishedProductionOrderId(id));
+                m.setQrCodeCount(recordQrCodeService.getCountBySemiFinishedProductionOrderId(id));
+            }
+        });
+
         return PageVO.of(page);
     }
 
@@ -92,9 +109,6 @@ public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderM
             final String productCode = m.getProductCode();
             final ProductionProduct productionProduct = productionProductMapper.getOneByCode(productCode);
             if (productionProduct != null) {
-                final String categoryCode = productionProduct.getCategoryCode();
-                String productType = productionProductCategoryMapper.getProductType(categoryCode);
-                m.setProductType(productType);
                 final LocalDate productionDate = m.getProductionDate();
                 if (productionDate != null) {
                     final String productionDateStr = LocalDateTimeUtil.format(productionDate, "yyyyMMdd");
@@ -102,7 +116,21 @@ public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderM
                     final LocalDate limitedUseDate = productionDate.plusYears(3);
                     m.setLimitedUseDateStr(LocalDateTimeUtil.format(limitedUseDate, "yyyyMMdd"));
                 }
-                
+                final String productType = m.getProductType();
+                final Long id = m.getId();
+                if (StrUtil.equals(ProductTypeEnum.FINISHED_PRODUCT.getCode(),productType)) {
+                    m.setBoxCodeCount(recordBoxCodeService.getCountByFinishedProductionOrderId(id));
+                    m.setBagCodeCount(recordBagCodeService.getCountByFinishedProductionOrderId(id));
+                    m.setQrCodeCount(recordQrCodeService.getCountByFinishedProductionOrderId(id));
+
+                }
+                if (StrUtil.equals(ProductTypeEnum.SEMI_FINISHED_PRODUCT.getCode(),productType)) {
+                    m.setBoxCodeCount(recordBoxCodeService.getCountBySemiFinishedProductionOrderId(id));
+                    m.setBagCodeCount(recordBagCodeService.getCountBySemiFinishedProductionOrderId(id));
+                    m.setQrCodeCount(recordQrCodeService.getCountBySemiFinishedProductionOrderId(id));
+                }
+
+
             }
 
         });
