@@ -9,8 +9,9 @@
         a.PULL_TYPE pullType,
         b.ORDER_NO finishedOrderNo,
         c.ORDER_NO semiFinishedOrderNo,
-        a.bag_code bagCode,
-        a.box_code boxCode from record_qr_code a
+        a.code code,
+        a.box_code boxCode 
+        from record_qr_code a
             inner join production_order b on a.finished_product_order_id = b.id
             inner join production_order c on a.semi_finished_product_order_id = c.id
         <where>
