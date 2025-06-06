@@ -1,6 +1,5 @@
 package com.miguoma.by.modules.system.service.impl;
 
-import cn.dev33.satoken.secure.SaSecureUtil;
 import cn.dev33.satoken.stp.SaTokenInfo;
 import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -11,7 +10,7 @@ import com.miguoma.by.common.utils.SysUserUtil;
 import com.miguoma.by.modules.client.dto.TeamLoginDTO;
 import com.miguoma.by.modules.system.dto.SysAccountLoginDTO;
 import com.miguoma.by.modules.system.entity.SysUser;
-import com.miguoma.by.modules.system.enums.UserTypeEnum;
+import com.miguoma.by.common.enums.UserTypeEnum;
 import com.miguoma.by.modules.system.service.SysAuthService;
 import com.miguoma.by.modules.system.service.SysUserRoleService;
 import com.miguoma.by.modules.system.service.SysUserService;

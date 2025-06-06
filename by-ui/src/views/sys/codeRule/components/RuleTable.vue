@@ -18,17 +18,10 @@
                     <el-icon class="drag-handle"><Rank /></el-icon>
                 </template>
             </el-table-column>
-            <el-table-column :resizable="false" label="来源类型">
-                <template #default="{ row }">
-                    <el-select v-model="row.sourceType"  class="form-input" @change="onSourceTypeChange(row)">
-                        <el-option v-for="source in sourceList" :key="source.code" :label="source.name" :value="source.code" />
-                    </el-select>
-                </template>
-            </el-table-column>
             <el-table-column :resizable="false" label="来源字段">
                 <template #default="{ row }">
-                    <el-select v-model="row.sourceField"  class="form-input">
-                        <el-option v-for="field in getFieldOptions(row.sourceType)" :key="field.code" :label="field.name" :value="field.code" />
+                    <el-select v-model="row.sourceField" class="form-input">
+                        <el-option v-for="sourceField in sourceFieldList" :key="sourceField.code" :label="sourceField.name" :value="sourceField.code" />
                     </el-select>
                 </template>
             </el-table-column>
@@ -45,7 +38,7 @@
             <el-table-column :resizable="false" align="center" label="编码类型">
                 <template #default="{ row }">
                     <el-select v-model="row.encodeType" class="form-input input-encode">
-                        <el-option v-for="type in encodeType" :key="type.code" :label="type.name" :value="type.code" />
+                        <el-option v-for="type in encodeTypeList" :key="type.code" :label="type.name" :value="type.code" />
                     </el-select>
                 </template>
             </el-table-column>
@@ -68,12 +61,12 @@
 <script lang="ts" setup>
 import { Delete, Plus, Rank } from "@element-plus/icons-vue";
 import { computed } from "vue";
-import type { RuleDetail, SourceOption } from "../config/ruleTypes";
-import { encodeType, fieldOptions } from "../config/ruleTypes";
+import type { RuleDetail, SourceFiledOption } from "../config/ruleTypes";
+import { encodeTypeList } from "../config/ruleTypes";
 
 const props = defineProps<{
     ruleList: RuleDetail[]
-    sourceList: SourceOption[]
+    sourceFieldList: SourceFiledOption[]
     isEditMode: boolean
     type: 'boxCode' | 'bagCode' | 'universalCode'
 }>()
@@ -96,26 +89,9 @@ const addButtonTitle = computed(() => {
     }
 })
 
-const getFieldOptions = (type: string) => {
-    return fieldOptions[type] || []
-}
-
-const onSourceTypeChange = (item: RuleDetail) => {
-    item.sourceField = ''
-    if (item.sourceType === 'CONSTANT') {
-        item.sourceField = 'INPUT'
-    } else {
-        const fieldOptions = getFieldOptions(item.sourceType)
-        if (fieldOptions.length === 1) {
-            item.sourceField = fieldOptions[0].code
-        }
-    }
-}
-
 const addRule = () => {
     const newRule: RuleDetail = {
         id: Date.now(),
-        sourceType: '',
         sourceField: '',
         indexBegin: 0,
         indexEnd: -1,

@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.miguoma.by.common.base.page.PageVO;
 import com.miguoma.by.common.base.service.impl.BaseServiceImpl;
-import com.miguoma.by.common.enums.ProductTypeEnum;
+import com.miguoma.by.modules.production.enums.ProductTypeEnum;
 import com.miguoma.by.modules.erp.dto.ErpProductDTO;
 import com.miguoma.by.modules.production.entity.ProductionProduct;
 import com.miguoma.by.modules.production.mapper.ProductionProductCategoryMapper;

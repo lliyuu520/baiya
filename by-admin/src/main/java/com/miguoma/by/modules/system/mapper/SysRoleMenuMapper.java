@@ -28,4 +28,18 @@ public interface SysRoleMenuMapper extends IBaseMapper<SysRoleMenu> {
      * @return
      */
     Set<String> getInterfaceMenuIdList(@Param("roleId") Long roleId);
+
+    /**
+     * 根据菜单ID，删除角色菜单关系
+     *
+     * @param menuId 菜单ID
+     */
+    void deleteByMenuId(@Param("menuId") Long menuId);
+
+    /**
+     * 根据角色ID，删除角色菜单关系
+     *
+     * @param roleId 角色ID
+     */
+    void deleteByRoleId(@Param("roleId") Long roleId);
 }

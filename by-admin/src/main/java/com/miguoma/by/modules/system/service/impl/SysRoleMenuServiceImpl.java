@@ -31,31 +31,16 @@ public class SysRoleMenuServiceImpl extends BaseServiceImpl<SysRoleMenuMapper, S
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void saveOrUpdate(Long roleId, List<Long> menuIdList) {
-        // 数据库菜单ID列表
-        List<Long> dbMenuIdList = getMenuIdList(roleId);
-
-        // 需要新增的菜单ID
-        Collection<Long> insertMenuIdList = CollUtil.subtract(menuIdList, dbMenuIdList);
-        if (CollUtil.isNotEmpty(insertMenuIdList)) {
-            // 将菜单ID转换为SysRoleMenu实体对象
-            List<SysRoleMenu> menuList = insertMenuIdList.stream().map(menuId -> {
+        // 不那么麻烦,直接删除角色全部菜单关系,然后新增
+        baseMapper.deleteByRoleId(roleId);
+        if (CollUtil.isNotEmpty(menuIdList)) {
+            List<SysRoleMenu> menuList = menuIdList.stream().map(menuId -> {
                 SysRoleMenu entity = new SysRoleMenu();
                 entity.setMenuId(menuId);
                 entity.setRoleId(roleId);
                 return entity;
             }).collect(Collectors.toList());
-
-            // 批量新增
             saveBatch(menuList);
-        }
-
-        // 需要删除的菜单ID
-        Collection<Long> deleteMenuIdList = CollUtil.subtract(dbMenuIdList, menuIdList);
-        if (CollUtil.isNotEmpty(deleteMenuIdList)) {
-            // 构建删除条件
-            LambdaQueryWrapper<SysRoleMenu> queryWrapper = new LambdaQueryWrapper<>();
-            // 删除指定角色下的指定菜单关系
-            remove(queryWrapper.eq(SysRoleMenu::getRoleId, roleId).in(SysRoleMenu::getMenuId, deleteMenuIdList));
         }
     }
 
@@ -79,7 +64,7 @@ public class SysRoleMenuServiceImpl extends BaseServiceImpl<SysRoleMenuMapper, S
     @Transactional(rollbackFor = Exception.class)
     public void deleteByRoleId(Long id) {
         // 删除指定角色的所有菜单关系
-        remove(new LambdaQueryWrapper<SysRoleMenu>().eq(SysRoleMenu::getRoleId, id));
+        baseMapper.deleteByRoleId(id);
     }
 
     /**
@@ -91,7 +76,7 @@ public class SysRoleMenuServiceImpl extends BaseServiceImpl<SysRoleMenuMapper, S
     @Transactional(rollbackFor = Exception.class)
     public void deleteByMenuId(Long menuId) {
         // 删除包含指定菜单的所有角色关系
-        remove(new LambdaQueryWrapper<SysRoleMenu>().eq(SysRoleMenu::getMenuId, menuId));
+        baseMapper.deleteByMenuId(menuId);
     }
 
 }

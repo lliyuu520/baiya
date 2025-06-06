@@ -7,9 +7,8 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.miguoma.by.common.base.page.PageVO;
 import com.miguoma.by.common.base.service.impl.BaseServiceImpl;
 import com.miguoma.by.common.cache.QrCodeCache;
-import com.miguoma.by.common.enums.ProductTypeEnum;
 import com.miguoma.by.common.exception.BaseException;
-import com.miguoma.by.common.utils.WebBase62;
+import com.miguoma.by.common.utils.encode.WebBase62;
 import com.miguoma.by.modules.client.dto.PullCodeDTO;
 import com.miguoma.by.modules.client.dto.RecordCodeUploadDTO;
 import com.miguoma.by.modules.client.vo.PullCodeVO;
@@ -18,7 +17,11 @@ import com.miguoma.by.modules.production.convert.ProductionOrderConvert;
 import com.miguoma.by.modules.production.dto.ProductionOrderDTO;
 import com.miguoma.by.modules.production.entity.ProductionOrder;
 import com.miguoma.by.modules.production.entity.ProductionProduct;
-import com.miguoma.by.modules.production.mapper.*;
+import com.miguoma.by.modules.production.enums.ProductTypeEnum;
+import com.miguoma.by.modules.production.mapper.ProductionOrderMapper;
+import com.miguoma.by.modules.production.mapper.ProductionProductMapper;
+import com.miguoma.by.modules.production.mapper.ProductionShiftMapper;
+import com.miguoma.by.modules.production.mapper.ProductionTeamMapper;
 import com.miguoma.by.modules.production.query.ProductionOrderQuery;
 import com.miguoma.by.modules.production.service.ProductionOrderService;
 import com.miguoma.by.modules.production.vo.ProductionOrderVO;
@@ -31,8 +34,9 @@ import com.miguoma.by.modules.record.service.RecordQrCodeService;
 import com.miguoma.by.modules.system.convert.SysCodeRuleDetailConvert;
 import com.miguoma.by.modules.system.entity.SysCodeRule;
 import com.miguoma.by.modules.system.entity.SysCodeRuleDetail;
+import com.miguoma.by.modules.system.enums.EncodeTypeEnums;
 import com.miguoma.by.modules.system.enums.RuleTypeEnums;
-import com.miguoma.by.modules.system.enums.SourceTypeEnums;
+import com.miguoma.by.modules.system.enums.SourceFiledEnums;
 import com.miguoma.by.modules.system.mapper.SysCodeRuleDetailMapper;
 import com.miguoma.by.modules.system.mapper.SysCodeRuleMapper;
 import com.miguoma.by.modules.system.vo.SysCodeRuleDetailVO;
@@ -282,86 +286,74 @@ public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderM
             .convertList(sysCodeRuleDetails);
         StringBuilder code = new StringBuilder();
         for (SysCodeRuleDetailVO m : sysCodeRuleDetailVOS) {
-            final String sourceType = m.getSourceType();
             final String sourceField = m.getSourceField();
             final String constant = m.getConstant();
             final Integer indexBegin = m.getIndexBegin();
             final Integer indexEnd = m.getIndexEnd();
+            final String encodeType = m.getEncodeType();
 
-            if (StrUtil.equals(sourceType, SourceTypeEnums.ORDER.getCode())) {
-                
+String str="";
                 //限用日期
-                if (StrUtil.equals(sourceField, "LIMITED_USE_DATE")) {
-                    // 订单日期
+                if (StrUtil.equals(sourceField, SourceFiledEnums.LIMITED_USE_DATE.getCode())) {
                     final LocalDate limitedUseDate = productionDate.plusYears(3);
-                    final String format = LocalDateTimeUtil.format(limitedUseDate, "yyyyMMdd");
-                    final String encode = WebBase62.encode(Long.parseLong(format));
-                    final String sub = StrUtil.sub(encode, indexBegin, indexEnd);
-                    code.append(sub);
-                }
-                // 单据日期
-                if (StrUtil.equals(sourceField, "ORDER_DATE")) {
-                    // 订单日期
+                    str=LocalDateTimeUtil.format(limitedUseDate, "yyyyMMdd");
 
-                    final String orderDateFormat = LocalDateTimeUtil.format(orderDate, "yyyyMMdd");
-                    final String encode = WebBase62.encode(Long.parseLong(orderDateFormat));
-                    final String sub = StrUtil.sub(encode, indexBegin, indexEnd);
-                    code.append(sub);
                 }
-                // 生产日期
-                if (StrUtil.equals(sourceField, "PRODUCTION_DATE")) {
-                    // 订单日期
-                    final String productionDateFormat = LocalDateTimeUtil.format(productionDate, "yyyyMMdd");
-                    final String encode = WebBase62.encode(Long.parseLong(productionDateFormat));
-                    final String sub = StrUtil.sub(encode, indexBegin, indexEnd);
-                    code.append(sub);
+                // 部门编码
+                if (StrUtil.equals(sourceField, SourceFiledEnums.PRODUCTION_DEPART_CODE.getCode())) {
+                    str=productionDepartCode;
                 }
-                // 生产部门
-                if (StrUtil.equals(sourceField, "PRODUCTION_DEPART")) {
-                    // 订单日期
-                    final String productionDepartmentCode = productionOrder.getProductionDepartCode();
-                    final String encode = WebBase62.encode(Long.parseLong(productionDepartmentCode));
-                    final String sub = StrUtil.sub(encode, indexBegin, indexEnd);
-                    code.append(sub);
+                // 车间编码
+                if (StrUtil.equals(sourceField, SourceFiledEnums.PRODUCTION_WORKSHOP_CODE.getCode())) {
+                    str = productionWorkshopCode;
                 }
-                // 生产车间
-                if (StrUtil.equals(sourceField, "PRODUCTION_WORKSHOP")) {
-                    // 订单日期
-                    final String encode = WebBase62.encode(Long.parseLong(productionWorkshopCode));
-                    final String sub = StrUtil.sub(encode, indexBegin, indexEnd);
-                    code.append(sub);
+                // 订单编码
+                if (StrUtil.equals(sourceField, SourceFiledEnums.ORDER_CODE.getCode())) {
+                    str = productionOrder.getOrderNo();
                 }
-
-                // todo 订单的其他属性
-            }
-            if (StrUtil.equals(sourceType, SourceTypeEnums.BOX_NO.getCode())) {
-                // 箱号 做占位符即可
-                code.append("{}");
-
-            }
-            if (StrUtil.equals(sourceType, SourceTypeEnums.CONSTANT.getCode())) {
-                // 常量
-                code.append(constant);
-            }
-            if (StrUtil.equals(sourceType, SourceTypeEnums.PRODUCT.getCode())) {
                 // 产品编码
-                if (StrUtil.equals(sourceField, "PRODUCT_CODE")) {
-                    // 订单日期
-                    final String encode = WebBase62.encode(Long.parseLong(productCode));
-                    final String sub = StrUtil.sub(encode, indexBegin, indexEnd);
-                    code.append(sub);
+                if (StrUtil.equals(sourceField, SourceFiledEnums.PRODUCT_CODE.getCode())) {
+                    str = productCode;
+                }
+                // 箱号 需要填充 使用占位符即可
+                if (StrUtil.equals(sourceField, SourceFiledEnums.BOX_NO.getCode())) {
+                    str = "{}";
 
                 }
-                // 产品分类
-                if (StrUtil.equals(sourceField, "PRODUCT_CATEGORY")) {
-                    // 订单日期
-                    final String categoryCode = productionProduct.getCategoryCode();
-                    final String encode = WebBase62.encode(Long.parseLong(categoryCode));
-                    final String sub = StrUtil.sub(encode, indexBegin, indexEnd);
-                    code.append(sub);
+                // 常量
+                if (StrUtil.equals(sourceField, SourceFiledEnums.CONSTANT.getCode())) {
+                    str=constant;
                 }
+                // 开始位 结束位
+            // 非箱号和常量 需要截取,修改编码方式
+            if ((!StrUtil.equals(sourceField, SourceFiledEnums.ORDER_CODE.getCode())&&(!StrUtil.equals(sourceField, SourceFiledEnums.CONSTANT.getCode())))) {
+                str=StrUtil.sub(str, indexBegin, indexEnd);
+                // 修改编码方式
+                if (StrUtil.equals(encodeType, EncodeTypeEnums.BASE_62.getCode())) {
+                    str = WebBase62.encode(Long.parseLong(str));
+                }
+//                Base62.encode().
+            //    if(StrUtil.equals(encodeType,EncodeTypeEnums.BASE_36.getCode())){
+            //     str=StrUtil.upperCase(str);
+            //    }
+            //    if(StrUtil.equals(encodeType,EncodeTypeEnums.BASE_32.getCode())){
+            //     str=StrUtil.upperCase(str);
+            //    }
+            //    if(StrUtil.equals(encodeType,EncodeTypeEnums.BASE_16.getCode())){
+
+
+
 
             }
+            // 编码
+
+
+
+
+
+              
+
+
 
 
         }

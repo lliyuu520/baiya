@@ -1,4 +1,4 @@
-package com.miguoma.by.modules.record.service;
+ package com.miguoma.by.modules.record.service;
 
 import java.util.List;
 
@@ -8,7 +8,7 @@ import com.miguoma.by.modules.record.entity.RecordBoxCode;
 import com.miguoma.by.modules.record.query.RecordBoxCodeQuery;
 import com.miguoma.by.modules.record.vo.RecordBoxCodeVO;
 
-/**
+ /**
  * 二维码关联服务接口
  * 提供二维码关联相关的业务操作
  *
@@ -16,21 +16,21 @@ import com.miguoma.by.modules.record.vo.RecordBoxCodeVO;
  */
 public interface RecordBoxCodeService extends BaseService<RecordBoxCode> {
 
-    /**
-     * 获取二维码关联详情
+     /**
+      * 获取二维码关联详情
      * 
-     * @param boxCode
-     * @return
-     */
-    RecordBoxCode getOneByBoxCode(String boxCode);
+      * @param boxCode
+      * @return
+      */
+     RecordBoxCode getOneByBoxCode(String boxCode);
 
-    /**
+     /**
      * * 根据箱码集合获取二维码关联集合
      * 
-     * @param boxCodeList
-     * @return
-     */
-    List<RecordBoxCode> listByBoxCode(List<String> boxCodeList);
+      * @param boxCodeList
+      * @return
+      */
+     List<RecordBoxCode> listByBoxCode(List<String> boxCodeList);
 
     /**
      * 分页查询
@@ -38,21 +38,21 @@ public interface RecordBoxCodeService extends BaseService<RecordBoxCode> {
      * @param recordBoxCodeQuery
      * @return
      */
-    PageVO<RecordBoxCodeVO> pageVO(RecordBoxCodeQuery recordBoxCodeQuery);
+     PageVO<RecordBoxCodeVO> pageVO(RecordBoxCodeQuery recordBoxCodeQuery);
 
-    /**
-     * 查询成品数量
+     /**
+      * 查询成品数量
      * 
-     * @param finishedProductionOrderId
-     * @return
-     */
-    Long getCountByFinishedProductionOrderId(Long finishedProductionOrderId);
+      * @param finishedProductionOrderId
+      * @return
+      */
+     Long getCountByFinishedProductionOrderId(Long finishedProductionOrderId);
 
-    /**
-     * 查询半成品数量
+     /**
+      * 查询半成品数量
      *
      * @param semiFinishedProductionOrderId
-     */
-    Long getCountBySemiFinishedProductionOrderId(Long semiFinishedProductionOrderId);
+      */
+     Long getCountBySemiFinishedProductionOrderId(Long semiFinishedProductionOrderId);
 
-}
+ } 

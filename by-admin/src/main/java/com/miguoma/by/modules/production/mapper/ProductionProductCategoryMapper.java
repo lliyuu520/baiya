@@ -3,7 +3,7 @@ package com.miguoma.by.modules.production.mapper;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.miguoma.by.common.enums.ProductTypeEnum;
+import com.miguoma.by.modules.production.enums.ProductTypeEnum;
 import org.springframework.stereotype.Repository;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;

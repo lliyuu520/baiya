@@ -9,7 +9,7 @@ import com.miguoma.by.common.utils.SysUserUtil;
 import com.miguoma.by.modules.system.convert.SysMenuConvert;
 import com.miguoma.by.modules.system.dto.SysMenuDTO;
 import com.miguoma.by.modules.system.entity.SysMenu;
-import com.miguoma.by.modules.system.enums.MenuTypeEnum;
+import com.miguoma.by.common.enums.MenuTypeEnum;
 import com.miguoma.by.modules.system.service.SysMenuService;
 import com.miguoma.by.modules.system.vo.SysMenuVO;
 import lombok.AllArgsConstructor;

@@ -11,20 +11,16 @@ import java.io.Serializable;
 public class SysCodeRuleDetailDTO implements Serializable {
 
 
-    /**
-     * 编码类型
-     */
-    private String encodeType;
-
-    /**
-     * 来源类型
-     */
-    private String sourceType;
+   
 
     /**
      * 来源字段
      */
     private String sourceField;
+    /**
+     * 编码类型
+     */
+    private String encodeType;
 
     /**
      * 排序号

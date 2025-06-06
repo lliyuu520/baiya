@@ -1,7 +1,7 @@
 package com.miguoma.by.modules.system.entity;
 
 import com.miguoma.by.common.base.entity.BaseEntity;
-import com.miguoma.by.modules.system.enums.UserTypeEnum;
+import com.miguoma.by.common.enums.UserTypeEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

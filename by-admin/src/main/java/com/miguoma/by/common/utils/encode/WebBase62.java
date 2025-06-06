@@ -1,4 +1,4 @@
-package com.miguoma.by.common.utils;
+package com.miguoma.by.common.utils.encode;
 
 /**
  * WebBase62 - 兼容网页风格的Base62编码工具

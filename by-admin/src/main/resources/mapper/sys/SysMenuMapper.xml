@@ -42,4 +42,9 @@
         where t1.role_id = #{roleId}
     </select>
 
+    <!-- deleteMenu --> 
+
+    <delete id="deleteMenu">
+        delete from sys_menu where id = #{id}
+    </delete>
 </mapper>

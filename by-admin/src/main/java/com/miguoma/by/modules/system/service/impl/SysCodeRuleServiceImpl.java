@@ -1,12 +1,6 @@
 package com.miguoma.by.modules.system.service.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -24,9 +18,13 @@ import com.miguoma.by.modules.system.mapper.SysCodeRuleMapper;
 import com.miguoma.by.modules.system.query.SysCodeRuleQuery;
 import com.miguoma.by.modules.system.service.SysCodeRuleService;
 import com.miguoma.by.modules.system.vo.SysCodeRuleVO;
-
-import cn.hutool.core.util.StrUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 编码规则服务实现类
@@ -148,7 +146,6 @@ public class SysCodeRuleServiceImpl extends BaseServiceImpl<SysCodeRuleMapper, S
                     sysCodeRuleDetail.setEncodeType(detail.getEncodeType());
                     sysCodeRuleDetail.setIndexBegin(detail.getIndexBegin());
                     sysCodeRuleDetail.setIndexEnd(detail.getIndexEnd());
-                    sysCodeRuleDetail.setSourceType(detail.getSourceType());
                     sysCodeRuleDetail.setSourceField(detail.getSourceField());
                     sysCodeRuleDetail.setWeight(detail.getWeight());
                     sysCodeRuleDetail.setConstant(detail.getConstant());

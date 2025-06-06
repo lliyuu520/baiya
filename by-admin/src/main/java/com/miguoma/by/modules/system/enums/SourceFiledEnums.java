@@ -4,39 +4,45 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * 来源类型枚举
+ * 来源字段枚举
  */
 @Getter
 @AllArgsConstructor
-public enum SourceTypeEnums {
+public enum SourceFiledEnums {
     /**
-     * 订单
+     * 限用日期
      */
-    ORDER("ORDER", "订单"),
+    LIMITED_USE_DATE("LIMITED_USE_DATE", "限用日期"),
+
     /**
-     * 产品
+     * 部门编码
      */
-    PRODUCT("PRODUCT", "产品"),
+    PRODUCTION_DEPART_CODE("PRODUCTION_DEPART_CODE", "部门编码"),
+
+    /**
+     * 车间编码
+     */
+    PRODUCTION_WORKSHOP_CODE("PRODUCTION_WORKSHOP_CODE", "车间编码"),
+
+    /**
+     * 订单编码
+     */
+    ORDER_CODE("ORDER_CODE", "订单编码"),
+
+    /**
+     * 产品编码
+     */
+    PRODUCT_CODE("PRODUCT_CODE", "产品编码"),
 
     /**
      * 箱号
      */
     BOX_NO("BOX_NO", "箱号"),
+
     /**
      * 常量
      */
-    CONSTANT("CONSTANT","常量"),
-    /**
-     * 车间
-     */
-    WORKSHOP("WORKSHOP", "车间"),
-    
-
-
-
-
-
-    ;
+    CONSTANT("CONSTANT", "常量");
 
     /**
      * 编码
@@ -54,12 +60,12 @@ public enum SourceTypeEnums {
      * @param code 编码
      * @return 枚举
      */
-    public static SourceTypeEnums getByCode(String code) {
-        for (SourceTypeEnums value : values()) {
+    public static SourceFiledEnums getByCode(String code) {
+        for (SourceFiledEnums value : values()) {
             if (value.getCode().equals(code)) {
                 return value;
             }
         }
         return null;
     }
-} 
+}

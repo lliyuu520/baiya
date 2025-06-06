@@ -4,8 +4,8 @@ package com.miguoma.by.common.utils.encode;
  * WebBase62 - 兼容网页风格的Base62编码工具
  * 使用字符集：0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
  */
-public class WebBase62 {
-    private static final String CHARS = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+public class WebBase36 {
+    private static final String CHARS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     private static final int BASE = CHARS.length();
 
     /**

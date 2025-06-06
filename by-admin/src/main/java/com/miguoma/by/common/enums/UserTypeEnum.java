@@ -1,4 +1,4 @@
-package com.miguoma.by.modules.system.enums;
+package com.miguoma.by.common.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -74,7 +74,7 @@ public class SysMenuServiceImpl extends BaseServiceImpl<SysMenuMapper, SysMenu> 
     @Transactional(rollbackFor = Exception.class)
     public void deleteOne(final Long id) {
         // 删除菜单
-        this.removeById(id);
+        baseMapper.deleteMenu(id);
 
         // 删除角色菜单关系
         this.sysRoleMenuService.deleteByMenuId(id);

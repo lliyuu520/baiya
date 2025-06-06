@@ -1,11 +1,8 @@
 package com.miguoma.by.modules.system.entity;
 
 import com.miguoma.by.common.base.entity.BaseEntity;
-
-import com.miguoma.by.modules.system.enums.NumeralSystemEnums;
+import com.miguoma.by.modules.system.enums.EncodeTypeEnums;
 import com.miguoma.by.modules.system.enums.RuleTypeEnums;
-import com.miguoma.by.modules.system.enums.SourceTypeEnums;
-import com.miguoma.by.modules.system.enums.ValueDirectionEnums;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -22,14 +19,10 @@ public class SysCodeRuleDetail extends BaseEntity {
     private Long ruleId;
 
     /**
-     * 编码类型 base62 ,base36 ,base10
+     * 编码类型 {@link EncodeTypeEnums}
      */
     private String encodeType;
 
-    /**
-     * 来源类型 {@link SourceTypeEnums}
-     */
-    private String sourceType;
 
     /**
      * 来源字段

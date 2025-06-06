@@ -15,6 +15,16 @@ import java.util.List;
 @Repository
 public interface SysMenuMapper extends IBaseMapper<SysMenu> {
 
+
+
+
+    /**
+     * 物理删除菜单
+     * @param id
+     * @return
+     */
+    void deleteMenu(@Param("id") Long id);  
+
     /**
      * 查询所有菜单列表
      *

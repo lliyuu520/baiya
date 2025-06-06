@@ -2,6 +2,33 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.miguoma.by.modules.system.mapper.SysCodeRuleDetailMapper">
 
-    
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.miguoma.by.modules.system.entity.SysCodeRuleDetail">
+        <id column="id" property="id" />
+        <result column="rule_id" property="ruleId" />
+        <result column="rule_type" property="ruleType" />
+        <result column="index_begin" property="indexBegin" />
+        <result column="index_end" property="indexEnd" />
+        <result column="numeral_system" property="numeralSystem" />
+        <result column="source_type" property="sourceType" />
+        <result column="source_field" property="sourceField" />
+        <result column="weight" property="weight" />
+        <result column="constant" property="constant" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="deleted" property="deleted" />
+    </resultMap>
+
+    <!-- 根据规则ID和类型查询规则详情列表 -->
+    <select id="selectListByRuleIdSAndType" resultMap="BaseResultMap"> SELECT * FROM
+        sys_code_rule_detail WHERE rule_id = #{ruleId} AND rule_type = #{ruleType} AND deleted = 0 </select>
+
+    <!-- 批量插入规则详情 -->
+    <insert id="insertBatch"> INSERT INTO sys_code_rule_detail ( rule_id, rule_type, index_begin,
+        index_end, numeral_system, source_type, source_field, weight, constant, create_time,
+        update_time ) VALUES <foreach collection="list" item="item" separator=","> ( #{item.ruleId},
+        #{item.ruleType}, #{item.indexBegin}, #{item.indexEnd}, #{item.numeralSystem},
+        #{item.sourceType}, #{item.sourceField}, #{item.weight}, #{item.constant}, NOW(), NOW() ) </foreach>
+    </insert>
 
 </mapper> 

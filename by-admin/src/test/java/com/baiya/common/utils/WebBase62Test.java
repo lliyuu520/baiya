@@ -1,11 +1,11 @@
 package com.baiya.common.utils;
 
-import static org.junit.jupiter.api.Assertions.*;
-
+import com.miguoma.by.common.utils.encode.WebBase62;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import com.miguoma.by.common.utils.WebBase62;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class WebBase62Test {
 

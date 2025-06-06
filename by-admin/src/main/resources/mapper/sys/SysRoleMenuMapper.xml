@@ -17,4 +17,15 @@
           and b.type = 2
     </select>
 
+    <!-- deleteByMenuId --> 
+
+    <delete id="deleteByMenuId">
+        delete from sys_role_menu where menu_id=#{menuId}
+    </delete>
+
+    <!-- deleteByRoleId --> 
+
+    <delete id="deleteByRoleId">
+        delete from sys_role_menu where role_id=#{roleId}
+    </delete>
 </mapper>

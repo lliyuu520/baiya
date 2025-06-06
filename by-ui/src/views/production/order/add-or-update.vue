@@ -1,5 +1,5 @@
 <template>
-	<el-dialog v-model="visible" :close-on-click-modal="false" :title="!dataForm.id ? '新增' : '修改'" width="800px">
+	<el-dialog v-model="visible" :close-on-click-modal="false" :title="!dataForm.id ? '新增' : '修改'" width="800px" v-loading="loading">
 		<el-form ref="dataFormRef" :model="dataForm" :rules="dataRules" label-width="140px" @keyup.enter="submitHandle()">
 			<el-form-item label="单据编号" prop="orderNo">
 				<el-input v-model="dataForm.orderNo" class="form-input" placeholder="请输入单据编号"></el-input>
@@ -32,8 +32,8 @@
 			</el-form-item>
 			<el-form-item label="产品类型" prop="productType">
 				<el-radio-group v-model="dataForm.productType" class="product-type-radio">
-					<el-radio label="FINISHED_PRODUCT">成品</el-radio>
-					<el-radio label="SEMI_FINISHED_PRODUCT">半成品</el-radio>
+					<el-radio value="FINISHED_PRODUCT">成品</el-radio>
+					<el-radio value="SEMI_FINISHED_PRODUCT">半成品</el-radio>
 				</el-radio-group>
 			</el-form-item>
 			<el-form-item v-show="dataForm.productType === 'FINISHED_PRODUCT'" label="成品" prop="productCode">
@@ -126,22 +126,35 @@ const teamList = ref<Team[]>([])
 const finishedProductList = ref<Product[]>([])
 const semiFinishedProductList = ref<Product[]>([])
 
+// 数据加载状态
+const loading = ref(false)
+// 数据是否已加载
+const dataLoaded = ref(false)
+
 // 初始化列表数据
 const initList = () => {
-	Promise.all([
+	// 如果数据已加载，直接返回
+	if (dataLoaded.value) {
+		return Promise.resolve()
+	}
+
+	loading.value = true
+	return Promise.all([
 		useDepartAndWorkshopListAllApi(),
-    useDepartAndWorkshopListAllApi(),
 		useShiftListAllApi(),
 		useTeamListAllApi(),
 		useProductListAllApi("FINISHED_PRODUCT"),
 		useProductListAllApi("SEMI_FINISHED_PRODUCT"),
-	]).then(([departRes, workshopRes, shiftRes, teamRes, finishedProductRes, semiFinishedProductRes]) => {
+	]).then(([departRes, shiftRes, teamRes, finishedProductRes, semiFinishedProductRes]) => {
 		departList.value = departRes.data
-		workshopList.value = workshopRes.data
+		workshopList.value = departRes.data  // 使用同一个接口的数据
 		shiftList.value = shiftRes.data
 		teamList.value = teamRes.data
 		finishedProductList.value = finishedProductRes.data
 		semiFinishedProductList.value = semiFinishedProductRes.data
+		dataLoaded.value = true
+	}).finally(() => {
+		loading.value = false
 	})
 }
 
@@ -182,6 +195,9 @@ const dataRules = ref({
 	productionTeamCode: [
 		{ required: true, message: '生产班组不能为空', trigger: 'change' }
 	],
+	productType: [
+		{ required: true, message: '产品类型不能为空', trigger: 'change' }
+	],
 	productCode: [
 		{ required: true, message: '产品编码不能为空', trigger: 'change' }
 	],
@@ -209,11 +225,12 @@ const init = (id?: number) => {
 		dataFormRef.value.resetFields()
 	}
 
-	initList()
-
-	if (id) {
-		getInfo(id)
-	}
+	// 先加载列表数据，再获取详情
+	initList().then(() => {
+		if (id) {
+			getInfo(id)
+		}
+	})
 }
 
 const getInfo = (id: number) => {
@@ -242,9 +259,12 @@ const submitHandle = () => {
 	})
 }
 
-// 监听产品类型变化，清空产品编码
+// 监听产品类型变化，只在新增时清空产品编码
 watch(() => dataForm.productType, (newVal) => {
-    dataForm.productCode = ''
+    // 只在新增时（没有id时）清空产品编码
+    if (!dataForm.id) {
+        dataForm.productCode = ''
+    }
 })
 
 defineExpose({
