@@ -55,61 +55,6 @@ public class ProductionProductController {
         return Result.ok(pageResult);
     }
 
-    /**
-     * 新增产品
-     *
-     * @param productDTO 产品信息
-     * @return 操作结果
-     */
-    @PostMapping
-    @SysLogCut(type = SysLogTypeEnums.INSERT, module = SysLogModuleEnums.PRODUCT)
-    @SaCheckPermission(value = "production:product:save")
-    public Result<String> save(@RequestBody ProductionProductDTO productDTO) {
-        productionProductService.saveOne(productDTO);
-        return Result.ok();
-    }
-
-    /**
-     * 编辑产品
-     *
-     * @param productDTO 产品信息
-     * @return 操作结果
-     */
-    @PutMapping
-    @SysLogCut(type = SysLogTypeEnums.UPDATE, module = SysLogModuleEnums.PRODUCT)
-    @SaCheckPermission(value = "production:product:update")
-    public Result<String> update(@RequestBody ProductionProductDTO productDTO) {
-        productionProductService.updateOne(productDTO);
-        return Result.ok();
-    }
-
-    /**
-     * 删除产品
-     *
-     * @param id 产品ID
-     * @return 操作结果
-     */
-    @DeleteMapping("/delete")
-    @SysLogCut(type = SysLogTypeEnums.DELETE, module = SysLogModuleEnums.PRODUCT)
-    @SaCheckPermission(value = "production:product:delete")
-    public Result<String> delete(Long id) {
-        productionProductService.deleteById(id);
-        return Result.ok();
-    }
-
-    /**
-     * 获取产品详情
-     *
-     * @param id 产品ID
-     * @return 产品详情
-     */
-    @GetMapping("/info")
-    @SysLogCut(type = SysLogTypeEnums.VIEW, module = SysLogModuleEnums.PRODUCT)
-    @SaCheckPermission(value = "production:product:info")
-    public Result<ProductionProductVO> info(Long id) {
-        ProductionProductVO productVO = productionProductService.getOneById(id);
-        return Result.ok(productVO);
-    }
 
     /**
      * 获取产品列表

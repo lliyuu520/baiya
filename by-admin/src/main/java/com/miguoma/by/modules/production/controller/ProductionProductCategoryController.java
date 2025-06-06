@@ -51,61 +51,8 @@ public class ProductionProductCategoryController {
         return Result.ok(pageResult);
     }
 
-    /**
-     * 新增产品分类
-     *
-     * @param productCategoryDTO 产品分类信息
-     * @return 操作结果
-     */
-    @PostMapping
-    @SysLogCut(type = SysLogTypeEnums.INSERT, module = SysLogModuleEnums.PRODUCT_CATEGORY)
-    @SaCheckPermission(value = "production:productCategory:save")
-    public Result<String> save(@RequestBody ProductionProductCategoryDTO productCategoryDTO) {
-        productionProductCategoryService.saveOne(productCategoryDTO);
-        return Result.ok();
-    }
+   
 
-    /**
-     * 编辑产品分类
-     *
-     * @param productCategoryDTO 产品分类信息
-     * @return 操作结果
-     */
-    @PutMapping
-    @SysLogCut(type = SysLogTypeEnums.UPDATE, module = SysLogModuleEnums.PRODUCT_CATEGORY)
-    @SaCheckPermission(value = "production:productCategory:update")
-    public Result<String> update(@RequestBody ProductionProductCategoryDTO productCategoryDTO) {
-        productionProductCategoryService.updateOne(productCategoryDTO);
-        return Result.ok();
-    }
-
-    /**
-     * 删除产品分类
-     *
-     * @param id 产品分类ID
-     * @return 操作结果
-     */
-    @DeleteMapping("/delete")
-    @SysLogCut(type = SysLogTypeEnums.DELETE, module = SysLogModuleEnums.PRODUCT_CATEGORY)
-    @SaCheckPermission(value = "production:productCategory:delete")
-    public Result<String> delete(Long id) {
-        productionProductCategoryService.deleteById(id);
-        return Result.ok();
-    }
-
-    /**
-     * 获取产品分类详情
-     *
-     * @param id 产品分类ID
-     * @return 产品分类详情
-     */
-    @GetMapping("/info")
-    @SysLogCut(type = SysLogTypeEnums.VIEW, module = SysLogModuleEnums.PRODUCT_CATEGORY)
-    @SaCheckPermission(value = "production:productCategory:info")
-    public Result<ProductionProductCategoryVO> info(Long id) {
-        ProductionProductCategoryVO productCategoryVO = productionProductCategoryService.getOneById(id);
-        return Result.ok(productCategoryVO);
-    }
 
     /**
      * 获取产品分类列表

@@ -8,7 +8,6 @@ import com.miguoma.by.common.base.page.PageVO;
 import com.miguoma.by.common.base.service.impl.BaseServiceImpl;
 import com.miguoma.by.modules.erp.dto.ErpDepartDTO;
 import com.miguoma.by.modules.production.convert.ProductionDepartAndWorkshopConvert;
-import com.miguoma.by.modules.production.dto.ProductionDepartAndWorkshopDTO;
 import com.miguoma.by.modules.production.entity.ProductionDepartAndWorkshop;
 import com.miguoma.by.modules.production.mapper.ProductionDepartAndWorkshopMapper;
 import com.miguoma.by.modules.production.query.ProductionDepartAndWorkshopQuery;
@@ -21,17 +20,19 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 /**
- * 工厂服务实现类
- * 实现工厂相关的业务操作
+ * 生产部门&车间服务实现类
+ * 实现生产部门&车间相关的业务操作
  *
  * @author liliangyu
  */
 @Service
 @RequiredArgsConstructor
-public class ProductionDepartAndWorkshopServiceImpl extends BaseServiceImpl<ProductionDepartAndWorkshopMapper, ProductionDepartAndWorkshop> implements ProductionDepartAndWorkshopService {
+public class ProductionDepartAndWorkshopServiceImpl
+        extends BaseServiceImpl<ProductionDepartAndWorkshopMapper, ProductionDepartAndWorkshop>
+        implements ProductionDepartAndWorkshopService {
 
     /**
-     * 分页查询工厂列表
+     * 分页查询生产部门&车间列表
      *
      * @param query 查询条件
      * @return 分页结果
@@ -69,52 +70,7 @@ public class ProductionDepartAndWorkshopServiceImpl extends BaseServiceImpl<Prod
         return wrapper;
     }
 
-    /**
-     * 新增工厂
-     *
-     * @param dto 工厂信息
-     */
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void saveOne(ProductionDepartAndWorkshopDTO dto) {
-        ProductionDepartAndWorkshop productionDepartAndWorkshop = ProductionDepartAndWorkshopConvert.INSTANCE.convertFromDTO(dto);
-        save(productionDepartAndWorkshop);
-    }
 
-    /**
-     * 编辑工厂
-     *
-     * @param dto 工厂信息
-     */
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void updateOne(ProductionDepartAndWorkshopDTO dto) {
-        ProductionDepartAndWorkshop productionDepartAndWorkshop = ProductionDepartAndWorkshopConvert.INSTANCE.convertFromDTO(dto);
-        updateById(productionDepartAndWorkshop);
-    }
-
-    /**
-     * 获取工厂详情
-     *
-     * @param id 工厂ID
-     * @return 工厂详情
-     */
-    @Override
-    public ProductionDepartAndWorkshopVO getOneById(Long id) {
-        ProductionDepartAndWorkshop productionDepartAndWorkshop = getById(id);
-        return ProductionDepartAndWorkshopConvert.INSTANCE.convertToVO(productionDepartAndWorkshop);
-    }
-
-    /**
-     * 删除工厂
-     *
-     * @param id 工厂ID
-     */
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void deleteById(Long id) {
-        removeById(id);
-    }
 
     /**
      * 同步生产部门和车间信息
@@ -139,7 +95,7 @@ public class ProductionDepartAndWorkshopServiceImpl extends BaseServiceImpl<Prod
                 productionDepartAndWorkshop.setCode(code);
                 productionDepartAndWorkshop.setParentCode(parentCode);
                 save(productionDepartAndWorkshop);
-            }else{
+            } else {
                 // 存在则更新
                 productionDepartAndWorkshopDB.setName(name);
                 productionDepartAndWorkshopDB.setParentCode(parentCode);

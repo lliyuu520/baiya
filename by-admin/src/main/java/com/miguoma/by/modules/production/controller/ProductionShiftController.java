@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
- * 产线视图控制器
- * 提供产线相关的增删改查接口
+ * 班次视图控制器
+ * 提供班次相关的增删改查接口
  *
  * @author liliangyu
  */
@@ -30,7 +30,7 @@ public class ProductionShiftController {
     private final ProductionShiftService productionShiftService;
 
     /**
-     * 分页查询产线列表
+     * 分页查询班次列表
      *
      * @param productionShiftQuery 查询条件
      * @return 分页结果
@@ -43,66 +43,11 @@ public class ProductionShiftController {
         return Result.ok(pageResult);
     }
 
-    /**
-     * 新增产线
-     *
-     * @param productionShiftDTO 产线信息
-     * @return 操作结果
-     */
-    @PostMapping
-    @SysLogCut(type = SysLogTypeEnums.INSERT, module = SysLogModuleEnums.PRODUCTION_LINE)
-    @SaCheckPermission(value = "production:shift:save")
-    public Result<String> save(@RequestBody ProductionShiftDTO productionShiftDTO) {
-        productionShiftService.saveOne(productionShiftDTO);
-        return Result.ok();
-    }
 
     /**
-     * 编辑产线
+     * 获取班次列表
      *
-     * @param productionShiftDTO 产线信息
-     * @return 操作结果
-     */
-    @PutMapping
-    @SysLogCut(type = SysLogTypeEnums.UPDATE, module = SysLogModuleEnums.PRODUCTION_LINE)
-    @SaCheckPermission(value = "production:shift:update")
-    public Result<String> update(@RequestBody ProductionShiftDTO productionShiftDTO) {
-        productionShiftService.updateOne(productionShiftDTO);
-        return Result.ok();
-    }
-
-    /**
-     * 删除产线
-     *
-     * @param id 产线ID
-     * @return 操作结果
-     */
-    @DeleteMapping("/delete")
-    @SysLogCut(type = SysLogTypeEnums.DELETE, module = SysLogModuleEnums.PRODUCTION_LINE)
-    @SaCheckPermission(value = "production:shift:delete")
-    public Result<String> delete(Long id) {
-        productionShiftService.deleteById(id);
-        return Result.ok();
-    }
-
-    /**
-     * 获取产线详情
-     *
-     * @param id 产线ID
-     * @return 产线详情
-     */
-    @GetMapping("/info")
-    @SysLogCut(type = SysLogTypeEnums.VIEW, module = SysLogModuleEnums.PRODUCTION_LINE)
-    @SaCheckPermission(value = "production:shift:info")
-    public Result<ProductionShiftVO> info(Long id) {
-        ProductionShiftVO productionShiftVO = productionShiftService.getOneById(id);
-        return Result.ok(productionShiftVO);
-    }
-
-    /**
-     * 获取产线列表
-     *
-     * @return 产线列表
+     * @return 班次列表
      */
     @GetMapping("/list")
     public Result<List<ProductionShift>> list() {

@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
- * 工厂视图控制器
- * 提供工厂相关的增删改查接口
+ * 生产部门&车间视图控制器
+ * 提供生产部门&车间相关的增删改查接口
  *
  * @author liliangyu
  */
@@ -30,7 +30,7 @@ public class ProductionDepartAndWorkshopController {
     private final ProductionDepartAndWorkshopService productionDepartAndWorkshopService;
 
     /**
-     * 分页查询工厂列表
+     * 分页查询生产部门&车间列表
      *
      * @param productionDepartAndWorkshopQuery 查询条件
      * @return 分页结果
@@ -43,66 +43,11 @@ public class ProductionDepartAndWorkshopController {
         return Result.ok(pageResult);
     }
 
+   
     /**
-     * 新增工厂
+     * 获取生产部门&车间列表
      *
-     * @param departDTO 工厂信息
-     * @return 操作结果
-     */
-    @PostMapping
-    @SysLogCut(type = SysLogTypeEnums.INSERT, module = SysLogModuleEnums.FACTORY)
-    @SaCheckPermission(value = "production:departAndWorkshop:save")
-    public Result<String> save(@RequestBody ProductionDepartAndWorkshopDTO departDTO) {
-        productionDepartAndWorkshopService.saveOne(departDTO);
-        return Result.ok();
-    }
-
-    /**
-     * 编辑工厂
-     *
-     * @param departDTO 工厂信息
-     * @return 操作结果
-     */
-    @PutMapping
-    @SysLogCut(type = SysLogTypeEnums.UPDATE, module = SysLogModuleEnums.FACTORY)
-    @SaCheckPermission(value = "production:departAndWorkshop:update")
-    public Result<String> update(@RequestBody ProductionDepartAndWorkshopDTO departDTO) {
-        productionDepartAndWorkshopService.updateOne(departDTO);
-        return Result.ok();
-    }
-
-    /**
-     * 删除工厂
-     *
-     * @param id 工厂ID
-     * @return 操作结果
-     */
-    @DeleteMapping("/delete")
-    @SysLogCut(type = SysLogTypeEnums.DELETE, module = SysLogModuleEnums.FACTORY)
-    @SaCheckPermission(value = "production:departAndWorkshop:delete")
-    public Result<String> delete(Long id) {
-        productionDepartAndWorkshopService.deleteById(id);
-        return Result.ok();
-    }
-
-    /**
-     * 获取工厂详情
-     *
-     * @param id 工厂ID
-     * @return 工厂详情
-     */
-    @GetMapping("/info")
-    @SysLogCut(type = SysLogTypeEnums.VIEW, module = SysLogModuleEnums.FACTORY)
-    @SaCheckPermission(value = "production:departAndWorkshop:info")
-    public Result<ProductionDepartAndWorkshopVO> info(Long id) {
-        ProductionDepartAndWorkshopVO departVO = productionDepartAndWorkshopService.getOneById(id);
-        return Result.ok(departVO);
-    }
-
-    /**
-     * 获取工厂列表
-     *
-     * @return 工厂列表
+     * @return 生产部门&车间列表
      */
     @GetMapping("/list")
     public Result<List<ProductionDepartAndWorkshop>> list() {

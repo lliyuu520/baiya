@@ -9,7 +9,7 @@
         b.ORDER_NO         finishedOrderNo,
         c.ORDER_NO         semiFinishedOrderNo,
         a.box_code         boxCode
-        from record_qr_code a
+        from record_bag_code a
         inner join production_order b on a.finished_product_order_id = b.id
         inner join production_order c on a.semi_finished_product_order_id = c.id
         <where>

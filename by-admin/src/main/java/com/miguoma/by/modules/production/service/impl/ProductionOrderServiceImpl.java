@@ -517,7 +517,11 @@ public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderM
         if (StrUtil.isNotBlank(bagNumMaxLimitedStr)) {
             bagNumMaxLimited = new BigDecimal(bagNumMaxLimitedStr).toBigInteger().intValue();
         }
-
+        final ProductionProduct productionProduct = productionProductMapper.getOneByCode(productCode);
+        if(productionProduct == null){
+            throw new BaseException("产品编码:{}不存在", productCode);
+        }
+        final String productType = productionProduct.getProductType();
         // 先处理班组,班次
         productionShiftMapper.syncOne(productionShiftCode);
         productionTeamMapper.syncOne(productionTeamCode);
@@ -530,6 +534,7 @@ public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderM
             productionOrder.setProductionDepartCode(productionDepartCode);
             productionOrder.setProductionWorkshopCode(productionWorkshopCode);
             productionOrder.setOrderDate(orderDate);
+            productionOrder.setProductType(productType);
             productionOrder.setProductionDate(productionDate);
             productionOrder.setProductCode(productCode);
             productionOrder.setBoxNum(boxNum);
@@ -545,6 +550,7 @@ public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderM
             productionOrderDB.setProductionDepartCode(productionDepartCode);
             productionOrderDB.setProductionWorkshopCode(productionWorkshopCode);
             productionOrderDB.setOrderDate(orderDate);
+            productionOrderDB.setProductType(productType);
             productionOrderDB.setProductionDate(productionDate);
             productionOrderDB.setProductCode(productCode);
             productionOrderDB.setBoxNum(boxNum);

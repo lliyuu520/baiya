@@ -1,21 +1,21 @@
 package com.miguoma.by.modules.production.service.impl;
 
-import cn.hutool.core.util.StrUtil;
+import org.springframework.stereotype.Service;
+
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.miguoma.by.common.base.page.PageVO;
 import com.miguoma.by.common.base.service.impl.BaseServiceImpl;
 import com.miguoma.by.modules.production.convert.ProductionFactoryConvert;
-import com.miguoma.by.modules.production.dto.ProductionFactoryDTO;
 import com.miguoma.by.modules.production.entity.ProductionFactory;
 import com.miguoma.by.modules.production.mapper.ProductionFactoryMapper;
 import com.miguoma.by.modules.production.query.ProductionFactoryQuery;
 import com.miguoma.by.modules.production.service.ProductionFactoryService;
 import com.miguoma.by.modules.production.vo.ProductionFactoryVO;
+
+import cn.hutool.core.util.StrUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 工厂服务实现类
@@ -25,7 +25,8 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 @RequiredArgsConstructor
-public class ProductionFactoryServiceImpl extends BaseServiceImpl<ProductionFactoryMapper, ProductionFactory> implements ProductionFactoryService {
+public class ProductionFactoryServiceImpl extends BaseServiceImpl<ProductionFactoryMapper, ProductionFactory>
+        implements ProductionFactoryService {
 
     /**
      * 分页查询工厂列表
@@ -65,53 +66,4 @@ public class ProductionFactoryServiceImpl extends BaseServiceImpl<ProductionFact
 
         return wrapper;
     }
-
-    /**
-     * 新增工厂
-     *
-     * @param dto 工厂信息
-     */
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void saveOne(ProductionFactoryDTO dto) {
-        ProductionFactory productionFactory = ProductionFactoryConvert.INSTANCE.convertFromDTO(dto);
-        save(productionFactory);
-    }
-
-    /**
-     * 编辑工厂
-     *
-     * @param dto 工厂信息
-     */
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void updateOne(ProductionFactoryDTO dto) {
-        ProductionFactory productionFactory = ProductionFactoryConvert.INSTANCE.convertFromDTO(dto);
-        updateById(productionFactory);
-    }
-
-    /**
-     * 获取工厂详情
-     *
-     * @param id 工厂ID
-     * @return 工厂详情
-     */
-    @Override
-    public ProductionFactoryVO getOneById(Long id) {
-        ProductionFactory productionFactory = getById(id);
-        return ProductionFactoryConvert.INSTANCE.convertToVO(productionFactory);
-    }
-
-    /**
-     * 删除工厂
-     *
-     * @param id 工厂ID
-     */
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void deleteById(Long id) {
-        removeById(id);
-    }
-
-
 }

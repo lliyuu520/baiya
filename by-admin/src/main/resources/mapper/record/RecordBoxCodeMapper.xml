@@ -9,7 +9,7 @@
         a.PULL_DATE_TIME pullDateTime,
         a.PULL_TYPE pullType,
         b.ORDER_NO finishedOrderNo,
-        c.ORDER_NO semi_finishedOrderNo,
+        c.ORDER_NO semiFinishedOrderNo,
         a.crib_code cribCode
 
         from record_box_code a

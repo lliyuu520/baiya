@@ -3,7 +3,6 @@ package com.miguoma.by.modules.production.service;
 import com.miguoma.by.common.base.page.PageVO;
 import com.miguoma.by.common.base.service.BaseService;
 import com.miguoma.by.modules.erp.dto.ErpProductDTO;
-import com.miguoma.by.modules.production.dto.ProductionProductDTO;
 import com.miguoma.by.modules.production.entity.ProductionProduct;
 import com.miguoma.by.modules.production.query.ProductionProductQuery;
 import com.miguoma.by.modules.production.vo.ProductionProductVO;
@@ -25,37 +24,10 @@ public interface ProductionProductService extends BaseService<ProductionProduct>
      */
     PageVO<ProductionProductVO> pageVO(ProductionProductQuery query);
 
-    /**
-     * 新增产品
-     *
-     * @param dto 产品信息
-     */
-    void saveOne(ProductionProductDTO dto);
-
-    /**
-     * 编辑产品
-     *
-     * @param dto 产品信息
-     */
-    void updateOne(ProductionProductDTO dto);
-
-    /**
-     * 获取产品详情
-     *
-     * @param id 产品ID
-     * @return 产品详情
-     */
-    ProductionProductVO getOneById(Long id);
-
-    /**
-     * 删除产品
-     *
-     * @param id 产品ID
-     */
-    void deleteById(Long id);
 
     /**
      * 同步ERP产品信息
+     * 
      * @param productList
      */
     void syncProduct(List<ErpProductDTO> productList);

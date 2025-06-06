@@ -42,57 +42,6 @@ public class ProductionTeamController {
         return Result.ok(pageResult);
     }
 
-    /**
-     * 新增
-     *
-     * @param teamDTO
-     */
-    @PostMapping
-    @SysLogCut(type = SysLogTypeEnums.INSERT, module = SysLogModuleEnums.TEAM)
-    @SaCheckPermission(value = "production:team:save")
-    public Result<String> save(@RequestBody ProductionTeamDTO teamDTO) {
-        productionTeamService.saveOne(teamDTO);
-        return Result.ok();
-    }
-
-    /**
-     * 编辑
-     *
-     * @param teamDTO
-     * @return
-     */
-    @PutMapping
-    @SysLogCut(type = SysLogTypeEnums.UPDATE, module = SysLogModuleEnums.TEAM)
-    @SaCheckPermission(value = "production:team:update")
-    public Result<String> update(@RequestBody ProductionTeamDTO teamDTO) {
-        productionTeamService.updateOne(teamDTO);
-        return Result.ok();
-    }
-
-    /**
-     * 删除
-     *
-     * @param id
-     * @return
-     */
-    @DeleteMapping("/delete")
-    @SysLogCut(type = SysLogTypeEnums.DELETE, module = SysLogModuleEnums.TEAM)
-    @SaCheckPermission(value = "production:team:delete")
-    public Result<String> delete(Long id) {
-        productionTeamService.deleteById(id);
-        return Result.ok();
-    }
-
-    /**
-     * 详情
-     */
-    @GetMapping("/info")
-    @SysLogCut(type = SysLogTypeEnums.VIEW, module = SysLogModuleEnums.TEAM)
-    @SaCheckPermission(value = "production:team:info")
-    public Result<ProductionTeam> info(Long id) {
-        ProductionTeam productionTeam = productionTeamService.getOneById(id);
-        return Result.ok(productionTeam);
-    }
 
     /**
      * 获取班组列表

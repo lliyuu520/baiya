@@ -28,4 +28,7 @@ public class ProductionProductQuery extends BaseQuery {
      * 产品类型编码
      */
     private String categoryCode;
+
+    /**产品类型 */
+    private String productType;
 }

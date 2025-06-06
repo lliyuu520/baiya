@@ -5,8 +5,8 @@ import com.miguoma.by.modules.production.entity.ProductionDepartAndWorkshop;
 import org.springframework.stereotype.Repository;
 
 /**
- * 工厂持久层接口
- * 提供工厂相关的数据库操作
+ * 生产部门&车间持久层接口
+ * 提供生产部门&车间相关的数据库操作
  *
  * @author liliangyu
  */
