@@ -3,7 +3,7 @@
 -- =============================================
 -- 创建数据表空间
 CREATE TABLESPACE by_admin_data
-DATAFILE '/oracle/oradata/orcl/by_admin_data.dbf'
+DATAFILE '/u01/oradata/by_admin_data.dbf'
 SIZE 1G
 AUTOEXTEND ON
 NEXT 100M
@@ -11,7 +11,7 @@ MAXSIZE UNLIMITED;
 
 -- 创建索引表空间
 CREATE TABLESPACE by_admin_idx
-DATAFILE '/oracle/oradata/orcl/by_admin_idx.dbf'
+DATAFILE '/u01/oradata/by_admin_idx.dbf'
 SIZE 500M
 AUTOEXTEND ON
 NEXT 50M
