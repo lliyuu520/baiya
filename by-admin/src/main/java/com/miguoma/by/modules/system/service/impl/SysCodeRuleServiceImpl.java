@@ -124,7 +124,7 @@ public class SysCodeRuleServiceImpl extends BaseServiceImpl<SysCodeRuleMapper, S
 
         // 批量保存规则详情
         if (!allDetails.isEmpty()) {
-            sysCodeRuleDetailMapper.insertBatch(allDetails);
+            allDetails.forEach(sysCodeRuleDetailMapper::insert);
         }
     }
 

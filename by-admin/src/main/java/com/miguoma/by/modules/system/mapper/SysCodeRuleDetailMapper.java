@@ -28,12 +28,6 @@ public interface SysCodeRuleDetailMapper extends BaseMapper<SysCodeRuleDetail> {
                 .orderByAsc(SysCodeRuleDetail::getWeight);
         return selectList(lambdaQuery);
     }
-
-    /**
-     * 批量插入规则详情
-     *
-     * @param details 规则详情列表
-     * @return 影响行数
-     */
-    int insertBatch(@Param("list") List<SysCodeRuleDetail> details);
 }
+
+   

@@ -21,7 +21,11 @@
 					{{ scope.row.pullDateTime ? scope.row.pullDateTime.replace('T', ' ') : '' }}
 				</template>
 			</el-table-column>
-			<el-table-column align="center" header-align="center" label="拉码类型" prop="pullType"></el-table-column>
+			<el-table-column align="center" header-align="center" label="拉码类型" prop="pullType">
+				<template #default="scope">
+					{{ filterPullType(scope.row.pullType) }}
+				</template>
+			</el-table-column>
 			<el-table-column align="center" header-align="center" label="成品订单号" prop="finishedOrderNo"></el-table-column>
 			<el-table-column align="center" header-align="center" label="半成品订单号" prop="semiFinishedOrderNo"></el-table-column>
 			<el-table-column align="center" header-align="center" label="袋码" prop="bagCode"></el-table-column>
@@ -54,6 +58,22 @@ const state: IHooksOptions = reactive({
 onMounted(() => {
 	getDataList()
 })
+
+const pullTypeList = [
+	{
+		desc: '二维码',
+		code: 'QR_CODE'
+	},
+	{
+		desc: '物流码',
+		code: 'LOGISTICS_CODE'
+	}
+	
+]
+
+const filterPullType = (code: string) => {
+	return pullTypeList.find(item => item.code === code)?.desc
+}
 
 const { getDataList, selectionChangeHandle, sizeChangeHandle, currentChangeHandle } = useCrud(state)
 </script>

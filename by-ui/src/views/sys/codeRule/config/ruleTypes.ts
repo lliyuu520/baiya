@@ -19,9 +19,9 @@ export interface EncodeTypeOption {
 }
 
 export const encodeTypeList: EncodeTypeOption[] = [
-    { code: 'base10', name: '10进制' },
-    { code: 'base36', name: '36进制' },
-    { code: 'base62', name: '62进制' }
+    { code: 'BASE_10', name: 'Base10' },
+    { code: 'BASE_36', name: 'Base36' },
+    { code: 'BASE_62', name: 'Base62' }
 ]
 
 export const boxCodeSourceFieldList: SourceFieldOption[] = [

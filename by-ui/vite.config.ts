@@ -26,6 +26,6 @@ export default defineConfig({
   server: {
     host: "0.0.0.0",
     port: 3000, // 端口号
-    open: true, // 是否自动打开浏览器
+    open: false, // 是否自动打开浏览器
   },
 });

@@ -23,12 +23,6 @@
     <select id="selectListByRuleIdSAndType" resultMap="BaseResultMap"> SELECT * FROM
         sys_code_rule_detail WHERE rule_id = #{ruleId} AND rule_type = #{ruleType} AND deleted = 0 </select>
 
-    <!-- 批量插入规则详情 -->
-    <insert id="insertBatch"> INSERT INTO sys_code_rule_detail ( rule_id, rule_type, index_begin,
-        index_end, numeral_system, source_type, source_field, weight, constant, create_time,
-        update_time ) VALUES <foreach collection="list" item="item" separator=","> ( #{item.ruleId},
-        #{item.ruleType}, #{item.indexBegin}, #{item.indexEnd}, #{item.numeralSystem},
-        #{item.sourceType}, #{item.sourceField}, #{item.weight}, #{item.constant}, NOW(), NOW() ) </foreach>
-    </insert>
+   
 
 </mapper> 

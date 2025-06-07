@@ -23,7 +23,7 @@
 								<rule-table
 									v-model:ruleList="dataForm.boxCodeRuleList"
 									:isEditMode="isEditMode"
-									:sourceList="boxCodeSourceList"
+									:sourceFieldList="boxCodeSourceFieldList"
 									type="boxCode"
 									@drag-end="onDragEnd"
 								/>
@@ -32,7 +32,7 @@
 								<rule-table
 									v-model:ruleList="dataForm.bagCodeRuleList"
 									:isEditMode="isEditMode"
-									:sourceList="bagCodeSourceList"
+									:sourceFieldList="bagCodeSourceFieldList"
 									type="bagCode"
 									@drag-end="onDragEnd"
 								/>
@@ -41,7 +41,7 @@
 								<rule-table
 									v-model:ruleList="dataForm.universalCodeRuleList"
 									:isEditMode="isEditMode"
-									:sourceList="universalCodeSourceList"
+									:sourceFieldList="universalCodeSourceFieldList"
 									type="universalCode"
 									@drag-end="onDragEnd"
 								/>
@@ -66,7 +66,7 @@ import Sortable from "sortablejs";
 import { computed, nextTick, reactive, ref, watch } from "vue";
 import RuleTable from "./components/RuleTable.vue";
 import type { RuleDetail } from "./config/ruleTypes";
-import { bagCodeSourceList, boxCodeSourceList, universalCodeSourceList } from "./config/ruleTypes";
+import { bagCodeSourceFieldList, boxCodeSourceFieldList, universalCodeSourceFieldList } from "./config/ruleTypes";
 
 const emit = defineEmits(['refreshDataList'])
 

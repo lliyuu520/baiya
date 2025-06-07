@@ -3,9 +3,12 @@ package com.miguoma.by.modules.production.service.impl;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.miguoma.by.common.base.page.PageVO;
 import com.miguoma.by.common.base.service.impl.BaseServiceImpl;
+import com.miguoma.by.modules.production.convert.ProductionProductConvert;
 import com.miguoma.by.modules.production.enums.ProductTypeEnum;
 import com.miguoma.by.modules.erp.dto.ErpProductDTO;
 import com.miguoma.by.modules.production.entity.ProductionProduct;
@@ -33,27 +36,48 @@ public class ProductionProductServiceImpl extends BaseServiceImpl<ProductionProd
         implements ProductionProductService {
 
     private final ProductionProductCategoryMapper productionProductCategoryMapper;
-
+    /**
+     * 分页查询生产订单列表
+     *
+     * @param query 查询条件
+     * @return 分页结果
+     */
     @Override
     public PageVO<ProductionProductVO> pageVO(ProductionProductQuery query) {
-        Page<ProductionProduct> page = new Page<>(query.getPage(), query.getLimit());
-        LambdaQueryWrapper<ProductionProduct> wrapper = new LambdaQueryWrapper<>();
-        wrapper.like(query.getName() != null, ProductionProduct::getName, query.getName());
-        wrapper.eq(query.getCode() != null, ProductionProduct::getCode, query.getCode());
-        wrapper.eq(query.getCategoryCode() != null, ProductionProduct::getCategoryCode, query.getCategoryCode());
-        wrapper.in(ProductionProduct::getProductType, CollUtil.toList(ProductTypeEnum.FINISHED_PRODUCT.getCode(),
-                ProductTypeEnum.SEMI_FINISHED_PRODUCT.getCode()));
-        wrapper.orderByDesc(ProductionProduct::getCreateTime);
-        Page<ProductionProduct> result = this.page(page, wrapper);
-        List<ProductionProductVO> records = result.getRecords().stream().map(this::convertToVO)
-                .collect(Collectors.toList());
-        return new PageVO<>(records, result.getTotal());
+        IPage<ProductionProduct> page = page(getPage(query), builderWrapper(query));
+        return PageVO.of(ProductionProductConvert.INSTANCE.convertList(page.getRecords()), page.getTotal());
     }
 
-    private ProductionProductVO convertToVO(ProductionProduct entity) {
-        ProductionProductVO vo = new ProductionProductVO();
-        BeanUtils.copyProperties(entity, vo);
-        return vo;
+    /**
+     * 构建查询条件
+     *
+     * @param query 查询条件
+     * @return 查询条件
+     */
+    private LambdaQueryWrapper<ProductionProduct> builderWrapper(ProductionProductQuery query) {
+        LambdaQueryWrapper<ProductionProduct> wrapper = Wrappers.lambdaQuery();
+        // 按名称模糊查询
+        final String name = query.getName();
+        if (StrUtil.isNotBlank(name)) {
+            wrapper.like(ProductionProduct::getName, name);
+        }
+        // 按编码精确查询
+        final String code = query.getCode();
+        if (StrUtil.isNotBlank(code)) {
+            wrapper.eq(ProductionProduct::getCode, code);
+        }
+        // 按产品类型编码精确查询
+        final String categoryCode = query.getCategoryCode();
+        if (StrUtil.isNotBlank(categoryCode)) {
+            wrapper.eq(ProductionProduct::getCategoryCode, categoryCode);
+        }
+        final String productType = query.getProductType();
+        if(StrUtil.isNotBlank(productType)){
+            wrapper.eq(ProductionProduct::getProductType, productType);
+        }
+        wrapper.in(ProductionProduct::getProductType, CollUtil.toList(ProductTypeEnum.FINISHED_PRODUCT.getCode(),ProductTypeEnum.SEMI_FINISHED_PRODUCT.getCode()));
+        wrapper.orderByDesc(ProductionProduct::getId);
+        return wrapper;
     }
 
     /**

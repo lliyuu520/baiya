@@ -20,31 +20,31 @@
             </el-table-column>
             <el-table-column :resizable="false" label="来源字段">
                 <template #default="{ row }">
-                    <el-select v-model="row.sourceField" class="form-input">
+                    <el-select v-model="row.sourceField" class="form-input" @change="handleSourceFieldChange(row)">
                         <el-option v-for="sourceField in sourceFieldList" :key="sourceField.code" :label="sourceField.name" :value="sourceField.code" />
                     </el-select>
                 </template>
             </el-table-column>
             <el-table-column :resizable="false" align="center" label="开始索引">
                 <template #default="{ row }">
-                    <el-input-number v-model="row.indexBegin" :controls="false" :min="-1" class="input-number-mini" />
+                    <el-input-number v-model="row.indexBegin" :controls="false" :min="-1" class="input-number-mini" :disabled="row.sourceField === 'BOX_NO'" />
                 </template>
             </el-table-column>
             <el-table-column :resizable="false" align="center" label="结束索引">
                 <template #default="{ row }">
-                    <el-input-number v-model="row.indexEnd" :controls="false" :min="-1" class="input-number-mini" />
+                    <el-input-number v-model="row.indexEnd" :controls="false" :min="-1" class="input-number-mini" :disabled="row.sourceField === 'BOX_NO'" />
                 </template>
             </el-table-column>
             <el-table-column :resizable="false" align="center" label="编码类型">
                 <template #default="{ row }">
-                    <el-select v-model="row.encodeType" class="form-input input-encode">
+                    <el-select v-model="row.encodeType" class="form-input input-encode" :disabled="row.sourceField === 'BOX_NO'">
                         <el-option v-for="type in encodeTypeList" :key="type.code" :label="type.name" :value="type.code" />
                     </el-select>
                 </template>
             </el-table-column>
             <el-table-column :resizable="false" align="center" label="常量值">
                 <template #default="{ row }">
-                    <el-input v-model="row.constant" :controls="false" />
+                    <el-input v-model="row.constant" :controls="false" :disabled="row.sourceField !== 'CONSTANT'" />
                 </template>
             </el-table-column>
 
@@ -61,12 +61,12 @@
 <script lang="ts" setup>
 import { Delete, Plus, Rank } from "@element-plus/icons-vue";
 import { computed } from "vue";
-import type { RuleDetail, SourceFiledOption } from "../config/ruleTypes";
+import type { RuleDetail, SourceFieldOption } from "../config/ruleTypes";
 import { encodeTypeList } from "../config/ruleTypes";
 
 const props = defineProps<{
     ruleList: RuleDetail[]
-    sourceFieldList: SourceFiledOption[]
+    sourceFieldList: SourceFieldOption[]
     isEditMode: boolean
     type: 'boxCode' | 'bagCode' | 'universalCode'
 }>()
@@ -88,6 +88,19 @@ const addButtonTitle = computed(() => {
             return '新增规则'
     }
 })
+
+const handleSourceFieldChange = (row: RuleDetail) => {
+    if (row.sourceField === 'BOX_NO') {
+        // 当选择箱号时，设置默认值
+        row.indexBegin = 0
+        row.indexEnd = -1
+        row.encodeType = 'base10'
+        row.constant = ''
+    } else if (row.sourceField !== 'CONSTANT') {
+        // 当选择非常量时，清空常量值
+        row.constant = ''
+    }
+}
 
 const addRule = () => {
     const newRule: RuleDetail = {
