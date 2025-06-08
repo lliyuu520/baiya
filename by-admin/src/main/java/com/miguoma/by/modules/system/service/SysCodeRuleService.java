@@ -1,5 +1,7 @@
 package com.miguoma.by.modules.system.service;
 
+import java.util.List;
+
 import com.miguoma.by.common.base.page.PageVO;
 import com.miguoma.by.common.base.service.BaseService;
 import com.miguoma.by.modules.system.dto.SysCodeRuleDTO;
@@ -66,4 +68,10 @@ public interface SysCodeRuleService extends BaseService<SysCodeRule> {
      * @return
      */
     SysCodeRuleVO getCurrentCodeRule();
+
+    /**
+     * 获取编码规则列表
+     * @return
+     */
+    List<SysCodeRuleVO> listVO();
 }

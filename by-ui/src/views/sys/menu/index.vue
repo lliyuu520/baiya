@@ -10,11 +10,6 @@
 		</el-form>
 		<el-table v-loading="state.dataListLoading" :data="state.dataList" border row-key="id" style="width: 100%">
 			<el-table-column header-align="center" label="名称" min-width="150" prop="name"></el-table-column>
-			<!-- <el-table-column align="center" header-align="center" label="图标" prop="icon">
-				<template #default="scope">
-					<svg-icon :icon="scope.row.icon"></svg-icon>
-				</template>
-			</el-table-column> -->
 			<el-table-column align="center" header-align="center" label="类型" prop="type">
 				<template #default="scope">
 					<el-tag v-if="scope.row.type === 0" type="info">菜单</el-tag>

@@ -38,9 +38,21 @@ public class ProductionDepartAndWorkshopController {
     @GetMapping("/page")
     @SysLogCut(type = SysLogTypeEnums.SELECT, module = SysLogModuleEnums.FACTORY)
     @SaCheckPermission(value = "production:departAndWorkshop:page")
-    public Result<PageVO<ProductionDepartAndWorkshopVO>> page(ProductionDepartAndWorkshopQuery productionDepartAndWorkshopQuery) {
-        PageVO<ProductionDepartAndWorkshopVO> pageResult = productionDepartAndWorkshopService.pageVO(productionDepartAndWorkshopQuery);
+    public Result<PageVO<ProductionDepartAndWorkshopVO>> page(
+            ProductionDepartAndWorkshopQuery productionDepartAndWorkshopQuery) {
+        PageVO<ProductionDepartAndWorkshopVO> pageResult = productionDepartAndWorkshopService
+                .pageVO(productionDepartAndWorkshopQuery);
         return Result.ok(pageResult);
+    }
+    /**
+     * 获取生产部门&车间详情
+     * @param id
+     * @return
+     */
+    @GetMapping("/info")
+    public Result<ProductionDepartAndWorkshop> info( Long id) {
+        ProductionDepartAndWorkshop productionDepartAndWorkshop= productionDepartAndWorkshopService.getById(id);
+        return Result.ok(productionDepartAndWorkshop);
     }
 
    
@@ -53,5 +65,24 @@ public class ProductionDepartAndWorkshopController {
     public Result<List<ProductionDepartAndWorkshop>> list() {
         List<ProductionDepartAndWorkshop> productionDepartAndWorkshopList = productionDepartAndWorkshopService.list();
         return Result.ok(productionDepartAndWorkshopList);
+    }
+
+
+    /**配置别名 */
+    @PostMapping("/configAlias")
+    public Result<Void> configAlias(@RequestBody ProductionDepartAndWorkshopDTO productionDepartAndWorkshopDTO) {
+        productionDepartAndWorkshopService.configAlias(productionDepartAndWorkshopDTO);
+        return Result.ok();
+    }
+
+    /**
+     * 配置编码规则
+     * @param productionDepartAndWorkshopDTO
+     * @return
+     */
+    @PostMapping("/configCodeRule")
+    public Result<Void> configCodeRule(@RequestBody ProductionDepartAndWorkshopDTO productionDepartAndWorkshopDTO) {
+        productionDepartAndWorkshopService.configCodeRule(productionDepartAndWorkshopDTO);
+        return Result.ok();
     }
 }

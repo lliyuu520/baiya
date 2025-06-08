@@ -15,6 +15,18 @@
 		<el-table v-loading="state.dataListLoading" :data="state.dataList" border style="width: 100%" @selection-change="selectionChangeHandle">
 			<el-table-column  align="center" header-align="center" label="编码" prop="code"></el-table-column>
 			<el-table-column  align="center" header-align="center" label="名称" prop="name"></el-table-column>
+			<el-table-column  align="center" header-align="center" label="别名" prop="alias"></el-table-column>
+			<el-table-column  align="center" header-align="center" label="编码规则" prop="codeRuleId">
+				<template #default="scope">
+					{{ filterCodeRule(scope.row.codeRuleId)?.name }}
+				</template>
+			</el-table-column>
+			<el-table-column  align="center" header-align="center" label="操作" width="400">
+				<template #default="scope">
+					<el-button type="primary" @click="configCodeRuleHandle(scope.row.id)">配置编码规则</el-button>
+					<el-button type="primary" @click="configAliasHandle(scope.row.id)">配置别名</el-button>
+				</template>
+			</el-table-column>
 					</el-table>
 		<el-pagination
 			:current-page="state.page"
@@ -26,6 +38,8 @@
 			@current-change="currentChangeHandle"
 		>
 		</el-pagination>
+		<ConfigCodeRule ref="configCodeRuleRef" @refreshDataList="getDataList" />
+		<ConfigAlias ref="configAliasRef" @refreshDataList="getDataList" />
 
 		
 	</el-card>
@@ -34,7 +48,10 @@
 <script lang="ts" setup>
 import { useCrud } from "@/hooks";
 import { IHooksOptions } from "@/hooks/interface";
-import { reactive, ref } from "vue";
+import { onMounted, reactive, ref } from "vue";
+import ConfigCodeRule from "./configCodeRule.vue";
+import ConfigAlias from "./configAlias.vue";
+import { useCodeRuleListAllApi } from "@/api/sys/codeRule/api";
 
 const state: IHooksOptions = reactive({
 	dataListUrl: '/production/departAndWorkshop/page',
@@ -44,6 +61,37 @@ const state: IHooksOptions = reactive({
 		name: ''
 	}
 })
+
+const configCodeRuleRef = ref()
+const configAliasRef = ref()
+
+const configCodeRuleHandle = (id: number) => {
+	configCodeRuleRef.value.init(id)
+}
+
+const configAliasHandle = (id: number) => {
+	configAliasRef.value.init(id)
+}
+interface CodeRule{
+	id:number
+	name:string
+}
+
+const codeRuleList = ref<CodeRule[]>([])
+
+const initCodeRuleList = () => {
+	useCodeRuleListAllApi().then(res => {
+		codeRuleList.value = res.data
+	})
+}	
+
+onMounted(() => {
+	initCodeRuleList()
+})
+
+const filterCodeRule = (id: number) => {
+	return codeRuleList.value.find(item => item.id === id)
+}
 
 
 

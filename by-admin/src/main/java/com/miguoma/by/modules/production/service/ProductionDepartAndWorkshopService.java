@@ -3,6 +3,7 @@ package com.miguoma.by.modules.production.service;
 import com.miguoma.by.common.base.page.PageVO;
 import com.miguoma.by.common.base.service.BaseService;
 import com.miguoma.by.modules.erp.dto.ErpDepartDTO;
+import com.miguoma.by.modules.production.dto.ProductionDepartAndWorkshopDTO;
 import com.miguoma.by.modules.production.entity.ProductionDepartAndWorkshop;
 import com.miguoma.by.modules.production.query.ProductionDepartAndWorkshopQuery;
 import com.miguoma.by.modules.production.vo.ProductionDepartAndWorkshopVO;
@@ -32,4 +33,17 @@ public interface ProductionDepartAndWorkshopService extends BaseService<Producti
      * @param erpDepartDTOList
      */
     void syncProductionDepartAndWorkShop(List<ErpDepartDTO> erpDepartDTOList);
+
+
+    /**
+     * 配置别名
+     * @param productionDepartAndWorkshopDTO
+     */
+    void configAlias(ProductionDepartAndWorkshopDTO productionDepartAndWorkshopDTO);
+
+    /**
+     * 配置编码规则
+     * @param productionDepartAndWorkshopDTO
+     */
+    void configCodeRule(ProductionDepartAndWorkshopDTO productionDepartAndWorkshopDTO);
 }

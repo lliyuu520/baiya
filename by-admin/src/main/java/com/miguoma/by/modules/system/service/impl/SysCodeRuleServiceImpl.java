@@ -241,4 +241,14 @@ public class SysCodeRuleServiceImpl extends BaseServiceImpl<SysCodeRuleMapper, S
         codeRuleVO.setUniversalCodeRuleList(SysCodeRuleDetailConvert.INSTANCE.convertList(qrSysCodeRuleDetails));
         return codeRuleVO;
     }
+
+    /**
+     * 获取编码规则列表
+     * @return
+     */
+    @Override
+    public List<SysCodeRuleVO> listVO() {
+        List<SysCodeRule> list = list();
+        return SysCodeRuleConvert.INSTANCE.convertToList(list);
+    }
 }

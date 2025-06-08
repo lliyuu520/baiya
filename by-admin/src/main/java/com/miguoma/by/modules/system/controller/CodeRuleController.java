@@ -3,6 +3,9 @@ package com.miguoma.by.modules.system.controller;
 import com.miguoma.by.modules.system.dto.SysCodeRuleDTO;
 import com.miguoma.by.modules.system.query.SysCodeRuleQuery;
 import com.miguoma.by.modules.system.vo.SysCodeRuleVO;
+
+import java.util.List;
+
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -43,6 +46,16 @@ public class CodeRuleController {
     public Result<PageVO<SysCodeRuleVO>> page(SysCodeRuleQuery sysCodeRuleQuery) {
         PageVO<SysCodeRuleVO> pageResult = sysCodeRuleService.pageVO(sysCodeRuleQuery);
         return Result.ok(pageResult);
+    }
+
+    /**
+     * 获取编码规则列表
+     * @return
+     */
+    @GetMapping("/list")
+    public Result<List<SysCodeRuleVO>> list() {
+        List<SysCodeRuleVO> list = sysCodeRuleService.listVO();
+        return Result.ok(list);
     }
 
     /**

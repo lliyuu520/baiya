@@ -50,20 +50,6 @@
 			<el-form-item label="授权标识" prop="perms">
 				<el-input v-model="dataForm.perms" placeholder="多个用逗号分隔，如：sys:menu:save,sys:menu:update"></el-input>
 			</el-form-item>
-			<el-form-item v-if="dataForm.type === 0" class="popover-list" label="图标" prop="icon">
-				<el-popover ref="iconListPopover" placement="top-start" popper-class="mod__menu-icon-popover" trigger="click" width="40%">
-					<template #reference>
-						<el-input v-model="dataForm.icon" :readonly="true" placeholder="图标"> </el-input>
-					</template>
-					<div class="mod__menu-icon-inner">
-						<div class="mod__menu-icon-list">
-							<el-button v-for="(item, index) in iconList" :key="index" :class="{ 'is-active': dataForm.icon === item }" @click="iconHandle(item)">
-								<svg-icon :icon="item" size="45px"></svg-icon>
-							</el-button>
-						</div>
-					</div>
-				</el-popover>
-			</el-form-item>
 		</el-form>
 		<template #footer>
 			<el-button @click="visible = false">取消</el-button>
@@ -73,21 +59,17 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, ref } from "vue";
-import { getIconList } from "@/utils/tool";
-import { ElMessage } from "element-plus/es";
 import { useMenuApi, useMenuListApi, useMenuSubmitApi } from "@/api/sys/menu";
-import SvgIcon from "@/components/svg-icon/src/svg-icon.vue";
+import { ElMessage } from "element-plus/es";
+import { reactive, ref } from "vue";
 
 const emit = defineEmits(['refreshDataList'])
 
 const visible = ref(false)
 const menuList = ref([])
-const iconList = ref<string[]>([])
 const menuListTree = ref()
 const dataFormRef = ref()
 const menuListPopover = ref()
-const iconListPopover = ref()
 
 const dataForm = reactive({
 	id: '',
@@ -98,7 +80,6 @@ const dataForm = reactive({
 	url: '',
 	perms: '',
   weight: 0,
-	icon: '',
 	openStyle: 0
 })
 
@@ -120,9 +101,6 @@ const init = (id?: number) => {
 
 	// 菜单列表
 	getMenuList()
-
-	// icon列表
-	iconList.value = getIconList()
 }
 
 // 菜单类型改变
@@ -161,12 +139,6 @@ const treeCurrentChange = (data: any) => {
 	dataForm.parentId = data.id
 	dataForm.parentName = data.name
 	menuListPopover.value.hide()
-}
-
-// 图标点击事件
-const iconHandle = (icon: string) => {
-	dataForm.icon = icon
-	iconListPopover.value.hide()
 }
 
 const dataRules = ref({
@@ -211,47 +183,6 @@ defineExpose({
 		}
 		:deep(.el-input__suffix) {
 			cursor: pointer;
-		}
-	}
-
-	&-icon-inner {
-		width: 100%;
-		max-height: 260px;
-		overflow-x: hidden;
-		overflow-y: auto;
-		// 滚动条的宽度
-		&::-webkit-scrollbar {
-			width: 8px;
-			height: 8px;
-			background: transparent;
-		}
-		// 滚动条的设置
-		&::-webkit-scrollbar-thumb {
-			background-color: #dddddd;
-			background-clip: padding-box;
-			min-height: 28px;
-			border-radius: 4px;
-		}
-		&::-webkit-scrollbar-thumb:hover {
-			background-color: #bbb;
-		}
-	}
-	&-icon-list {
-		width: 100% !important;
-		padding: 0;
-		margin: -8px 0 0 -8px;
-		> .el-button {
-			padding: 8px;
-			margin: 18px 0 0 8px;
-			height: 50px;
-			width: 50px;
-			> span {
-				display: inline-block;
-				vertical-align: middle;
-				width: 18px;
-				height: 18px;
-				font-size: 18px;
-			}
 		}
 	}
 }

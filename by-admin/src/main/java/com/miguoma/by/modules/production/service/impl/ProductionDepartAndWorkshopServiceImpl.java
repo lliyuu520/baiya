@@ -8,6 +8,7 @@ import com.miguoma.by.common.base.page.PageVO;
 import com.miguoma.by.common.base.service.impl.BaseServiceImpl;
 import com.miguoma.by.modules.erp.dto.ErpDepartDTO;
 import com.miguoma.by.modules.production.convert.ProductionDepartAndWorkshopConvert;
+import com.miguoma.by.modules.production.dto.ProductionDepartAndWorkshopDTO;
 import com.miguoma.by.modules.production.entity.ProductionDepartAndWorkshop;
 import com.miguoma.by.modules.production.mapper.ProductionDepartAndWorkshopMapper;
 import com.miguoma.by.modules.production.query.ProductionDepartAndWorkshopQuery;
@@ -103,4 +104,33 @@ public class ProductionDepartAndWorkshopServiceImpl
             }
         });
     }
+
+    /**
+     * 配置编码规则
+     * @param productionDepartAndWorkshopDTO
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void configCodeRule(ProductionDepartAndWorkshopDTO productionDepartAndWorkshopDTO) {
+        Long id = productionDepartAndWorkshopDTO.getId();
+        Long codeRuleId = productionDepartAndWorkshopDTO.getCodeRuleId();
+        ProductionDepartAndWorkshop productionDepartAndWorkshop = getById(id);
+        productionDepartAndWorkshop.setCodeRuleId(codeRuleId);
+        updateById(productionDepartAndWorkshop);
+    }
+
+    /**
+     * 配置别名
+     * @param productionDepartAndWorkshopDTO
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void configAlias(ProductionDepartAndWorkshopDTO productionDepartAndWorkshopDTO) {
+        Long id = productionDepartAndWorkshopDTO.getId();
+        String alias = productionDepartAndWorkshopDTO.getAlias();
+        ProductionDepartAndWorkshop productionDepartAndWorkshop = getById(id);
+        productionDepartAndWorkshop.setAlias(alias);
+        updateById(productionDepartAndWorkshop);
+    }
+
 }

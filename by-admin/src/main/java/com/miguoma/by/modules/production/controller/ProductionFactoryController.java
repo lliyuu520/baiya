@@ -43,6 +43,61 @@ public class ProductionFactoryController {
         return Result.ok(pageResult);
     }
 
+    /**
+     * 新增工厂
+     *
+     * @param factoryDTO 工厂信息
+     * @return 操作结果
+     */
+    @PostMapping
+    @SysLogCut(type = SysLogTypeEnums.INSERT, module = SysLogModuleEnums.FACTORY)
+    @SaCheckPermission(value = "production:factory:save")
+    public Result<String> save(@RequestBody ProductionFactoryDTO factoryDTO) {
+        productionFactoryService.saveOne(factoryDTO);
+        return Result.ok();
+    }
+
+    /**
+     * 编辑工厂
+     *
+     * @param factoryDTO 工厂信息
+     * @return 操作结果
+     */
+    @PutMapping
+    @SysLogCut(type = SysLogTypeEnums.UPDATE, module = SysLogModuleEnums.FACTORY)
+    @SaCheckPermission(value = "production:factory:update")
+    public Result<String> update(@RequestBody ProductionFactoryDTO factoryDTO) {
+        productionFactoryService.updateOne(factoryDTO);
+        return Result.ok();
+    }
+
+    /**
+     * 删除工厂
+     *
+     * @param id 工厂ID
+     * @return 操作结果
+     */
+    @DeleteMapping("/delete")
+    @SysLogCut(type = SysLogTypeEnums.DELETE, module = SysLogModuleEnums.FACTORY)
+    @SaCheckPermission(value = "production:factory:delete")
+    public Result<String> delete(Long id) {
+        productionFactoryService.deleteById(id);
+        return Result.ok();
+    }
+
+    /**
+     * 获取工厂详情
+     *
+     * @param id 工厂ID
+     * @return 工厂详情
+     */
+    @GetMapping("/info")
+    @SysLogCut(type = SysLogTypeEnums.VIEW, module = SysLogModuleEnums.FACTORY)
+    @SaCheckPermission(value = "production:factory:info")
+    public Result<ProductionFactoryVO> info(Long id) {
+        ProductionFactoryVO factoryVO = productionFactoryService.getOneById(id);
+        return Result.ok(factoryVO);
+    }
 
     /**
      * 获取工厂列表

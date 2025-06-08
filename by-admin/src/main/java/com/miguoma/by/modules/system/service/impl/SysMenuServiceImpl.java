@@ -1,9 +1,14 @@
 package com.miguoma.by.modules.system.service.impl;
 
-import cn.hutool.core.lang.tree.Tree;
-import cn.hutool.core.lang.tree.TreeNode;
-import cn.hutool.core.lang.tree.TreeUtil;
-import cn.hutool.core.util.StrUtil;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.miguoma.by.common.base.service.impl.BaseServiceImpl;
@@ -16,11 +21,12 @@ import com.miguoma.by.modules.system.entity.SysMenu;
 import com.miguoma.by.modules.system.mapper.SysMenuMapper;
 import com.miguoma.by.modules.system.service.SysMenuService;
 import com.miguoma.by.modules.system.service.SysRoleMenuService;
-import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import cn.hutool.core.lang.tree.Tree;
+import cn.hutool.core.lang.tree.TreeNode;
+import cn.hutool.core.lang.tree.TreeUtil;
+import cn.hutool.core.util.StrUtil;
+import lombok.AllArgsConstructor;
 
 /**
  * 菜单管理
@@ -140,8 +146,8 @@ public class SysMenuServiceImpl extends BaseServiceImpl<SysMenuMapper, SysMenu> 
     public Set<String> getUserAuthority(final UserDetail user) {
         // 系统管理员，拥有最高权限
         final List<String> authorityList;
-       
-            authorityList = this.baseMapper.getUserAuthorityList(user.getId());
+
+        authorityList = this.baseMapper.getUserAuthorityList(user.getId());
 
         // 用户权限列表
         final Set<String> permsSet = new HashSet<>();
@@ -168,7 +174,6 @@ public class SysMenuServiceImpl extends BaseServiceImpl<SysMenuMapper, SysMenu> 
             final TreeNode<Long> longTreeNode = new TreeNode<>(id, m.getParentId(), name, m.getWeight());
             final HashMap<String, Object> map = new HashMap<>();
             map.put("perms", m.getPerms());
-            map.put("icon", m.getIcon());
             map.put("openStyle", m.getOpenStyle());
             map.put("type", m.getType());
             map.put("url", m.getUrl());
@@ -178,6 +183,5 @@ public class SysMenuServiceImpl extends BaseServiceImpl<SysMenuMapper, SysMenu> 
 
         return TreeUtil.build(treeNodeList, Constant.ROOT);
     }
-
 
 }
