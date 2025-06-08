@@ -32,6 +32,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/client")
 @RequiredArgsConstructor
+@SaIgnore
 public class ClientController {
 
     private final ProductionFactoryService productionFactoryService;
@@ -56,21 +57,11 @@ public class ClientController {
      * @return
      */
     @PostMapping("login")
-    @SaIgnore
     public Result<String> login(@RequestBody TeamLoginDTO dto) {
         final SysTokenVO sysTokenVO = sysAuthService.loginByClient(dto);
         return Result.ok(sysTokenVO.getAccessToken());
     }
 
-    /**
-     * 退出登录
-     */
-    @GetMapping("logout")
-    @SaIgnore
-    public Result<String> logout() {
-        sysAuthService.logout();
-        return Result.ok("退出成功");
-    }
 
     /**
      * 获取订单列表

@@ -12,7 +12,11 @@ import java.io.Serializable;
 public class TeamLoginDTO implements Serializable {
 
     /** 车间编码 */
-    private String workshopCode;
+    private String productionWorkshopCode;
+
+
+    /** 工厂编码 */
+    private String productionFactoryCode;
 
 
 
