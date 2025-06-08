@@ -19,6 +19,14 @@ public class ProductionOrderQuery extends BaseQuery {
      * 订单号
      */
     private String orderNo;
+    /**
+     * 订单类型
+     */
+    private String productType;
+    /**
+     * 生产车间名称
+     */
+    private String productionWorkshopName;
 
     /**
      * 单据日期范围

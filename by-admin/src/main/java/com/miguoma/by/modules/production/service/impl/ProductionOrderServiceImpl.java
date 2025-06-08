@@ -87,13 +87,9 @@ public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderM
             final String productType = m.getProductType();
             if (StrUtil.equals(ProductTypeEnum.FINISHED_PRODUCT.getCode(),productType)) {
                 m.setBoxCodeCount(recordBoxCodeService.getCountByFinishedProductionOrderId(id));
-                m.setBagCodeCount(recordBagCodeService.getCountByFinishedProductionOrderId(id));
-                m.setQrCodeCount(recordQrCodeService.getCountByFinishedProductionOrderId(id));
             }
             if (StrUtil.equals(ProductTypeEnum.SEMI_FINISHED_PRODUCT.getCode(),productType)) {
                 m.setBoxCodeCount(recordBoxCodeService.getCountBySemiFinishedProductionOrderId(id));
-                m.setBagCodeCount(recordBagCodeService.getCountBySemiFinishedProductionOrderId(id));
-                m.setQrCodeCount(recordQrCodeService.getCountBySemiFinishedProductionOrderId(id));
             }
         });
 
@@ -124,14 +120,10 @@ public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderM
                 final Long id = m.getId();
                 if (StrUtil.equals(ProductTypeEnum.FINISHED_PRODUCT.getCode(),productType)) {
                     m.setBoxCodeCount(recordBoxCodeService.getCountByFinishedProductionOrderId(id));
-                    m.setBagCodeCount(recordBagCodeService.getCountByFinishedProductionOrderId(id));
-                    m.setQrCodeCount(recordQrCodeService.getCountByFinishedProductionOrderId(id));
 
                 }
                 if (StrUtil.equals(ProductTypeEnum.SEMI_FINISHED_PRODUCT.getCode(),productType)) {
                     m.setBoxCodeCount(recordBoxCodeService.getCountBySemiFinishedProductionOrderId(id));
-                    m.setBagCodeCount(recordBagCodeService.getCountBySemiFinishedProductionOrderId(id));
-                    m.setQrCodeCount(recordQrCodeService.getCountBySemiFinishedProductionOrderId(id));
                 }
 
 

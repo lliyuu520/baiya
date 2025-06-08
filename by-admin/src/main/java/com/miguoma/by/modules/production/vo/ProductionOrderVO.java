@@ -55,9 +55,6 @@ public class ProductionOrderVO extends ProductionOrder {
 
     /** 件码数量 */
     private Long boxCodeCount;
-    /** 袋码数量 */
-    private Long bagCodeCount;
-    /** 二维码数量 */
-    private Long qrCodeCount;
+   
 
 }

@@ -11,6 +11,15 @@
 					<el-option :value="false" label="否"></el-option>
 				</el-select>
 			</el-form-item>
+			<el-form-item label="订单类型">
+				<el-select v-model="state.queryForm.productType" clearable>
+					<el-option value="FINISHED_PRODUCT" label="成品"></el-option>
+					<el-option value="SEMI_FINISHED_PRODUCT" label="半成品"></el-option>
+				</el-select>
+			</el-form-item>
+			<el-form-item label="生产车间">
+				<el-input v-model="state.queryForm.productionWorkshopName" clearable></el-input>
+			</el-form-item>
 			<el-form-item>
 				<el-button @click="getDataList()">查询</el-button>
 			</el-form-item>
@@ -22,6 +31,11 @@
 
 			<el-table-column align="center" header-align="center" label="单据编号" prop="orderNo"></el-table-column>
 			<el-table-column align="center" header-align="center" label="单据日期" prop="orderDate"></el-table-column>
+			<el-table-column align="center" header-align="center" label="订单类型" prop="productType">
+				<template #default="scope">
+					{{ scope.row.productType === 'FINISHED_PRODUCT' ? '成品' : '半成品' }}
+				</template>
+			</el-table-column>
 			<el-table-column align="center" header-align="center" label="生产工厂" prop="productionFactoryName"></el-table-column>
 			<el-table-column align="center" header-align="center" label="生产日期" prop="productionDate"></el-table-column>
 			<el-table-column align="center" header-align="center" label="生产部门" prop="productionDepartName"></el-table-column>
@@ -30,8 +44,8 @@
 			<el-table-column align="center" header-align="center" label="生产班组" prop="productionTeamName"></el-table-column>
 			<el-table-column align="center" header-align="center" label="产品" prop="productName"></el-table-column>
 			<el-table-column align="center" header-align="center" label="件数" prop="boxNum"></el-table-column>
+			<el-table-column align="center" header-align="center" label="上传件数" prop="boxCodeCount"></el-table-column>
 			<el-table-column align="center" header-align="center" label="片数" prop="bagNum"></el-table-column>
-			<el-table-column align="center" header-align="center" label="最大件数" prop="boxNumMaxLimited"></el-table-column>
 			<el-table-column align="center" header-align="center" label="最大片数" prop="bagNumMaxLimited"></el-table-column>
 			<el-table-column align="center" header-align="center" label="返工" prop="reworkFlag">
 				<template #default="scope">
@@ -76,7 +90,9 @@ const state: IHooksOptions = reactive({
 	deleteUrl: '/production/order/delete',
 	queryForm: {
 		orderNo: '',
-		reworkFlag: null
+		reworkFlag: null,
+		productType: null,
+		productionWorkshopName: null
 	}
 })
 

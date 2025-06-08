@@ -52,9 +52,6 @@
 			<el-form-item label="片数" prop="bagNum">
 				<el-input-number v-model="dataForm.bagNum" :controls="false" :min="1"  class="form-input"></el-input-number>
 			</el-form-item>
-			<el-form-item label="最大件数" prop="boxNumMaxLimited">
-				<el-input-number v-model="dataForm.boxNumMaxLimited" :controls="false" :min="1"  class="form-input"></el-input-number>
-			</el-form-item>
 			<el-form-item label="最大片数" prop="bagNumMaxLimited">
 				<el-input-number v-model="dataForm.bagNumMaxLimited" :controls="false" :min="1"  class="form-input"></el-input-number>
 			</el-form-item>

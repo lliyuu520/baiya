@@ -1,69 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.miguoma.by.modules.production.mapper.ProductionOrderMapper">
-    <select id="pageVO" resultType="com.miguoma.by.modules.production.vo.ProductionOrderVO"> 
-        select a.*,
-        i.NAME          as productionFactoryName,
-        d.NAME          as productionDepartName,
-        e.NAME          as productionWorkshopName,
-        f.NAME          as productionTeamName,
-        g.NAME          as productionShiftName,
-        b.NAME          as productName,
-        b.SPECIFICATION as productSpecification,
-        h.NAME          as productCategoryName
-        from PRODUCTION_ORDER a
-        LEFT join PRODUCTION_PRODUCT B ON A.PRODUCT_CODE = B.CODE
-        LEFT JOIN PRODUCTION_DEPART_AND_WORKSHOP D ON A.PRODUCTION_DEPART_CODE = D.CODE
-        LEFT JOIN PRODUCTION_DEPART_AND_WORKSHOP E ON A.PRODUCTION_WORKSHOP_CODE = E.CODE
-        LEFT JOIN PRODUCTION_TEAM F ON A.PRODUCTION_TEAM_CODE = F.CODE
-        LEFT JOIN PRODUCTION_SHIFT G ON A.PRODUCTION_SHIFT_CODE = G.CODE
-        LEFT JOIN PRODUCTION_PRODUCT_CATEGORY H ON B.CATEGORY_CODE = H.CODE
-        LEFT JOIN PRODUCTION_FACTORY I ON A.PRODUCTION_FACTORY_CODE = I.CODE 
-        <where>
-            <if test="query.orderNo != null and query.orderNo != ''"> 
-                A.ORDER_NO = #{query.orderNo}
-        </if>
-        <if test="query.orderDateBegin!=null"> 
-        AND A.ORDER_DATE &gt;= #{query.orderDateBegin} 
-        </if>
-        <if test="query.orderDateEnd!=null"> 
-        AND A.ORDER_DATE &lt;= #{query.orderDateEnd} 
-        </if>
-       
+    <select id="pageVO" resultType="com.miguoma.by.modules.production.vo.ProductionOrderVO"> select
+        a.*, i.NAME as productionFactoryName, d.NAME as productionDepartName, e.NAME as
+        productionWorkshopName, f.NAME as productionTeamName, g.NAME as productionShiftName, b.NAME
+        as productName, b.SPECIFICATION as productSpecification, h.NAME as productCategoryName from
+        PRODUCTION_ORDER a LEFT join PRODUCTION_PRODUCT B ON A.PRODUCT_CODE = B.CODE LEFT JOIN
+        PRODUCTION_DEPART_AND_WORKSHOP D ON A.PRODUCTION_DEPART_CODE = D.CODE LEFT JOIN
+        PRODUCTION_DEPART_AND_WORKSHOP E ON A.PRODUCTION_WORKSHOP_CODE = E.CODE LEFT JOIN
+        PRODUCTION_TEAM F ON A.PRODUCTION_TEAM_CODE = F.CODE LEFT JOIN PRODUCTION_SHIFT G ON
+        A.PRODUCTION_SHIFT_CODE = G.CODE LEFT JOIN PRODUCTION_PRODUCT_CATEGORY H ON B.CATEGORY_CODE
+        = H.CODE LEFT JOIN PRODUCTION_FACTORY I ON A.PRODUCTION_FACTORY_CODE = I.CODE <where>
+            <if test="query.orderNo != null and query.orderNo != ''"> A.ORDER_NO = #{query.orderNo} </if>
+        <if
+                test="query.orderDateBegin!=null"> AND A.ORDER_DATE &gt;= #{query.orderDateBegin} </if>
+        <if
+                test="query.orderDateEnd!=null"> AND A.ORDER_DATE &lt;= #{query.orderDateEnd} </if>
+        <if
+                test="query.productType!=null and query.productType!=''"> AND A.PRODUCT_TYPE =
+        #{query.productType} </if>
+        <if
+                test="query.productionWorkshopName!=null and query.productionWorkshopName!=''"> AND
+        E.NAME like '%' || #{query.productionWorkshopName} || '%' </if>
+        <if
+                test="query.reworkFlag!=null"> AND A.REWORK_FLAG = #{query.reworkFlag} </if>
         </where>
-        order by a.ORDER_DATE desc
-        </select>
-    <select id="listVO" resultType="com.miguoma.by.modules.production.vo.ProductionOrderVO">
-        select a.*,
-        i.NAME          as productionFactoryName,
-        d.NAME          as productionDepartName,
-        e.NAME          as productionWorkshopName,
-        f.NAME          as productionTeamName,
-        g.NAME          as productionShiftName,
-        b.NAME          as productName,
-        b.SPECIFICATION as productSpec,
-        h.NAME          as productCategoryName
-        from PRODUCTION_ORDER a
-        INNER join PRODUCTION_PRODUCT B ON A.PRODUCT_CODE = B.CODE
-        INNER JOIN PRODUCTION_DEPART_AND_WORKSHOP D ON A.PRODUCTION_DEPART_CODE = D.CODE
-        INNER JOIN PRODUCTION_DEPART_AND_WORKSHOP E ON A.PRODUCTION_WORKSHOP_CODE = E.CODE
-        INNER JOIN PRODUCTION_TEAM F ON A.PRODUCTION_TEAM_CODE = F.CODE
-        INNER JOIN PRODUCTION_SHIFT G ON A.PRODUCTION_SHIFT_CODE = G.CODE
-        INNER JOIN PRODUCTION_PRODUCT_CATEGORY H ON B.CATEGORY_CODE = H.CODE
-        LEFT JOIN PRODUCTION_FACTORY I ON A.PRODUCTION_FACTORY_CODE = I.CODE
-        <where>
-            <if test="query.orderNo != null and query.orderNo != ''">
-                A.ORDER_NO like concat('%', #{query.orderNo},'%')
-            </if>
-            <if test="query.orderDateBegin!=null">
-                AND A.ORDER_DATE &gt;= #{query.orderDateBegin}
-            </if>
-            <if test="query.orderDateEnd!=null">
-                AND A.ORDER_DATE &lt;= #{query.orderDateEnd}
-            </if>
-        </where>
-        or a.REWORK_FLAG=1
-        order by a.ORDER_DATE desc
-
-    </select>
+        order by a.ORDER_DATE desc </select>
+    <select id="listVO" resultType="com.miguoma.by.modules.production.vo.ProductionOrderVO"> select
+        a.*, i.NAME as productionFactoryName, d.NAME as productionDepartName, e.NAME as
+        productionWorkshopName, f.NAME as productionTeamName, g.NAME as productionShiftName, b.NAME
+        as productName, b.SPECIFICATION as productSpec, h.NAME as productCategoryName from
+        PRODUCTION_ORDER a LEFT join PRODUCTION_PRODUCT B ON A.PRODUCT_CODE = B.CODE LEFT JOIN
+        PRODUCTION_DEPART_AND_WORKSHOP D ON A.PRODUCTION_DEPART_CODE = D.CODE LEFT JOIN
+        PRODUCTION_DEPART_AND_WORKSHOP E ON A.PRODUCTION_WORKSHOP_CODE = E.CODE LEFT JOIN
+        PRODUCTION_TEAM F ON A.PRODUCTION_TEAM_CODE = F.CODE LEFT JOIN PRODUCTION_SHIFT G ON
+        A.PRODUCTION_SHIFT_CODE = G.CODE LEFT JOIN PRODUCTION_PRODUCT_CATEGORY H ON B.CATEGORY_CODE
+        = H.CODE LEFT JOIN PRODUCTION_FACTORY I ON A.PRODUCTION_FACTORY_CODE = I.CODE <where>
+            <if test="query.orderNo != null and query.orderNo != ''"> A.ORDER_NO like '%' ||
+        #{query.orderNo} || '%' </if>
+            <if test="query.orderDateBegin!=null"> AND A.ORDER_DATE &gt;=
+        #{query.orderDateBegin} </if>
+            <if test="query.orderDateEnd!=null"> AND A.ORDER_DATE &lt;=
+        #{query.orderDateEnd} </if> OR A.REWORK_FLAG = 1 </where> order by a.ORDER_DATE desc </select>
 </mapper> 
