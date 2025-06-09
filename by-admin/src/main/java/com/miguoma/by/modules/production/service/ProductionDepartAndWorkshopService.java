@@ -46,4 +46,11 @@ public interface ProductionDepartAndWorkshopService extends BaseService<Producti
      * @param productionDepartAndWorkshopDTO
      */
     void configCodeRule(ProductionDepartAndWorkshopDTO productionDepartAndWorkshopDTO);
+
+    /**
+     * 校验车间编码
+     * @param workshopCode
+     * @return
+     */
+    Boolean checkWorkshopCode(String workshopCode);
 }

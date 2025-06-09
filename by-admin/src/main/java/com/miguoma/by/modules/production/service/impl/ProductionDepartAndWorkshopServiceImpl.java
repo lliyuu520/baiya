@@ -133,4 +133,16 @@ public class ProductionDepartAndWorkshopServiceImpl
         updateById(productionDepartAndWorkshop);
     }
 
+    /**
+     * 校验车间编码
+     *
+     * @param workshopCode
+     * @return
+     */
+    @Override
+    public Boolean checkWorkshopCode(String workshopCode) {
+        LambdaQueryWrapper<ProductionDepartAndWorkshop> wrapper = Wrappers.lambdaQuery();
+        wrapper.eq(ProductionDepartAndWorkshop::getCode, workshopCode);
+        return count(wrapper) > 0;
+    }
 }

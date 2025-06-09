@@ -29,6 +29,11 @@ public class ProductionOrderQuery extends BaseQuery {
     private String productionWorkshopName;
 
     /**
+     * 生产车间编号
+     */
+    private String productionWorkshopCode;
+
+    /**
      * 单据日期范围
      */
     private LocalDate[] orderDateRange;

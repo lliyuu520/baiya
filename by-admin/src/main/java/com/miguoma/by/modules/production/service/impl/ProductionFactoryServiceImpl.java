@@ -113,5 +113,16 @@ public class ProductionFactoryServiceImpl extends BaseServiceImpl<ProductionFact
         removeById(id);
     }
 
-
+    /**
+     * 校验工厂编码是否存在
+     *
+     * @param factoryCode
+     * @return
+     */
+    @Override
+    public Boolean checkFactoryCode(String factoryCode) {
+        LambdaQueryWrapper<ProductionFactory> wrapper = Wrappers.lambdaQuery();
+        wrapper.eq(ProductionFactory::getCode, factoryCode);
+        return count(wrapper) > 0;
+    }
 }

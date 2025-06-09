@@ -55,4 +55,11 @@ public interface ProductionFactoryService extends BaseService<ProductionFactory>
      */
     void deleteById(Long id);
 
+    /**
+     * 校验工厂编码是否存在
+     * @param factoryCode
+     * @return
+     */
+    Boolean checkFactoryCode(String factoryCode);
+
 }
