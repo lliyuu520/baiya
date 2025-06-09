@@ -45,8 +45,8 @@ public class ClientController {
 
 
     /**
-     * 登录 客户端登录不需要密码
-     * header 中携带 Authorization
+     * 登录
+     * header 中携带 Token
      *
      * @param dto
      * @return

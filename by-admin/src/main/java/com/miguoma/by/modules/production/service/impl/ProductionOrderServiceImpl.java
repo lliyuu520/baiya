@@ -1,5 +1,7 @@
 package com.miguoma.by.modules.production.service.impl;
 
+import cn.hutool.core.codec.Base32;
+import cn.hutool.core.codec.Base62;
 import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
@@ -233,9 +235,6 @@ public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderM
         final LocalDate productionDate = productionOrder.getProductionDate();
         final String productionDepartCode = productionOrder.getProductionDepartCode();
         final String productionWorkshopCode = productionOrder.getProductionWorkshopCode();
-        // 班组和班次都是中文
-        final String productionShiftCode = productionOrder.getProductionShiftCode();
-        final String productionTeamCode = productionOrder.getProductionTeamCode();
 
         final Integer boxNoBegin = pullCodeDTO.getBoxNoBegin();
         final Integer boxCodeNum = pullCodeDTO.getBoxCodeNum();
@@ -294,22 +293,13 @@ public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderM
                 str = StrUtil.sub(str, indexBegin, indexEnd);
                 // 修改编码方式
                 if (StrUtil.equals(encodeType, EncodeTypeEnums.BASE_62.getCode())) {
-                    str = WebBase62.encode(Long.parseLong(str));
+                    str = Base62.encode(str);
                 }
-//                Base62.encode().
-                //    if(StrUtil.equals(encodeType,EncodeTypeEnums.BASE_36.getCode())){
-                //     str=StrUtil.upperCase(str);
-                //    }
-                //    if(StrUtil.equals(encodeType,EncodeTypeEnums.BASE_32.getCode())){
-                //     str=StrUtil.upperCase(str);
-                //    }
-                //    if(StrUtil.equals(encodeType,EncodeTypeEnums.BASE_16.getCode())){
-
-
+                if (StrUtil.equals(encodeType, EncodeTypeEnums.BASE_32.getCode())) {
+                    str = Base32.encode(str);
+                }
             }
-            // 编码
-
-
+            code.append(str);
         }
         int boxNoEnd = boxNoBegin + boxCodeNum;
         List<String> boxCodeList = new ArrayList<>();
@@ -358,7 +348,8 @@ public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderM
             recordQrCodeService.saveBatch(recordQrCodeList);
 
         }
-        if (StrUtil.equals("BOX_CODE", type)) {
+        if (StrUtil.equals("LOGISTICS_CODE", type)) {
+
 
         }
 
