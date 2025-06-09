@@ -199,7 +199,7 @@ create table SYS_CODE_RULE_DETAIL
         constraint PK_CORE_CODE_RULE_DETAIL
             primary key,
     RULE_ID      NUMBER(20),
-    ENCODE_TYPE  NUMBER(10),
+    ENCODE_TYPE  VARCHAR2(100),
     SOURCE_FIELD VARCHAR2(100),
     WEIGHT       NUMBER(10),
     CREATE_TIME  TIMESTAMP(6) default SYSDATE,
