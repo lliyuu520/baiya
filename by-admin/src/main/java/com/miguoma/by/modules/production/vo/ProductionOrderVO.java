@@ -55,6 +55,10 @@ public class ProductionOrderVO extends ProductionOrder {
 
     /** 件码数量 */
     private Long boxCodeCount;
+    /**
+     * 打印代码
+     */
+    private String printCode;
    
 
 }

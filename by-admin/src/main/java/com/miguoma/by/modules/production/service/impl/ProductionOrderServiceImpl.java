@@ -15,13 +15,11 @@ import com.miguoma.by.modules.client.vo.PullCodeVO;
 import com.miguoma.by.modules.erp.dto.ErpOrderDTO;
 import com.miguoma.by.modules.production.convert.ProductionOrderConvert;
 import com.miguoma.by.modules.production.dto.ProductionOrderDTO;
+import com.miguoma.by.modules.production.entity.ProductionDepartAndWorkshop;
 import com.miguoma.by.modules.production.entity.ProductionOrder;
 import com.miguoma.by.modules.production.entity.ProductionProduct;
 import com.miguoma.by.modules.production.enums.ProductTypeEnum;
-import com.miguoma.by.modules.production.mapper.ProductionOrderMapper;
-import com.miguoma.by.modules.production.mapper.ProductionProductMapper;
-import com.miguoma.by.modules.production.mapper.ProductionShiftMapper;
-import com.miguoma.by.modules.production.mapper.ProductionTeamMapper;
+import com.miguoma.by.modules.production.mapper.*;
 import com.miguoma.by.modules.production.query.ProductionOrderQuery;
 import com.miguoma.by.modules.production.service.ProductionOrderService;
 import com.miguoma.by.modules.production.vo.ProductionOrderVO;
@@ -57,8 +55,7 @@ import java.util.List;
  */
 @Service
 @RequiredArgsConstructor
-public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderMapper, ProductionOrder>
-    implements ProductionOrderService {
+public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderMapper, ProductionOrder> implements ProductionOrderService {
 
     private final SysCodeRuleMapper sysCodeRuleMapper;
     private final SysCodeRuleDetailMapper sysCodeRuleDetailMapper;
@@ -70,6 +67,7 @@ public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderM
     private final RecordBagCodeService recordBagCodeService;
     private final ProductionShiftMapper productionShiftMapper;
     private final ProductionTeamMapper productionTeamMapper;
+    private final ProductionDepartAndWorkshopMapper productionDepartAndWorkshopMapper;
 
     /**
      * 分页查询生产订单列表
@@ -85,10 +83,10 @@ public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderM
         records.forEach(m -> {
             final Long id = m.getId();
             final String productType = m.getProductType();
-            if (StrUtil.equals(ProductTypeEnum.FINISHED_PRODUCT.getCode(),productType)) {
+            if (StrUtil.equals(ProductTypeEnum.FINISHED_PRODUCT.getCode(), productType)) {
                 m.setBoxCodeCount(recordBoxCodeService.getCountByFinishedProductionOrderId(id));
             }
-            if (StrUtil.equals(ProductTypeEnum.SEMI_FINISHED_PRODUCT.getCode(),productType)) {
+            if (StrUtil.equals(ProductTypeEnum.SEMI_FINISHED_PRODUCT.getCode(), productType)) {
                 m.setBoxCodeCount(recordBoxCodeService.getCountBySemiFinishedProductionOrderId(id));
             }
         });
@@ -105,31 +103,7 @@ public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderM
     @Override
     public List<ProductionOrderVO> listVO(ProductionOrderQuery query) {
         List<ProductionOrderVO> records = baseMapper.listVO(query);
-        records.forEach(m -> {
-            final String productCode = m.getProductCode();
-            final ProductionProduct productionProduct = productionProductMapper.getOneByCode(productCode);
-            if (productionProduct != null) {
-                final LocalDate productionDate = m.getProductionDate();
-                if (productionDate != null) {
-                    final String productionDateStr = LocalDateTimeUtil.format(productionDate, "yyyyMMdd");
-                    m.setProductionBatchNo(WebBase62.encode(Long.parseLong(productionDateStr)));
-                    final LocalDate limitedUseDate = productionDate.plusYears(3);
-                    m.setLimitedUseDateStr(LocalDateTimeUtil.format(limitedUseDate, "yyyyMMdd"));
-                }
-                final String productType = m.getProductType();
-                final Long id = m.getId();
-                if (StrUtil.equals(ProductTypeEnum.FINISHED_PRODUCT.getCode(),productType)) {
-                    m.setBoxCodeCount(recordBoxCodeService.getCountByFinishedProductionOrderId(id));
-
-                }
-                if (StrUtil.equals(ProductTypeEnum.SEMI_FINISHED_PRODUCT.getCode(),productType)) {
-                    m.setBoxCodeCount(recordBoxCodeService.getCountBySemiFinishedProductionOrderId(id));
-                }
-
-
-            }
-
-        });
+        records.forEach(this::accept);
         return records;
     }
 
@@ -272,10 +246,8 @@ public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderM
         refreshBoxNo(productionOrder, boxNoBegin, boxCodeNum);
 
         // 物流码
-        final List<SysCodeRuleDetail> sysCodeRuleDetails = sysCodeRuleDetailMapper.selectListByRuleIdSAndType(ruleId,
-            RuleTypeEnums.BOX.getCode());
-        final List<SysCodeRuleDetailVO> sysCodeRuleDetailVOS = SysCodeRuleDetailConvert.INSTANCE
-            .convertList(sysCodeRuleDetails);
+        final List<SysCodeRuleDetail> sysCodeRuleDetails = sysCodeRuleDetailMapper.selectListByRuleIdSAndType(ruleId, RuleTypeEnums.BOX.getCode());
+        final List<SysCodeRuleDetailVO> sysCodeRuleDetailVOS = SysCodeRuleDetailConvert.INSTANCE.convertList(sysCodeRuleDetails);
         StringBuilder code = new StringBuilder();
         for (SysCodeRuleDetailVO m : sysCodeRuleDetailVOS) {
             final String sourceField = m.getSourceField();
@@ -284,68 +256,58 @@ public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderM
             final Integer indexEnd = m.getIndexEnd();
             final String encodeType = m.getEncodeType();
 
-String str="";
-                //限用日期
-                if (StrUtil.equals(sourceField, SourceFiledEnums.LIMITED_USE_DATE.getCode())) {
-                    final LocalDate limitedUseDate = productionDate.plusYears(3);
-                    str=LocalDateTimeUtil.format(limitedUseDate, "yyyyMMdd");
+            String str = "";
+            //限用日期
+            if (StrUtil.equals(sourceField, SourceFiledEnums.LIMITED_USE_DATE.getCode())) {
+                final LocalDate limitedUseDate = productionDate.plusYears(3);
+                str = LocalDateTimeUtil.format(limitedUseDate, "yyyyMMdd");
 
-                }
-                // 部门编码
-                if (StrUtil.equals(sourceField, SourceFiledEnums.PRODUCTION_DEPART_CODE.getCode())) {
-                    str=productionDepartCode;
-                }
-                // 车间编码
-                if (StrUtil.equals(sourceField, SourceFiledEnums.PRODUCTION_WORKSHOP_CODE.getCode())) {
-                    str = productionWorkshopCode;
-                }
-                // 订单编码
-                if (StrUtil.equals(sourceField, SourceFiledEnums.ORDER_CODE.getCode())) {
-                    str = productionOrder.getOrderNo();
-                }
-                // 产品编码
-                if (StrUtil.equals(sourceField, SourceFiledEnums.PRODUCT_CODE.getCode())) {
-                    str = productCode;
-                }
-                // 箱号 需要填充 使用占位符即可
-                if (StrUtil.equals(sourceField, SourceFiledEnums.BOX_NO.getCode())) {
-                    str = "{}";
+            }
+            // 部门编码
+            if (StrUtil.equals(sourceField, SourceFiledEnums.PRODUCTION_DEPART_CODE.getCode())) {
+                str = productionDepartCode;
+            }
+            // 车间编码
+            if (StrUtil.equals(sourceField, SourceFiledEnums.PRODUCTION_WORKSHOP_CODE.getCode())) {
+                str = productionWorkshopCode;
+            }
+            // 订单编码
+            if (StrUtil.equals(sourceField, SourceFiledEnums.ORDER_CODE.getCode())) {
+                str = productionOrder.getOrderNo();
+            }
+            // 产品编码
+            if (StrUtil.equals(sourceField, SourceFiledEnums.PRODUCT_CODE.getCode())) {
+                str = productCode;
+            }
+            // 箱号 需要填充 使用占位符即可
+            if (StrUtil.equals(sourceField, SourceFiledEnums.BOX_NO.getCode())) {
+                str = "{}";
 
-                }
-                // 常量
-                if (StrUtil.equals(sourceField, SourceFiledEnums.CONSTANT.getCode())) {
-                    str=constant;
-                }
-                // 开始位 结束位
+            }
+            // 常量
+            if (StrUtil.equals(sourceField, SourceFiledEnums.CONSTANT.getCode())) {
+                str = constant;
+            }
+            // 开始位 结束位
             // 非箱号和常量 需要截取,修改编码方式
-            if ((!StrUtil.equals(sourceField, SourceFiledEnums.ORDER_CODE.getCode())&&(!StrUtil.equals(sourceField, SourceFiledEnums.CONSTANT.getCode())))) {
-                str=StrUtil.sub(str, indexBegin, indexEnd);
+            if ((!StrUtil.equals(sourceField, SourceFiledEnums.ORDER_CODE.getCode()) && (!StrUtil.equals(sourceField, SourceFiledEnums.CONSTANT.getCode())))) {
+                str = StrUtil.sub(str, indexBegin, indexEnd);
                 // 修改编码方式
                 if (StrUtil.equals(encodeType, EncodeTypeEnums.BASE_62.getCode())) {
                     str = WebBase62.encode(Long.parseLong(str));
                 }
 //                Base62.encode().
-            //    if(StrUtil.equals(encodeType,EncodeTypeEnums.BASE_36.getCode())){
-            //     str=StrUtil.upperCase(str);
-            //    }
-            //    if(StrUtil.equals(encodeType,EncodeTypeEnums.BASE_32.getCode())){
-            //     str=StrUtil.upperCase(str);
-            //    }
-            //    if(StrUtil.equals(encodeType,EncodeTypeEnums.BASE_16.getCode())){
-
-
+                //    if(StrUtil.equals(encodeType,EncodeTypeEnums.BASE_36.getCode())){
+                //     str=StrUtil.upperCase(str);
+                //    }
+                //    if(StrUtil.equals(encodeType,EncodeTypeEnums.BASE_32.getCode())){
+                //     str=StrUtil.upperCase(str);
+                //    }
+                //    if(StrUtil.equals(encodeType,EncodeTypeEnums.BASE_16.getCode())){
 
 
             }
             // 编码
-
-
-
-
-
-              
-
-
 
 
         }
@@ -413,8 +375,7 @@ String str="";
     public void collectUpload(RecordCodeUploadDTO recordCodeUploadDTO) {
         final LocalDateTime now = LocalDateTimeUtil.now();
 
-        final List<RecordCodeUploadDTO.RecordQrCodeUploadDTO> qrCodeUploadDTOList = recordCodeUploadDTO
-            .getQrCodeUploadDTOList();
+        final List<RecordCodeUploadDTO.RecordQrCodeUploadDTO> qrCodeUploadDTOList = recordCodeUploadDTO.getQrCodeUploadDTOList();
         qrCodeUploadDTOList.forEach(m -> {
             final String boxCode = m.getBoxCode();
             final List<String> qrCodeList = m.getQrCodeList();
@@ -445,8 +406,7 @@ String str="";
             });
             recordBagCodeService.updateBatchById(recordBagCodeList);
         });
-        final List<RecordCodeUploadDTO.CribCodeUploadDTO> cribCodeUploadDTOList = recordCodeUploadDTO
-            .getCribCodeUploadDTOList();
+        final List<RecordCodeUploadDTO.CribCodeUploadDTO> cribCodeUploadDTOList = recordCodeUploadDTO.getCribCodeUploadDTOList();
         cribCodeUploadDTOList.forEach(m -> {
             final String cribCode = m.getCribCode();
             final List<String> boxCodeList1 = m.getBoxCodeList();
@@ -502,7 +462,7 @@ String str="";
             bagNumMaxLimited = new BigDecimal(bagNumMaxLimitedStr).toBigInteger().intValue();
         }
         final ProductionProduct productionProduct = productionProductMapper.getOneByCode(productCode);
-        if(productionProduct == null){
+        if (productionProduct == null) {
             throw new BaseException("产品编码:{}不存在", productCode);
         }
         final String productType = productionProduct.getProductType();
@@ -542,6 +502,42 @@ String str="";
             productionOrderDB.setBoxNumMaxLimited(boxNumMaxLimited);
             productionOrderDB.setBagNumMaxLimited(bagNumMaxLimited);
             updateById(productionOrderDB);
+
+        }
+
+    }
+
+    private void accept(ProductionOrderVO m) {
+        final String productCode = m.getProductCode();
+        final ProductionProduct productionProduct = productionProductMapper.getOneByCode(productCode);
+        if (productionProduct != null) {
+            final LocalDate productionDate = m.getProductionDate();
+            if (productionDate != null) {
+                final String productionDateStr = LocalDateTimeUtil.format(productionDate, "yyyyMMdd");
+                m.setProductionBatchNo(WebBase62.encode(Long.parseLong(productionDateStr)));
+                final LocalDate limitedUseDate = productionDate.plusYears(3);
+                m.setLimitedUseDateStr(LocalDateTimeUtil.format(limitedUseDate, "yyyyMMdd"));
+            }
+            final String productType = m.getProductType();
+            final Long id = m.getId();
+            if (StrUtil.equals(ProductTypeEnum.FINISHED_PRODUCT.getCode(), productType)) {
+                m.setBoxCodeCount(recordBoxCodeService.getCountByFinishedProductionOrderId(id));
+
+            }
+            if (StrUtil.equals(ProductTypeEnum.SEMI_FINISHED_PRODUCT.getCode(), productType)) {
+                m.setBoxCodeCount(recordBoxCodeService.getCountBySemiFinishedProductionOrderId(id));
+            }
+            final String productionWorkshopCode = m.getProductionWorkshopCode();
+            final ProductionDepartAndWorkshop productionDepartAndWorkshop = productionDepartAndWorkshopMapper.getOneByCode(productionWorkshopCode);
+
+            final String productionTeamCode = m.getProductionTeamCode();
+            // 取第一个字符
+            final String sub = StrUtil.sub(productionTeamCode, 0, 1);
+            String alias = "";
+            if (productionDepartAndWorkshop != null) {
+                alias = productionDepartAndWorkshop.getAlias();
+            }
+            m.setPrintCode(sub + alias);
 
         }
 
