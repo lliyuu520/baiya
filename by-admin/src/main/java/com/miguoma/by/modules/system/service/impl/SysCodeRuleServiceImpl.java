@@ -87,17 +87,21 @@ public class SysCodeRuleServiceImpl extends BaseServiceImpl<SysCodeRuleMapper, S
         if (dto == null) {
             throw new IllegalArgumentException("编码规则信息不能为空");
         }
-        if (StrUtil.isBlank(dto.getCode())) {
+        final String code = dto.getCode();
+        if (StrUtil.isBlank(code)) {
             throw new IllegalArgumentException("编码规则编码不能为空");
         }
-        if (StrUtil.isBlank(dto.getName())) {
+        final String name = dto.getName();
+        if (StrUtil.isBlank(name)) {
             throw new IllegalArgumentException("编码规则名称不能为空");
         }
+        final String qrCodeUrlPrefix = dto.getQrCodeUrlPrefix();
 
         // 保存主表
         SysCodeRule sysCodeRule = new SysCodeRule();
-        sysCodeRule.setCode(dto.getCode());
-        sysCodeRule.setName(dto.getName());
+        sysCodeRule.setCode(code);
+        sysCodeRule.setName(name);
+        sysCodeRule.setQrCodeUrlPrefix(qrCodeUrlPrefix);
         sysCodeRule.setEnabled(false);
         save(sysCodeRule);
 
@@ -162,8 +166,53 @@ public class SysCodeRuleServiceImpl extends BaseServiceImpl<SysCodeRuleMapper, S
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void updateOne(SysCodeRuleDTO dto) {
-        SysCodeRule sysCodeRule = SysCodeRuleConvert.INSTANCE.convertFromDTO(dto);
+        // 参数校验
+        if (dto == null) {
+            throw new IllegalArgumentException("编码规则信息不能为空");
+        }
+        final String code = dto.getCode();
+        if (StrUtil.isBlank(code)) {
+            throw new IllegalArgumentException("编码规则编码不能为空");
+        }
+        final String name = dto.getName();
+        if (StrUtil.isBlank(name)) {
+            throw new IllegalArgumentException("编码规则名称不能为空");
+        }
+        final String qrCodeUrlPrefix = dto.getQrCodeUrlPrefix();
+
+        // 保存主表
+        final Long ruleId = dto.getId();
+        SysCodeRule sysCodeRule = getById(ruleId);
+        sysCodeRule.setCode(code);
+        sysCodeRule.setName(name);
+        sysCodeRule.setQrCodeUrlPrefix(qrCodeUrlPrefix);
         updateById(sysCodeRule);
+
+        // 获取规则ID
+        final Long codeRuleId = sysCodeRule.getId();
+
+        // 处理所有类型的规则详情
+        List<SysCodeRuleDetail> allDetails = new ArrayList<>();
+
+        // 处理箱码规则
+        if (dto.getBoxCodeRuleList() != null) {
+            allDetails.addAll(convertRuleDetails(dto.getBoxCodeRuleList(), codeRuleId, RuleTypeEnums.BOX.getCode()));
+        }
+
+        // 处理袋码规则
+        if (dto.getBagCodeRuleList() != null) {
+            allDetails.addAll(convertRuleDetails(dto.getBagCodeRuleList(), codeRuleId, RuleTypeEnums.BAG.getCode()));
+        }
+
+        // 处理通用码规则
+        if (dto.getUniversalCodeRuleList() != null) {
+            allDetails.addAll(convertRuleDetails(dto.getUniversalCodeRuleList(), codeRuleId, RuleTypeEnums.UNIVERSAL_CODE.getCode()));
+        }
+        sysCodeRuleDetailMapper.deleteByRuleId(ruleId);
+        // 批量保存规则详情
+        if (!allDetails.isEmpty()) {
+            allDetails.forEach(sysCodeRuleDetailMapper::insert);
+        }
     }
 
     /**

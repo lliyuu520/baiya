@@ -24,6 +24,11 @@ public class PullCodeVO implements Serializable {
      */
     private List<LogisticsTypeData> logisticsTypeDataList;
 
+    /**
+     * 万用码
+     */
+    private String universalCode;
+
 
     /**
      * 二维码类型数据
@@ -56,7 +61,7 @@ public class PullCodeVO implements Serializable {
         /**
          * 袋码
          */
-        private List<String> bagCodeList = new ArrayList<>();
+        private String bagCode  ;
 
 
     }

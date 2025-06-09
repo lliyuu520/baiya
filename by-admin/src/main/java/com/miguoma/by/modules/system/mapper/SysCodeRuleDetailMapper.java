@@ -28,6 +28,12 @@ public interface SysCodeRuleDetailMapper extends BaseMapper<SysCodeRuleDetail> {
                 .orderByAsc(SysCodeRuleDetail::getWeight);
         return selectList(lambdaQuery);
     }
+
+    /**
+     * 根据规则ID删除编码规则明细
+     * @param ruleId
+     */
+    void deleteByRuleId(@Param("ruleId") Long ruleId);
 }
 
    

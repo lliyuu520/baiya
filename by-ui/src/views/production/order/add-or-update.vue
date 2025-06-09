@@ -11,22 +11,22 @@
 				<el-date-picker v-model="dataForm.productionDate" class="form-input" placeholder="请选择生产日期" type="date" value-format="YYYY-MM-DD"></el-date-picker>
 			</el-form-item>
 			<el-form-item label="生产部门" prop="productionDepartCode">
-				<el-select v-model="dataForm.productionDepartCode" class="form-input" placeholder="请选择生产部门">
+				<el-select v-model="dataForm.productionDepartCode" class="form-input" placeholder="请选择生产部门" filterable>
 					<el-option v-for="item in departList" :key="item.code" :label="item.name" :value="item.code"></el-option>
 				</el-select>
 			</el-form-item>
 			<el-form-item label="生产车间" prop="productionWorkshopCode">
-				<el-select v-model="dataForm.productionWorkshopCode" class="form-input" placeholder="请选择生产车间">
+				<el-select v-model="dataForm.productionWorkshopCode" class="form-input" placeholder="请选择生产车间" filterable>
 					<el-option v-for="item in workshopList" :key="item.code" :label="item.name" :value="item.code"></el-option>
 				</el-select>
 			</el-form-item>
 			<el-form-item label="生产班次" prop="productionShiftCode">
-				<el-select v-model="dataForm.productionShiftCode" class="form-input" placeholder="请选择生产班次">
+				<el-select v-model="dataForm.productionShiftCode" class="form-input" placeholder="请选择生产班次" filterable>
 					<el-option v-for="item in shiftList" :key="item.code" :label="item.name" :value="item.code"></el-option>
 				</el-select>
 			</el-form-item>
 			<el-form-item label="生产班组" prop="productionTeamCode">
-				<el-select v-model="dataForm.productionTeamCode" class="form-input" placeholder="请选择生产班组">
+				<el-select v-model="dataForm.productionTeamCode" class="form-input" placeholder="请选择生产班组" filterable>
 					<el-option v-for="item in teamList" :key="item.code" :label="item.name" :value="item.code"></el-option>
 				</el-select>
 			</el-form-item>
@@ -137,14 +137,13 @@ const initList = () => {
 
 	loading.value = true
 	return Promise.all([
-		useDepartAndWorkshopListAllApi(),
+		useDepartAndWorkshopListAllApi(), // 查询所有部门
 		useShiftListAllApi(),
 		useTeamListAllApi(),
 		useProductListAllApi("FINISHED_PRODUCT"),
 		useProductListAllApi("SEMI_FINISHED_PRODUCT"),
 	]).then(([departRes, shiftRes, teamRes, finishedProductRes, semiFinishedProductRes]) => {
 		departList.value = departRes.data
-		workshopList.value = departRes.data  // 使用同一个接口的数据
 		shiftList.value = shiftRes.data
 		teamList.value = teamRes.data
 		finishedProductList.value = finishedProductRes.data
@@ -256,12 +255,15 @@ const submitHandle = () => {
 	})
 }
 
-// 监听产品类型变化，只在新增时清空产品编码
-watch(() => dataForm.productType, (newVal) => {
-    // 只在新增时（没有id时）清空产品编码
-    if (!dataForm.id) {
-        dataForm.productCode = ''
-    }
+
+
+// 监听生产部门变化，更新生产车间列表
+watch(() => dataForm.productionDepartCode, (newVal) => {
+    if (newVal) {
+        useDepartAndWorkshopListAllApi(newVal).then(res => {
+            workshopList.value = res.data
+        })
+    } 
 })
 
 defineExpose({

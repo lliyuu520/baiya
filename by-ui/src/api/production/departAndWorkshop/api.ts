@@ -7,7 +7,7 @@ const departAndWorkshopApi = new BaseApi({ baseUrl, moduleName: 'depart' })
 export const useDepartAndWorkshopApi = (id: number) => departAndWorkshopApi.getInfo(id)
 export const useDepartAndWorkshopSubmitApi = (dataForm: any) => departAndWorkshopApi.submit(dataForm)
 export const deleteDepartAndWorkshopApi = (id: number) => departAndWorkshopApi.delete(id)
-export const useDepartAndWorkshopListAllApi = () => departAndWorkshopApi.getList()
+export const useDepartAndWorkshopListAllApi = (parentCode?: string) => departAndWorkshopApi.getList({ parentCode })
 export const useDepartAndWorkshopPageApi = (params: any) => departAndWorkshopApi.getPage(params)
 
 export const useConfigCodeRuleApi = (dataForm: any) => {

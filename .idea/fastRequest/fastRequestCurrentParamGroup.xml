@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="fastRequestCurrentParamGroup">
+    <option name="bodyParamMap">
+      <map>
+        <entry key="pullCodeDTO">
+          <value>
+            <Object />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="className" value="com.miguoma.by.modules.client.controller.ClientController" />
+    <option name="filePath" value="" />
+    <option name="method" value="pullCode" />
+    <option name="methodDescription" value="拉码" />
+    <option name="methodType" value="POST" />
+    <option name="module" value="by-admin" />
+    <option name="originUrl" value="/client/pullCode" />
+    <option name="responseParamMap">
+      <map>
+        <entry key="return">
+          <value>
+            <Object />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="returnDocument" value="{&quot;code&quot;:&quot;No comment,Type =Number&quot;,&quot;msg&quot;:&quot;No comment,Type =String&quot;,&quot;data&quot;:{&quot;qrCodeTypeData&quot;:{&quot;qrCodeList&quot;:[&quot;二维码数据&quot;],&quot;boxCodeList&quot;:[&quot;箱码数据&quot;]},&quot;logisticsTypeDataList&quot;:[{&quot;boxCode&quot;:&quot;箱码&quot;,&quot;bagCode&quot;:&quot;袋码&quot;}],&quot;universalCode&quot;:&quot;万用码&quot;}}" />
+    <option name="url" value="/client/pullCode" />
+  </component>
+</project>

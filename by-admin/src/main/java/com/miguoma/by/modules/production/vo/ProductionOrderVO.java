@@ -59,6 +59,11 @@ public class ProductionOrderVO extends ProductionOrder {
      * 打印代码
      */
     private String printCode;
+
+    /**
+     * 一箱有多少包
+     */
+    private Integer oneBoxPackageNum;
    
 
 }

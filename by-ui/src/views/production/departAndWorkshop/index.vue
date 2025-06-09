@@ -1,6 +1,9 @@
 <template>
 	<el-card>
 		<el-form :inline="true" :model="state.queryForm" @keyup.enter="getDataList()">
+			<el-form-item label="父级编码">
+				<el-input v-model="state.queryForm.parentCode" clearable></el-input>
+			</el-form-item>
 			<el-form-item  label="编码">
 				<el-input v-model="state.queryForm.code" clearable></el-input>
 			</el-form-item>
@@ -15,6 +18,11 @@
 		<el-table v-loading="state.dataListLoading" :data="state.dataList" border style="width: 100%" @selection-change="selectionChangeHandle">
 			<el-table-column  align="center" header-align="center" label="编码" prop="code"></el-table-column>
 			<el-table-column  align="center" header-align="center" label="名称" prop="name"></el-table-column>
+			<el-table-column  align="center" header-align="center" label="父级编码" prop="parentCode">
+				<template #default="scope">
+					{{ filterDepartAndWorkshop(scope.row.parentCode)?.name }}
+				</template>
+			</el-table-column>
 			<el-table-column  align="center" header-align="center" label="别名" prop="alias"></el-table-column>
 			<el-table-column  align="center" header-align="center" label="编码规则" prop="codeRuleId">
 				<template #default="scope">
@@ -52,13 +60,15 @@ import { onMounted, reactive, ref } from "vue";
 import ConfigCodeRule from "./configCodeRule.vue";
 import ConfigAlias from "./configAlias.vue";
 import { useCodeRuleListAllApi } from "@/api/sys/codeRule/api";
+import { useDepartAndWorkshopListAllApi } from "@/api/production/departAndWorkshop/api";
 
 const state: IHooksOptions = reactive({
 	dataListUrl: '/production/departAndWorkshop/page',
 	deleteUrl: '/production/departAndWorkshop/delete',
 	queryForm: {
 		code: '',
-		name: ''
+		name: '',
+		parentCode:''
 	}
 })
 
@@ -83,16 +93,32 @@ const initCodeRuleList = () => {
 	useCodeRuleListAllApi().then(res => {
 		codeRuleList.value = res.data
 	})
+}
+interface DepartAndWorkshop {
+	code: string
+	name:string
 }	
+
+const departAndWorkshopList = ref<DepartAndWorkshop[]>([])
+const initDepartAndWorkshopList = () => {
+	useDepartAndWorkshopListAllApi().then(res => {
+		departAndWorkshopList.value=res.data
+	})
+}
+
 
 onMounted(() => {
 	initCodeRuleList()
+	initDepartAndWorkshopList()
 })
 
 const filterCodeRule = (id: number) => {
 	return codeRuleList.value.find(item => item.id === id)
 }
 
+const filterDepartAndWorkshop = (code: string) => {
+	return departAndWorkshopList.value.find(item => item.code === code)
+}
 
 
 const { getDataList, selectionChangeHandle, sizeChangeHandle, currentChangeHandle, deleteHandle } = useCrud(state)

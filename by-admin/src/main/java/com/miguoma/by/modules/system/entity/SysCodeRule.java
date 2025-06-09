@@ -1,6 +1,7 @@
 package com.miguoma.by.modules.system.entity;
 
 import com.miguoma.by.common.base.entity.BaseEntity;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -19,6 +20,10 @@ public class SysCodeRule extends BaseEntity {
      * 规则编码
      */
     private String code;
+    /**
+     * 二维码url前缀
+     */
+    private String qrCodeUrlPrefix;
 
     /**
      * 是否启用

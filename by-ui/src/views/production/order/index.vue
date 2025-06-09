@@ -31,17 +31,17 @@
 
 			<el-table-column align="center" header-align="center" label="单据编号" prop="orderNo"></el-table-column>
 			<el-table-column align="center" header-align="center" label="单据日期" prop="orderDate"></el-table-column>
+			<el-table-column align="center" header-align="center" label="生产日期" prop="productionDate"></el-table-column>
+
 			<el-table-column align="center" header-align="center" label="订单类型" prop="productType">
 				<template #default="scope">
 					{{ scope.row.productType === 'FINISHED_PRODUCT' ? '成品' : '半成品' }}
 				</template>
 			</el-table-column>
-			<el-table-column align="center" header-align="center" label="生产工厂" prop="productionFactoryName"></el-table-column>
-			<el-table-column align="center" header-align="center" label="生产日期" prop="productionDate"></el-table-column>
-			<el-table-column align="center" header-align="center" label="生产部门" prop="productionDepartName"></el-table-column>
-			<el-table-column align="center" header-align="center" label="生产车间" prop="productionWorkshopName"></el-table-column>
-			<el-table-column align="center" header-align="center" label="生产班次" prop="productionShiftName"></el-table-column>
-			<el-table-column align="center" header-align="center" label="生产班组" prop="productionTeamName"></el-table-column>
+			<el-table-column align="center" header-align="center" label="部门" prop="productionDepartName"></el-table-column>
+			<el-table-column align="center" header-align="center" label="车间" prop="productionWorkshopName"></el-table-column>
+			<el-table-column align="center" header-align="center" label="班次" prop="productionShiftName"></el-table-column>
+			<el-table-column align="center" header-align="center" label="班组" prop="productionTeamName"></el-table-column>
 			<el-table-column align="center" header-align="center" label="产品" prop="productName"></el-table-column>
 			<el-table-column align="center" header-align="center" label="件数" prop="boxNum"></el-table-column>
 			<el-table-column align="center" header-align="center" label="上传件数" prop="boxCodeCount"></el-table-column>

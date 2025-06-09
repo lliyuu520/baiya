@@ -8,43 +8,48 @@
             row-key="id"
             @row-drop="onDragEnd"
         >
-            <el-table-column :resizable="false" align="center" label="序号" width="60">
+            <el-table-column align="center" label="序号" width="60">
                 <template #default="{ $index }">
                     <span class="weight-field">{{ $index + 1 }}</span>
                 </template>
             </el-table-column>
-            <el-table-column :resizable="false" align="center" label="排序" width="60">
+            <el-table-column align="center" label="排序" width="60">
                 <template #default>
                     <el-icon class="drag-handle"><Rank /></el-icon>
                 </template>
             </el-table-column>
-            <el-table-column :resizable="false" label="来源字段">
+            <el-table-column label="来源字段" width="280">
                 <template #default="{ row }">
                     <el-select v-model="row.sourceField" class="form-input" @change="handleSourceFieldChange(row)">
                         <el-option v-for="sourceField in sourceFieldList" :key="sourceField.code" :label="sourceField.name" :value="sourceField.code" />
                     </el-select>
                 </template>
             </el-table-column>
-            <el-table-column :resizable="false" align="center" label="开始索引">
+            <el-table-column align="center" label="开始索引" width="90">
                 <template #default="{ row }">
-                    <el-input-number v-model="row.indexBegin" :controls="false" :min="-1" class="input-number-mini" :disabled="row.sourceField === 'BOX_NO'" />
+                    <el-input-number v-model="row.indexBegin" :controls="false" :min="-1" class="input-number-mini" 
+                    :disabled=" row.sourceField === 'SPECIFY_BOX_NO' || row.sourceField === 'CONSTANT' || row.sourceField === 'BOX_NO'" />
                 </template>
             </el-table-column>
-            <el-table-column :resizable="false" align="center" label="结束索引">
+            <el-table-column align="center" label="结束索引" width="90">
                 <template #default="{ row }">
-                    <el-input-number v-model="row.indexEnd" :controls="false" :min="-1" class="input-number-mini" :disabled="row.sourceField === 'BOX_NO'" />
+                    <el-input-number v-model="row.indexEnd" :controls="false" :min="-1" class="input-number-mini" 
+                    :disabled=" row.sourceField === 'SPECIFY_BOX_NO' || row.sourceField === 'CONSTANT' || row.sourceField === 'BOX_NO'" />
                 </template>
             </el-table-column>
-            <el-table-column :resizable="false" align="center" label="编码类型">
+            <el-table-column align="center" label="编码类型" width="230">
                 <template #default="{ row }">
-                    <el-select v-model="row.encodeType" class="form-input input-encode" :disabled="row.sourceField === 'BOX_NO'">
+                    <el-select v-model="row.encodeType" class="form-input input-encode" 
+                    :disabled=" row.sourceField === 'SPECIFY_BOX_NO' || row.sourceField === 'CONSTANT' || row.sourceField === 'BOX_NO'" >
+
                         <el-option v-for="type in encodeTypeList" :key="type.code" :label="type.name" :value="type.code" />
                     </el-select>
                 </template>
             </el-table-column>
-            <el-table-column :resizable="false" align="center" label="常量值">
+            <el-table-column align="center" label="取值" width="120">
                 <template #default="{ row }">
-                    <el-input v-model="row.constant" :controls="false" :disabled="row.sourceField !== 'CONSTANT'" />
+                    <el-input v-model="row.constant" class="input-constant" 
+                    :disabled="row.sourceField !== 'CONSTANT'&&row.sourceField !== 'SPECIFY_BOX_NO'" />
                 </template>
             </el-table-column>
 
@@ -90,16 +95,13 @@ const addButtonTitle = computed(() => {
 })
 
 const handleSourceFieldChange = (row: RuleDetail) => {
-    if (row.sourceField === 'BOX_NO') {
-        // 当选择箱号时，设置默认值
+    
+        // 当选择箱号或指定箱号时，设置默认值
         row.indexBegin = 0
         row.indexEnd = -1
-        row.encodeType = 'base10'
+        row.encodeType = 'BASE_10'
         row.constant = ''
-    } else if (row.sourceField !== 'CONSTANT') {
-        // 当选择非常量时，清空常量值
-        row.constant = ''
-    }
+    
 }
 
 const addRule = () => {
@@ -109,7 +111,7 @@ const addRule = () => {
         indexBegin: 0,
         indexEnd: -1,
         weight: props.ruleList.length,
-        encodeType: 'base10',
+        encodeType: 'BASE_10',
         constant: ''
     }
 
@@ -183,22 +185,29 @@ const onDragEnd = (evt: any) => {
 }
 
 .form-input {
-    width: 120px;
-    max-width: 120px;
+    width: 100%;
+    max-width: 100%;
     height: 36px;
     border-radius: 8px;
 }
 
 .input-number-mini {
-    width: 80px;
-    max-width: 80px;
+    width: 100%;
+    max-width: 100%;
     height: 36px;
     border-radius: 8px;
 }
 
 .input-encode {
-    width: 100px;
-    max-width: 100px;
+    width: 100%;
+    max-width: 100%;
+    height: 36px;
+    border-radius: 8px;
+}
+
+.input-constant {
+    width: 100%;
+    max-width: 100%;
     height: 36px;
     border-radius: 8px;
 }

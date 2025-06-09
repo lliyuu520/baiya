@@ -19,14 +19,7 @@ public interface SysAuthService {
     SysTokenVO loginByAccount(SysAccountLoginDTO sysAccountLoginDTO);
 
 
-    /**
-     * 客户端登录
-     *
-     * @param teamLoginDTO 登录信息
-     */
-    SysTokenVO loginByClient(TeamLoginDTO teamLoginDTO);
-        
-    
+
     
 
 

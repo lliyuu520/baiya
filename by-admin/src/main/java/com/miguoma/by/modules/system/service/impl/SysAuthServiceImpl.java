@@ -64,32 +64,6 @@ public class SysAuthServiceImpl implements SysAuthService {
         return new SysTokenVO(tokenInfo.getTokenValue());
     }
 
-    /** 
-     * 客户端登录
-     *
-     * @param teamLoginDTO 登录信息
-     * @return
-     */
-    @Override   
-    public SysTokenVO loginByClient(final TeamLoginDTO teamLoginDTO) {
-
-        String workshopCode = teamLoginDTO.getWorkshopCode();
-        LambdaQueryWrapper<SysUser> wrapper = Wrappers.lambdaQuery();
-        wrapper.eq(SysUser::getUserType, UserTypeEnum.CLIENT.getCode());
-        wrapper.eq(SysUser::getUsername, workshopCode);
-        SysUser sysUser = sysUserService.getOne(wrapper);
-        if (sysUser == null) {
-            throw new BaseException("车间不存在");
-        }
-
-        final UserDetail userDetail = UserDetail.of(sysUser);
-        StpUtil.login(userDetail.getId());
-
-        SysUserUtil.setUserInfo(userDetail);
-        final SaTokenInfo tokenInfo = StpUtil.getTokenInfo();
-        return new SysTokenVO(tokenInfo.getTokenValue());
-    }
-
     /**
      * 退出登录
      */

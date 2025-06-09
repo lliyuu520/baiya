@@ -80,12 +80,12 @@ public class ClientController {
      */
     @GetMapping("productionOrderList")
     public Result<List<ProductionOrderVO>> getProductionOrderList(@RequestHeader("Token") String token, ProductionOrderQuery query) {
-        final TeamLoginDTO teamLoginDTO = getTeamLoginDTO(token);
+//        final TeamLoginDTO teamLoginDTO = getTeamLoginDTO(token);
 
-        final String productionFactoryCode = teamLoginDTO.getProductionFactoryCode();
-        final String productionWorkshopCode = teamLoginDTO.getProductionWorkshopCode();
+        // final String productionFactoryCode = teamLoginDTO.getProductionFactoryCode();
+        // final String productionWorkshopCode = teamLoginDTO.getProductionWorkshopCode();
 
-        query.setProductionWorkshopCode(productionWorkshopCode);
+        // query.setProductionWorkshopCode(productionWorkshopCode);
         query.setReworkFlag(true);
         final LocalDate orderDateEnd = LocalDateTimeUtil.now().toLocalDate();
         final LocalDate orderDateBegin = orderDateEnd.plusDays(-15);
@@ -122,7 +122,7 @@ public class ClientController {
     @PostMapping("pullCode")
     @SysLogCut(module = SysLogModuleEnums.CLIENT, type = SysLogTypeEnums.INSERT)
     public Result<PullCodeVO> pullCode(@RequestHeader("Token") String token, @RequestBody PullCodeDTO pullCodeDTO) {
-        final TeamLoginDTO teamLoginDTO = getTeamLoginDTO(token);
+//        final TeamLoginDTO teamLoginDTO = getTeamLoginDTO(token);
         final PullCodeVO pullCodeVO = orderService.pullCode(pullCodeDTO);
         return Result.ok(pullCodeVO);
 

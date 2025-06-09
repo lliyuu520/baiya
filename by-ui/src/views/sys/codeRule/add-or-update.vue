@@ -16,6 +16,13 @@
 						</el-form-item>
 					</el-col>
 				</el-row>
+				<el-row :gutter="20">
+					<el-col :span="24">
+						<el-form-item label="二维码前缀" prop="qrCodeUrlPrefix">
+							<el-input v-model="dataForm.qrCodeUrlPrefix" class="form-input input-value"></el-input>
+						</el-form-item>
+					</el-col>
+				</el-row>
 				<el-row>
 					<el-col :span="24">
 						<el-tabs v-model="activeTab" class="rule-tabs">
@@ -60,7 +67,6 @@
 
 <script lang="ts" setup>
 import { useCodeRuleApi, useCodeRuleSubmitApi } from "@/api/sys/codeRule/api";
-import type { CheckboxValueType } from "element-plus";
 import { ElMessage } from "element-plus/es";
 import Sortable from "sortablejs";
 import { computed, nextTick, reactive, ref, watch } from "vue";
@@ -77,8 +83,7 @@ let sortableInstance: any = null
 const dataForm = reactive({
 	id: 0,
 	code: '',
-	domain: '',
-	domainEnabled: false,
+	qrCodeUrlPrefix: '',
 	name: '',
 	boxCodeRuleList: [] as RuleDetail[],
 	bagCodeRuleList: [] as RuleDetail[],
@@ -88,9 +93,8 @@ const dataForm = reactive({
 const resetDataForm = () => {
 	dataForm.id = 0
 	dataForm.code = ''
-	dataForm.domain = ''
-	dataForm.domainEnabled = false
 	dataForm.name = ''
+  dataForm.qrCodeUrlPrefix = ''
 	dataForm.boxCodeRuleList = []
 	dataForm.bagCodeRuleList = []
 	dataForm.universalCodeRuleList = []
@@ -102,7 +106,10 @@ const dataRules = ref({
 	],
 	name: [
 		{ required: true, message: '名称不能为空', trigger: 'blur' }
-	]
+	],
+  qrCodeUrlPrefix: [
+    { required: true, message: '二维码前缀不能为空', trigger: 'blur' }
+  ]
 })
 
 const onDragEnd = (evt: any) => {
@@ -145,11 +152,7 @@ const getCodeRule = async (id: number) => {
 	Object.assign(dataForm, res.data)
 }
 
-const handleDomainEnabledChange = (val: CheckboxValueType) => {
-	if (!val) {
-		dataForm.domain = ''
-	}
-}
+
 
 const submitHandle = () => {
 	dataFormRef.value.validate((valid: boolean) => {
