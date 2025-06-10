@@ -1,4 +1,4 @@
-import { ITheme } from '@/store/theme/interface'
+import {ITheme} from '@/store/theme/interface'
 
 // 处理主题样式
 export const handleThemeStyle = (theme: ITheme) => {

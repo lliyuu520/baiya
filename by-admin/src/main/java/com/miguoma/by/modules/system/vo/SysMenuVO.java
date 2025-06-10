@@ -4,8 +4,6 @@ import com.miguoma.by.modules.system.entity.SysMenu;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import java.io.Serializable;
-
 /**
  * 菜单管理
  *

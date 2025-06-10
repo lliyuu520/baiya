@@ -1,6 +1,5 @@
 package com.miguoma.by.modules.production.entity;
 
-import com.baomidou.mybatisplus.annotation.TableName;
 import com.miguoma.by.common.base.entity.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

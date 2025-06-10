@@ -1,13 +1,12 @@
 package com.miguoma.by.modules.production.convert;
 
-import java.util.List;
-
-import org.mapstruct.Mapper;
-import org.mapstruct.factory.Mappers;
-
 import com.miguoma.by.modules.production.dto.ProductionProductCategoryDTO;
 import com.miguoma.by.modules.production.entity.ProductionProductCategory;
 import com.miguoma.by.modules.production.vo.ProductionProductCategoryVO;
+import org.mapstruct.Mapper;
+import org.mapstruct.factory.Mappers;
+
+import java.util.List;
 
 /**
  * 产品分类对象转换器

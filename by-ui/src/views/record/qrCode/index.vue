@@ -39,9 +39,9 @@
 </template>
 
 <script lang="ts" setup>
-import { useCrud } from "@/hooks";
-import { IHooksOptions } from "@/hooks/interface";
-import { onMounted, reactive } from "vue";
+import {useCrud} from "@/hooks";
+import {IHooksOptions} from "@/hooks/interface";
+import {onMounted, reactive} from "vue";
 
 const state: IHooksOptions = reactive({
 	dataListUrl: '/record/qrCode/page',

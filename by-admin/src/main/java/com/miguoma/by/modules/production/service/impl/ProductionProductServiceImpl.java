@@ -5,25 +5,22 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.miguoma.by.common.base.page.PageVO;
 import com.miguoma.by.common.base.service.impl.BaseServiceImpl;
-import com.miguoma.by.modules.production.convert.ProductionProductConvert;
-import com.miguoma.by.modules.production.enums.ProductTypeEnum;
 import com.miguoma.by.modules.erp.dto.ErpProductDTO;
+import com.miguoma.by.modules.production.convert.ProductionProductConvert;
 import com.miguoma.by.modules.production.entity.ProductionProduct;
+import com.miguoma.by.modules.production.enums.ProductTypeEnum;
 import com.miguoma.by.modules.production.mapper.ProductionProductCategoryMapper;
 import com.miguoma.by.modules.production.mapper.ProductionProductMapper;
 import com.miguoma.by.modules.production.query.ProductionProductQuery;
 import com.miguoma.by.modules.production.service.ProductionProductService;
 import com.miguoma.by.modules.production.vo.ProductionProductVO;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * 产品service实现类

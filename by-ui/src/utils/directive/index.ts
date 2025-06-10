@@ -1,5 +1,5 @@
-import type { App } from 'vue'
-import { auth, fieldAuth } from './auth'
+import type {App} from 'vue'
+import {auth, fieldAuth} from './auth'
 
 export const directive = (app: App) => {
 	// 权限指令

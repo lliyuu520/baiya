@@ -105,13 +105,13 @@
 
 <script lang="ts" setup>
 import store from "@/store";
-import { computed, ref } from "vue";
-import { CopyDocument, RefreshRight } from "@element-plus/icons-vue";
-import { useClipboard, useDark } from "@vueuse/core";
+import {computed, ref} from "vue";
+import {CopyDocument, RefreshRight} from "@element-plus/icons-vue";
+import {useClipboard, useDark} from "@vueuse/core";
 import SwitchItem from "./components/SwitchItem.vue";
 import SelectItem from "./components/SelectItem.vue";
-import { ElMessage } from "element-plus";
-import { handleThemeStyle } from "@/utils/theme";
+import {ElMessage} from "element-plus";
+import {handleThemeStyle} from "@/utils/theme";
 import cache from "@/utils/cache";
 import emits from "@/utils/emits";
 import SvgIcon from "@/components/svg-icon/src/svg-icon.vue";

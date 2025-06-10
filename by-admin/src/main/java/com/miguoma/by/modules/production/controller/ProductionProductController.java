@@ -1,32 +1,25 @@
 package com.miguoma.by.modules.production.controller;
 
-import java.util.List;
-
+import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.miguoma.by.common.annotation.SysLogCut;
 import com.miguoma.by.common.base.page.PageVO;
 import com.miguoma.by.common.enums.SysLogModuleEnums;
 import com.miguoma.by.common.enums.SysLogTypeEnums;
 import com.miguoma.by.common.utils.Result;
-import com.miguoma.by.modules.production.dto.ProductionProductDTO;
 import com.miguoma.by.modules.production.entity.ProductionProduct;
 import com.miguoma.by.modules.production.query.ProductionProductQuery;
 import com.miguoma.by.modules.production.service.ProductionProductService;
 import com.miguoma.by.modules.production.vo.ProductionProductVO;
-
-import cn.dev33.satoken.annotation.SaCheckPermission;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * 产品视图控制器

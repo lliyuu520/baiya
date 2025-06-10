@@ -1,11 +1,10 @@
 package com.miguoma.by.modules.production.mapper;
 
-import org.springframework.stereotype.Repository;
-
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.miguoma.by.common.base.mapper.IBaseMapper;
 import com.miguoma.by.modules.production.entity.ProductionProduct;
+import org.springframework.stereotype.Repository;
 
 /**
  * 产品持久层接口

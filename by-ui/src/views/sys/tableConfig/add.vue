@@ -15,9 +15,9 @@
 </template>
 
 <script lang="ts" setup>
-import { useTableConfigListAllApi, useTableConfigSubmitApi } from "@/api/sys/tableConfig/api";
-import { ElMessage } from "element-plus/es";
-import { onMounted, reactive, ref } from "vue";
+import {useTableConfigListAllApi, useTableConfigSubmitApi} from "@/api/sys/tableConfig/api";
+import {ElMessage} from "element-plus/es";
+import {onMounted, reactive, ref} from "vue";
 
 const emit = defineEmits(['refreshDataList'])
 

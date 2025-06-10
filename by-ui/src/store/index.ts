@@ -1,7 +1,7 @@
-import { userStore } from './modules/user'
-import { routerStore } from './modules/router'
-import { appStore } from './modules/app'
-import { tabsStore } from './modules/tabs'
+import {userStore} from './modules/user'
+import {routerStore} from './modules/router'
+import {appStore} from './modules/app'
+import {tabsStore} from './modules/tabs'
 
 const store: any = {}
 

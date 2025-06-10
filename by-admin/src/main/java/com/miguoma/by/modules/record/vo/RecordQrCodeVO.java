@@ -1,7 +1,6 @@
 package com.miguoma.by.modules.record.vo;
 
 import com.miguoma.by.modules.record.entity.RecordQrCode;
-
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

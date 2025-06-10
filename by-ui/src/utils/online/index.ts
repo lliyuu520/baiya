@@ -1,4 +1,4 @@
-import type { App } from 'vue'
+import type {App} from 'vue'
 import MakuOnline from 'maku-online'
 
 const importGlobs = [import.meta.glob('@/utils/*.ts', { eager: true }), import.meta.glob('@/hooks/*.ts', { eager: true })]

@@ -1,4 +1,4 @@
-import { BaseApi } from "@/utils/api";
+import {BaseApi} from "@/utils/api";
 
 const baseUrl = '/production/productCategory'
 const productCategoryApi = new BaseApi({ baseUrl, moduleName: 'productCategory' })

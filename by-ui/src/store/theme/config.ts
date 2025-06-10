@@ -1,4 +1,4 @@
-import { ITheme } from '@/store/theme/interface'
+import {ITheme} from '@/store/theme/interface'
 
 export const themeConfig: ITheme = {
 	sidebarStyle: 'dark',

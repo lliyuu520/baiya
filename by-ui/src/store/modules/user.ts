@@ -1,9 +1,9 @@
-import { defineStore } from 'pinia'
-import { useAccountLoginApi, useMobileLoginApi, useLogoutApi } from '@/api/auth'
-import { useUserInfoApi } from '@/api/sys/user'
+import {defineStore} from 'pinia'
+import {useAccountLoginApi, useLogoutApi} from '@/api/auth'
+import {useUserInfoApi} from '@/api/sys/user'
 import cache from '@/utils/cache'
-import { useAuthorityListApi } from '@/api/sys/menu'
-import { useFieldAuthorityListApi } from '@/api/sys/role'
+import {useAuthorityListApi} from '@/api/sys/menu'
+import {useFieldAuthorityListApi} from '@/api/sys/role'
 
 export const userStore = defineStore('userStore', {
 	state: () => ({

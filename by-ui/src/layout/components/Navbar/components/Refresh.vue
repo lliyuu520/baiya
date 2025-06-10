@@ -4,8 +4,8 @@
 
 <script setup lang="ts">
 import store from '@/store'
-import { useRouter, useRoute } from 'vue-router'
-import { nextTick } from 'vue'
+import {useRoute, useRouter} from 'vue-router'
+import {nextTick} from 'vue'
 
 const router = useRouter()
 const route = useRoute()

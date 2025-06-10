@@ -9,7 +9,7 @@ import Settings from '@/layout/components/Settings/index.vue'
 import Vertical from '@/layout/components/Theme/Vertical.vue'
 import Columns from '@/layout/components/Theme/Columns.vue'
 import Transverse from '@/layout/components/Theme/Transverse.vue'
-import { computed } from 'vue'
+import {computed} from 'vue'
 
 const LayoutComponents: { [key: string]: any } = {
 	vertical: Vertical,

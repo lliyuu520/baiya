@@ -8,7 +8,6 @@
 </template>
 
 <script setup lang="ts">
-import Lang from '@/components/lang/index.vue'
 import ComponentSize from './components/ComponentSize.vue'
 import Fullscreen from './components/Fullscreen.vue'
 import User from './components/User.vue'

@@ -1,8 +1,8 @@
 import store from '@/store'
-import { isExternalLink, pathToCamel } from '@/utils/tool'
+import {isExternalLink, pathToCamel} from '@/utils/tool'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
-import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
+import {createRouter, createWebHashHistory, RouteRecordRaw} from 'vue-router'
 
 NProgress.configure({ showSpinner: false })
 

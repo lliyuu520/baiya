@@ -24,8 +24,8 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, ref } from "vue";
-import { useLogApi } from "@/api/sys/log/api";
+import {reactive, ref} from "vue";
+import {useLogApi} from "@/api/sys/log/api";
 
 const visible = ref(false)
 const dataForm = reactive({

@@ -14,10 +14,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted, onBeforeUnmount } from 'vue'
-import { User, Lock, Key } from '@element-plus/icons-vue'
+import {onBeforeUnmount, onMounted, reactive, ref} from 'vue'
+import {Lock, User} from '@element-plus/icons-vue'
 import store from '@/store'
-import { useRouter } from 'vue-router'
+import {useRouter} from 'vue-router'
 
 const router = useRouter()
 const loginFormRef = ref()

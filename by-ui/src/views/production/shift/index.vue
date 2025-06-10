@@ -33,9 +33,9 @@
 </template>
 
 <script lang="ts" setup>
-import { useCrud } from "@/hooks";
-import { IHooksOptions } from "@/hooks/interface";
-import { reactive, ref } from "vue";
+import {useCrud} from "@/hooks";
+import {IHooksOptions} from "@/hooks/interface";
+import {reactive} from "vue";
 
 const state: IHooksOptions = reactive({
 	dataListUrl: '/production/shift/page',

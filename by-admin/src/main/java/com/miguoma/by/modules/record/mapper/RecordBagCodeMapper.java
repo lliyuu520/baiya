@@ -1,15 +1,12 @@
 package com.miguoma.by.modules.record.mapper;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import org.apache.ibatis.annotations.Param;
-import org.springframework.stereotype.Repository;
-
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.miguoma.by.common.base.mapper.IBaseMapper;
 import com.miguoma.by.modules.record.entity.RecordBagCode;
 import com.miguoma.by.modules.record.query.RecordBagCodeQuery;
 import com.miguoma.by.modules.record.vo.RecordBagCodeVO;
+import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
 /**
  * 二维码关联持久层接口 提供二维码关联相关的数据库操作

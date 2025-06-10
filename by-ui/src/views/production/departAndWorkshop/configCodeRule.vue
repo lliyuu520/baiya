@@ -15,10 +15,10 @@
 </template>
 
 <script lang="ts" setup>
-import { useDepartAndWorkshopApi, useConfigCodeRuleApi } from "@/api/production/departAndWorkshop/api";
-import { useCodeRuleListAllApi } from "@/api/sys/codeRule/api";
-import { ElMessage } from "element-plus/es";
-import { reactive, ref, watch } from "vue";
+import {useConfigCodeRuleApi, useDepartAndWorkshopApi} from "@/api/production/departAndWorkshop/api";
+import {useCodeRuleListAllApi} from "@/api/sys/codeRule/api";
+import {ElMessage} from "element-plus/es";
+import {reactive, ref} from "vue";
 
 const emit = defineEmits(['refreshDataList'])
 

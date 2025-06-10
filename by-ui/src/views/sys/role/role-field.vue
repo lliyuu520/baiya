@@ -20,10 +20,11 @@
 </template>
 
 <script setup lang="ts">
-import { useGetFieldIdByRoleId, useRoleFieldSubmitApi } from '@/api/sys/role'
-import { useTableConfigVOListApi } from '@/api/sys/tableConfig/api'
-import { ElMessage } from 'element-plus/es'
-import { reactive, ref } from 'vue'
+import {useGetFieldIdByRoleId, useRoleFieldSubmitApi} from '@/api/sys/role'
+import {useTableConfigVOListApi} from '@/api/sys/tableConfig/api'
+import {ElMessage} from 'element-plus/es'
+import {reactive, ref} from 'vue'
+
 const emit = defineEmits(['refreshDataList'])
 
 const visible = ref(false)

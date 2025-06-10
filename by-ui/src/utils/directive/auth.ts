@@ -1,5 +1,5 @@
 import store from '@/store'
-import type { App } from 'vue'
+import type {App} from 'vue'
 
 export function auth(app: App) {
 	// 权限验证

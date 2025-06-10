@@ -54,13 +54,13 @@
 </template>
 
 <script lang="ts" setup>
-import { useCrud } from "@/hooks";
-import { IHooksOptions } from "@/hooks/interface";
-import { onMounted, reactive, ref } from "vue";
+import {useCrud} from "@/hooks";
+import {IHooksOptions} from "@/hooks/interface";
+import {onMounted, reactive, ref} from "vue";
 import ConfigCodeRule from "./configCodeRule.vue";
 import ConfigAlias from "./configAlias.vue";
-import { useCodeRuleListAllApi } from "@/api/sys/codeRule/api";
-import { useDepartAndWorkshopListAllApi } from "@/api/production/departAndWorkshop/api";
+import {useCodeRuleListAllApi} from "@/api/sys/codeRule/api";
+import {useDepartAndWorkshopListAllApi} from "@/api/production/departAndWorkshop/api";
 
 const state: IHooksOptions = reactive({
 	dataListUrl: '/production/departAndWorkshop/page',

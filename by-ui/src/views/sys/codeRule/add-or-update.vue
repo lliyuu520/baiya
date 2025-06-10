@@ -66,13 +66,13 @@
 </template>
 
 <script lang="ts" setup>
-import { useCodeRuleApi, useCodeRuleSubmitApi } from "@/api/sys/codeRule/api";
-import { ElMessage } from "element-plus/es";
+import {useCodeRuleApi, useCodeRuleSubmitApi} from "@/api/sys/codeRule/api";
+import {ElMessage} from "element-plus/es";
 import Sortable from "sortablejs";
-import { computed, nextTick, reactive, ref, watch } from "vue";
+import {computed, nextTick, reactive, ref, watch} from "vue";
 import RuleTable from "./components/RuleTable.vue";
-import type { RuleDetail } from "./config/ruleTypes";
-import { bagCodeSourceFieldList, boxCodeSourceFieldList, universalCodeSourceFieldList } from "./config/ruleTypes";
+import type {RuleDetail} from "./config/ruleTypes";
+import {bagCodeSourceFieldList, boxCodeSourceFieldList, universalCodeSourceFieldList} from "./config/ruleTypes";
 
 const emit = defineEmits(['refreshDataList'])
 

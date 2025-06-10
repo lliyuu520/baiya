@@ -6,9 +6,6 @@ import com.miguoma.by.modules.production.dto.ProductionFactoryDTO;
 import com.miguoma.by.modules.production.entity.ProductionFactory;
 import com.miguoma.by.modules.production.query.ProductionFactoryQuery;
 import com.miguoma.by.modules.production.vo.ProductionFactoryVO;
-import com.miguoma.by.modules.client.vo.FactoryInfo;
-
-import java.util.List;
 
 /**
  * 工厂服务接口

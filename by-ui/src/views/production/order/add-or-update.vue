@@ -68,13 +68,13 @@
 </template>
 
 <script lang="ts" setup>
-import { useDepartAndWorkshopListAllApi } from "@/api/production/departAndWorkshop/api";
-import { useOrderApi, useOrderSubmitApi } from "@/api/production/order/api";
-import { useProductListAllApi } from "@/api/production/product/api";
-import { useShiftListAllApi } from "@/api/production/shift/api";
-import { useTeamListAllApi } from "@/api/production/team/api";
-import { ElMessage } from "element-plus/es";
-import { reactive, ref, watch } from "vue";
+import {useDepartAndWorkshopListAllApi} from "@/api/production/departAndWorkshop/api";
+import {useOrderApi, useOrderSubmitApi} from "@/api/production/order/api";
+import {useProductListAllApi} from "@/api/production/product/api";
+import {useShiftListAllApi} from "@/api/production/shift/api";
+import {useTeamListAllApi} from "@/api/production/team/api";
+import {ElMessage} from "element-plus/es";
+import {reactive, ref, watch} from "vue";
 
 const emit = defineEmits(['refreshDataList'])
 

@@ -1,5 +1,5 @@
-import { defineStore } from 'pinia'
-import { RouteLocationNormalizedLoaded } from 'vue-router'
+import {defineStore} from 'pinia'
+import {RouteLocationNormalizedLoaded} from 'vue-router'
 
 export const tabsStore = defineStore('tabsStore', {
 	state: () => ({

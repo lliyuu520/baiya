@@ -6,6 +6,7 @@
 
 <script setup lang="ts">
 import emits from '@/utils/emits'
+
 const themeSettingsHandle = () => {
 	emits.emit('openThemeSettings')
 }

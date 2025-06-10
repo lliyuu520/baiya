@@ -1,4 +1,4 @@
-import type { App, Plugin } from 'vue'
+import type {App, Plugin} from 'vue'
 import constant from '@/utils/constant'
 
 // 把路径转换成驼峰命名

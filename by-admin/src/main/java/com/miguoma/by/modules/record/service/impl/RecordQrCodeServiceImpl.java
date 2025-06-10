@@ -1,9 +1,5 @@
 package com.miguoma.by.modules.record.service.impl;
 
-import java.util.List;
-
-import org.springframework.stereotype.Service;
-
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -14,9 +10,11 @@ import com.miguoma.by.modules.record.mapper.RecordQrCodeMapper;
 import com.miguoma.by.modules.record.query.RecordQrCodeQuery;
 import com.miguoma.by.modules.record.service.RecordQrCodeService;
 import com.miguoma.by.modules.record.vo.RecordQrCodeVO;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * 二维码关联服务实现类 实现二维码关联相关的业务操作

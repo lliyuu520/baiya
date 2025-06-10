@@ -1,4 +1,4 @@
-import { BaseApi } from '@/utils/api'
+import {BaseApi} from '@/utils/api'
 
 const baseUrl = '/production/team'
 const teamApi = new BaseApi({ baseUrl, moduleName: 'team' })

@@ -36,8 +36,8 @@ import Main from "@/layout/components/Main/index.vue";
 import Tabs from "@/layout/components/Tabs/index.vue";
 import Logo from "@/layout/components/Logo/index.vue";
 import MenuItem from "@/layout/components/Menu/MenuItem.vue";
-import { computed } from "vue";
-import { useRoute } from "vue-router";
+import {computed} from "vue";
+import {useRoute} from "vue-router";
 
 const route = useRoute()
 

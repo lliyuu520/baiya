@@ -1,13 +1,13 @@
 package com.miguoma.by.modules.system.service;
 
-import java.util.List;
-
 import com.miguoma.by.common.base.page.PageVO;
 import com.miguoma.by.common.base.service.BaseService;
 import com.miguoma.by.modules.system.dto.SysCodeRuleDTO;
 import com.miguoma.by.modules.system.entity.SysCodeRule;
 import com.miguoma.by.modules.system.query.SysCodeRuleQuery;
 import com.miguoma.by.modules.system.vo.SysCodeRuleVO;
+
+import java.util.List;
 
 /**
  * 编码规则服务接口

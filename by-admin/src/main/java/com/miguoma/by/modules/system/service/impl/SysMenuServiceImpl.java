@@ -1,14 +1,9 @@
 package com.miguoma.by.modules.system.service.impl;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
+import cn.hutool.core.lang.tree.Tree;
+import cn.hutool.core.lang.tree.TreeNode;
+import cn.hutool.core.lang.tree.TreeUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.miguoma.by.common.base.service.impl.BaseServiceImpl;
@@ -21,12 +16,11 @@ import com.miguoma.by.modules.system.entity.SysMenu;
 import com.miguoma.by.modules.system.mapper.SysMenuMapper;
 import com.miguoma.by.modules.system.service.SysMenuService;
 import com.miguoma.by.modules.system.service.SysRoleMenuService;
-
-import cn.hutool.core.lang.tree.Tree;
-import cn.hutool.core.lang.tree.TreeNode;
-import cn.hutool.core.lang.tree.TreeUtil;
-import cn.hutool.core.util.StrUtil;
 import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.*;
 
 /**
  * 菜单管理

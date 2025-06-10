@@ -1,7 +1,6 @@
 package com.miguoma.by.modules.system.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.miguoma.by.common.base.service.impl.BaseServiceImpl;
 import com.miguoma.by.modules.system.entity.SysRoleMenu;
 import com.miguoma.by.modules.system.mapper.SysRoleMenuMapper;
@@ -9,7 +8,6 @@ import com.miguoma.by.modules.system.service.SysRoleMenuService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 

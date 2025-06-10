@@ -59,8 +59,8 @@ import NavbarRight from "@/layout/components/Navbar/NavbarRight.vue";
 import Main from "@/layout/components/Main/index.vue";
 import Tabs from "@/layout/components/Tabs/index.vue";
 import MenuItem from "@/layout/components/Menu/MenuItem.vue";
-import { computed, onMounted, ref, watch } from "vue";
-import { RouteRecordRaw, useRoute, useRouter } from "vue-router";
+import {computed, onMounted, ref, watch} from "vue";
+import {RouteRecordRaw, useRoute, useRouter} from "vue-router";
 
 const route = useRoute()
 const router = useRouter()

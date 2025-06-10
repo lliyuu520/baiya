@@ -1,8 +1,8 @@
-import { resolve } from "path";
-import { defineConfig } from "vite";
+import {resolve} from "path";
+import {defineConfig} from "vite";
 import vue from "@vitejs/plugin-vue";
 
-import { createSvgIconsPlugin } from "vite-plugin-svg-icons";
+import {createSvgIconsPlugin} from "vite-plugin-svg-icons";
 import vueSetupExtend from "vite-plugin-vue-setup-extend";
 
 // 参考：https://cn.vitejs.dev/config/

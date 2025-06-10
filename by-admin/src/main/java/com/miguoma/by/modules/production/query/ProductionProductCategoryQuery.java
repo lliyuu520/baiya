@@ -1,7 +1,6 @@
 package com.miguoma.by.modules.production.query;
 
 import com.miguoma.by.common.base.query.BaseQuery;
-
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

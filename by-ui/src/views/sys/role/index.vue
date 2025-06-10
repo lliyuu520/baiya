@@ -39,11 +39,11 @@
 </template>
 
 <script setup lang="ts" name="SysRoleIndex">
-import { useCrud } from '@/hooks'
-import { reactive, ref } from 'vue'
+import {useCrud} from '@/hooks'
+import {reactive, ref} from 'vue'
 import AddOrUpdate from './add-or-update.vue'
 import RoleField from './role-field.vue'
-import { IHooksOptions } from '@/hooks/interface'
+import {IHooksOptions} from '@/hooks/interface'
 
 const state: IHooksOptions = reactive({
 	dataListUrl: '/sys/role/page',

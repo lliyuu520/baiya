@@ -5,9 +5,9 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, watch } from 'vue'
-import { RouteLocationNormalizedLoaded, useRoute } from 'vue-router'
-import { replaceLinkParam } from '@/utils/tool'
+import {onMounted, ref, watch} from 'vue'
+import {RouteLocationNormalizedLoaded, useRoute} from 'vue-router'
+import {replaceLinkParam} from '@/utils/tool'
 
 const route = useRoute()
 const url = ref('')

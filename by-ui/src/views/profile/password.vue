@@ -21,13 +21,13 @@
 </template>
 
 <script setup lang="ts" name="ProfilePassword">
-import { reactive, ref } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
+import {reactive, ref} from 'vue'
+import {useRoute, useRouter} from 'vue-router'
 import store from '@/store'
-import { validatePassword } from '@/utils/validate'
-import { updatePasswordApi } from '@/api/sys/user'
-import { ElMessage } from 'element-plus'
-import { closeTab } from '@/utils/tabs'
+import {validatePassword} from '@/utils/validate'
+import {updatePasswordApi} from '@/api/sys/user'
+import {ElMessage} from 'element-plus'
+import {closeTab} from '@/utils/tabs'
 
 const router = useRouter()
 const route = useRoute()

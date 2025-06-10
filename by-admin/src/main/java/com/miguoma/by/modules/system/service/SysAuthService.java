@@ -1,6 +1,5 @@
 package com.miguoma.by.modules.system.service;
 
-import com.miguoma.by.modules.client.dto.TeamLoginDTO;
 import com.miguoma.by.modules.system.dto.SysAccountLoginDTO;
 import com.miguoma.by.modules.system.vo.SysTokenVO;
 

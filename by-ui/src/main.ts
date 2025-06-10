@@ -1,12 +1,12 @@
-import { createPinia } from "pinia";
+import {createPinia} from "pinia";
 import "virtual:svg-icons-register";
-import { createApp } from "vue";
+import {createApp} from "vue";
 import App from "./App.vue";
-import { router } from "./router";
+import {router} from "./router";
 import ElementPlus from "element-plus";
 import "element-plus/dist/index.css";
-import { registerStore } from "./store";
-import { directive } from "./utils/directive";
+import {registerStore} from "./store";
+import {directive} from "./utils/directive";
 
 import "@/icons/iconfont/iconfont";
 import "@/styles/index.scss";

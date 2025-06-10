@@ -48,11 +48,11 @@
 </template>
 
 <script lang="ts" setup>
-import { useCodeRuleSetCurrentApi } from "@/api/sys/codeRule/api";
-import { useCrud } from "@/hooks";
-import { IHooksOptions } from "@/hooks/interface";
-import { ElMessage } from "element-plus";
-import { onMounted, reactive, ref } from "vue";
+import {useCodeRuleSetCurrentApi} from "@/api/sys/codeRule/api";
+import {useCrud} from "@/hooks";
+import {IHooksOptions} from "@/hooks/interface";
+import {ElMessage} from "element-plus";
+import {onMounted, reactive, ref} from "vue";
 import AddOrUpdate from "./add-or-update.vue";
 
 const state: IHooksOptions = reactive({

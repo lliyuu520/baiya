@@ -1,12 +1,12 @@
  package com.miguoma.by.modules.record.service;
 
-import java.util.List;
+ import com.miguoma.by.common.base.page.PageVO;
+ import com.miguoma.by.common.base.service.BaseService;
+ import com.miguoma.by.modules.record.entity.RecordBoxCode;
+ import com.miguoma.by.modules.record.query.RecordBoxCodeQuery;
+ import com.miguoma.by.modules.record.vo.RecordBoxCodeVO;
 
-import com.miguoma.by.common.base.page.PageVO;
-import com.miguoma.by.common.base.service.BaseService;
-import com.miguoma.by.modules.record.entity.RecordBoxCode;
-import com.miguoma.by.modules.record.query.RecordBoxCodeQuery;
-import com.miguoma.by.modules.record.vo.RecordBoxCodeVO;
+ import java.util.List;
 
  /**
  * 二维码关联服务接口

@@ -16,9 +16,9 @@
 </template>
 
 <script setup lang="ts">
-import { useFactoryApi, useFactorySubmitApi } from '@/api/production/factory/api'
-import { ElMessage } from 'element-plus/es'
-import { reactive, ref } from 'vue'
+import {useFactoryApi, useFactorySubmitApi} from '@/api/production/factory/api'
+import {ElMessage} from 'element-plus/es'
+import {reactive, ref} from 'vue'
 
 const emit = defineEmits(['refreshDataList'])
 

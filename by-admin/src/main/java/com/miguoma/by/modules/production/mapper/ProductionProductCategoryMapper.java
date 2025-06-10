@@ -1,17 +1,15 @@
 package com.miguoma.by.modules.production.mapper;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import com.miguoma.by.modules.production.enums.ProductTypeEnum;
-import org.springframework.stereotype.Repository;
-
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.miguoma.by.common.base.mapper.IBaseMapper;
 import com.miguoma.by.modules.production.entity.ProductionProductCategory;
+import com.miguoma.by.modules.production.enums.ProductTypeEnum;
+import org.springframework.stereotype.Repository;
 
-import cn.hutool.core.util.StrUtil;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * 产品分类持久层接口

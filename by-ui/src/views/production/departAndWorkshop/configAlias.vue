@@ -13,9 +13,9 @@
 </template>
 
 <script lang="ts" setup>
-import { useDepartAndWorkshopApi, useConfigAliasApi } from "@/api/production/departAndWorkshop/api";
-import { ElMessage } from "element-plus/es";
-import { reactive, ref, watch } from "vue";
+import {useConfigAliasApi, useDepartAndWorkshopApi} from "@/api/production/departAndWorkshop/api";
+import {ElMessage} from "element-plus/es";
+import {reactive, ref} from "vue";
 
 const emit = defineEmits(['refreshDataList'])
 

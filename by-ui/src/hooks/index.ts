@@ -1,7 +1,7 @@
-import { IHooksOptions } from '@/hooks/interface'
+import {IHooksOptions} from '@/hooks/interface'
 import service from '@/utils/request'
-import { onMounted } from 'vue'
-import { ElMessage, ElMessageBox } from 'element-plus'
+import {onMounted} from 'vue'
+import {ElMessage, ElMessageBox} from 'element-plus'
 import axios from 'axios'
 
 export const useCrud = (options: IHooksOptions) => {

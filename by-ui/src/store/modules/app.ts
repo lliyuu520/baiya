@@ -1,5 +1,5 @@
-import { defineStore } from 'pinia'
-import { ITheme } from '@/store/theme/interface'
+import {defineStore} from 'pinia'
+import {ITheme} from '@/store/theme/interface'
 import cache from '@/utils/cache'
 
 export const appStore = defineStore('appStore', {

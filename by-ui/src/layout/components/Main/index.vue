@@ -17,8 +17,8 @@
 
 <script setup lang="ts">
 import store from '@/store'
-import { computed } from 'vue'
-import { RouterView } from 'vue-router'
+import {computed} from 'vue'
+import {RouterView} from 'vue-router'
 
 const theme = computed(() => store.appStore.theme)
 const layoutMainHeight = computed(() => {

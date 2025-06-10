@@ -102,8 +102,8 @@ import {
   useServerInfoApi,
   useSysInfoApi
 } from "@/api/monitor/server";
-import { onMounted, reactive } from "vue";
-import { Refresh } from "@element-plus/icons-vue";
+import {onMounted, reactive} from "vue";
+import {Refresh} from "@element-plus/icons-vue";
 
 const data = reactive({
 	cpu: {

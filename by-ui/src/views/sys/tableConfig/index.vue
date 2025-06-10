@@ -42,9 +42,9 @@
 </template>
 
 <script lang="ts" setup>
-import { useCrud } from "@/hooks";
-import { reactive, ref } from "vue";
-import { IHooksOptions } from "@/hooks/interface";
+import {useCrud} from "@/hooks";
+import {reactive, ref} from "vue";
+import {IHooksOptions} from "@/hooks/interface";
 import Add from "./add.vue";
 import Field from "./field.vue";
 

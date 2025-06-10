@@ -1,4 +1,4 @@
-import { BaseApi } from "@/utils/api";
+import {BaseApi} from "@/utils/api";
 import service from "@/utils/request";
 
 const baseUrl = '/production/departAndWorkshop';

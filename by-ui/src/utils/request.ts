@@ -1,6 +1,6 @@
 import axios from 'axios'
 import qs from 'qs'
-import { ElMessage } from 'element-plus'
+import {ElMessage} from 'element-plus'
 import store from '@/store'
 import cache from '@/utils/cache'
 

@@ -1,7 +1,6 @@
 package com.miguoma.by.modules.production.service.impl;
 
-import org.springframework.stereotype.Service;
-
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -13,9 +12,8 @@ import com.miguoma.by.modules.production.mapper.ProductionShiftMapper;
 import com.miguoma.by.modules.production.query.ProductionShiftQuery;
 import com.miguoma.by.modules.production.service.ProductionShiftService;
 import com.miguoma.by.modules.production.vo.ProductionShiftVO;
-
-import cn.hutool.core.util.StrUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 /**
  * 班次服务实现类

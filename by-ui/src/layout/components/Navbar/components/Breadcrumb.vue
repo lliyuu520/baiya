@@ -10,9 +10,9 @@
 </template>
 
 <script lang="ts" setup>
-import { useRoute } from "vue-router";
-import { ArrowRight } from "@element-plus/icons-vue";
-import { computed } from "vue";
+import {useRoute} from "vue-router";
+import {ArrowRight} from "@element-plus/icons-vue";
+import {computed} from "vue";
 
 const route = useRoute()
 const breadcrumb = computed(() => route.meta.breadcrumb)

@@ -39,8 +39,8 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref } from "vue";
-import { useCacheInfoApi } from "@/api/monitor/cache";
+import {onMounted, ref} from "vue";
+import {useCacheInfoApi} from "@/api/monitor/cache";
 
 const data = ref({
 	info: {

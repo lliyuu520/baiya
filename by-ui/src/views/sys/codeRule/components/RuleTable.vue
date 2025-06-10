@@ -64,10 +64,10 @@
 </template>
 
 <script lang="ts" setup>
-import { Delete, Plus, Rank } from "@element-plus/icons-vue";
-import { computed } from "vue";
-import type { RuleDetail, SourceFieldOption } from "../config/ruleTypes";
-import { encodeTypeList } from "../config/ruleTypes";
+import {Delete, Plus, Rank} from "@element-plus/icons-vue";
+import {computed} from "vue";
+import type {RuleDetail, SourceFieldOption} from "../config/ruleTypes";
+import {encodeTypeList} from "../config/ruleTypes";
 
 const props = defineProps<{
     ruleList: RuleDetail[]

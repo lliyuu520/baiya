@@ -13,7 +13,7 @@
 
 <script setup lang="ts">
 import store from '@/store'
-import { computed } from 'vue'
+import {computed} from 'vue'
 import SvgIcon from '@/components/svg-icon/src/svg-icon.vue'
 
 const componentSize = computed(() => store.appStore.componentSize)

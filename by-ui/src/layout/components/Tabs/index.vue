@@ -26,10 +26,10 @@
 
 <script lang="ts" setup>
 import store from "@/store";
-import { closeAllTabs, closeOthersTabs, closeTab } from "@/utils/tabs";
-import { ArrowDown, CircleClose, CircleCloseFilled, Close } from "@element-plus/icons-vue";
-import { computed, onMounted, ref, watch } from "vue";
-import { useRoute, useRouter } from "vue-router";
+import {closeAllTabs, closeOthersTabs, closeTab} from "@/utils/tabs";
+import {ArrowDown, CircleClose, CircleCloseFilled, Close} from "@element-plus/icons-vue";
+import {computed, onMounted, ref, watch} from "vue";
+import {useRoute, useRouter} from "vue-router";
 
 const route = useRoute()
 const router = useRouter()

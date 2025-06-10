@@ -17,9 +17,9 @@
 </template>
 
 <script lang="ts" setup>
-import { useInfoByTableConfigIdApi, useListByTableConfigIdApi, useSubmitApi } from "@/api/sys/tableField/api";
-import { ElMessage } from "element-plus/es";
-import { reactive, ref } from "vue";
+import {useInfoByTableConfigIdApi, useListByTableConfigIdApi, useSubmitApi} from "@/api/sys/tableField/api";
+import {ElMessage} from "element-plus/es";
+import {reactive, ref} from "vue";
 
 const emit = defineEmits(['refreshDataList'])
 

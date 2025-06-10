@@ -1,7 +1,7 @@
-import { useMenuNavApi } from '@/api/sys/menu'
-import { generateRoutes } from '@/router'
-import { defineStore } from 'pinia'
-import { RouteRecordRaw } from 'vue-router'
+import {useMenuNavApi} from '@/api/sys/menu'
+import {generateRoutes} from '@/router'
+import {defineStore} from 'pinia'
+import {RouteRecordRaw} from 'vue-router'
 
 export const routerStore = defineStore('routerStore', {
 	state: () => ({

@@ -1,9 +1,9 @@
 package com.miguoma.by.modules.system.dto;
 
+import lombok.Data;
+
 import java.io.Serializable;
 import java.util.List;
-
-import lombok.Data;
 
 /**
  * 编码规则数据传输对象

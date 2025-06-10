@@ -39,10 +39,10 @@
 </template>
 
 <script lang="ts" setup>
-import { useCrud } from "@/hooks";
-import { reactive, ref } from "vue";
+import {useCrud} from "@/hooks";
+import {reactive, ref} from "vue";
 import AddOrUpdate from "./add-or-update.vue";
-import { IHooksOptions } from "@/hooks/interface";
+import {IHooksOptions} from "@/hooks/interface";
 
 const state: IHooksOptions = reactive({
 	dataListUrl: '/sys/menu/list',

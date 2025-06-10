@@ -1,10 +1,5 @@
 package com.miguoma.by.modules.production.mapper;
 
-import java.util.List;
-
-import org.apache.ibatis.annotations.Param;
-import org.springframework.stereotype.Repository;
-
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -12,6 +7,10 @@ import com.miguoma.by.common.base.mapper.IBaseMapper;
 import com.miguoma.by.modules.production.entity.ProductionOrder;
 import com.miguoma.by.modules.production.query.ProductionOrderQuery;
 import com.miguoma.by.modules.production.vo.ProductionOrderVO;
+import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * 生产订单持久层接口

@@ -1,7 +1,6 @@
 package com.miguoma.by.common.base.page;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.db.PageResult;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import lombok.AllArgsConstructor;
 import lombok.Data;

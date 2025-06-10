@@ -1,7 +1,6 @@
 package com.miguoma.by.modules.production.dto;
 
 import com.miguoma.by.modules.production.entity.ProductionProduct;
-
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

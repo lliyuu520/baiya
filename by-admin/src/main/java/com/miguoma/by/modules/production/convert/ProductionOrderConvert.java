@@ -1,13 +1,12 @@
 package com.miguoma.by.modules.production.convert;
 
-import java.util.List;
-
-import org.mapstruct.Mapper;
-import org.mapstruct.factory.Mappers;
-
 import com.miguoma.by.modules.production.dto.ProductionOrderDTO;
 import com.miguoma.by.modules.production.entity.ProductionOrder;
 import com.miguoma.by.modules.production.vo.ProductionOrderVO;
+import org.mapstruct.Mapper;
+import org.mapstruct.factory.Mappers;
+
+import java.util.List;
 
 /**
  * 生产订单对象转换器

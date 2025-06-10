@@ -39,10 +39,10 @@
 </template>
 
 <script lang="ts" setup>
-import { useProductCategoryListAllApi } from "@/api/production/productCategory/api";
-import { useCrud } from "@/hooks";
-import { IHooksOptions } from "@/hooks/interface";
-import { onMounted, reactive, ref } from "vue";
+import {useProductCategoryListAllApi} from "@/api/production/productCategory/api";
+import {useCrud} from "@/hooks";
+import {IHooksOptions} from "@/hooks/interface";
+import {onMounted, reactive, ref} from "vue";
 
 const state: IHooksOptions = reactive({
 	dataListUrl: '/production/productCategory/page',

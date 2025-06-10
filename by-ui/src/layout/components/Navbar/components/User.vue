@@ -17,8 +17,7 @@
 
 <script setup lang="ts">
 import store from '@/store'
-import { useRouter } from 'vue-router'
-import { ArrowDown } from '@element-plus/icons-vue'
+import {ArrowDown} from '@element-plus/icons-vue'
 
 
 const logout = () => {

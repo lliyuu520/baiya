@@ -1,12 +1,10 @@
 package com.miguoma.by.common.init;
 
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.stereotype.Component;
-
 import com.miguoma.by.common.cache.QrCodeCache;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.stereotype.Component;
 
 /**
  * 初始化二维码缓存

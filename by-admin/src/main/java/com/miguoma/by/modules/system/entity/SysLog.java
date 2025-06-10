@@ -1,12 +1,11 @@
 package com.miguoma.by.modules.system.entity;
 
-import java.time.LocalDateTime;
-
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.miguoma.by.common.base.entity.BaseEntity;
-
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
+import java.time.LocalDateTime;
 
 @Data
 @TableName("sys_log")

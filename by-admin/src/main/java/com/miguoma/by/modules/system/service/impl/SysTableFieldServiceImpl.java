@@ -1,28 +1,26 @@
 package com.miguoma.by.modules.system.service.impl;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.StrUtil;
+import com.miguoma.by.common.base.service.impl.BaseServiceImpl;
+import com.miguoma.by.modules.system.dto.SysTableFieldDTO;
+import com.miguoma.by.modules.system.entity.SysTableConfig;
+import com.miguoma.by.modules.system.entity.SysTableField;
+import com.miguoma.by.modules.system.mapper.SysTableConfigMapper;
+import com.miguoma.by.modules.system.mapper.SysTableFieldMapper;
+import com.miguoma.by.modules.system.service.SysTableFieldService;
+import com.miguoma.by.modules.system.vo.SysTableFieldVO;
+import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.miguoma.by.modules.system.entity.SysTableConfig;
-import com.miguoma.by.modules.system.entity.SysTableField;
-import com.miguoma.by.modules.system.vo.SysTableFieldVO;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import com.miguoma.by.common.base.service.impl.BaseServiceImpl;
-import com.miguoma.by.modules.system.dto.SysTableFieldDTO;
-import com.miguoma.by.modules.system.mapper.SysTableConfigMapper;
-import com.miguoma.by.modules.system.mapper.SysTableFieldMapper;
-import com.miguoma.by.modules.system.service.SysTableFieldService;
-
-import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.util.StrUtil;
-import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 
 /**
  * 字段配置服务实现

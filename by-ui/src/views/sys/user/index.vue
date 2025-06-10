@@ -37,13 +37,10 @@
 </template>
 
 <script setup lang="ts" name="SysUserIndex">
-import { useCrud } from '@/hooks'
-import { reactive, ref } from 'vue'
+import {useCrud} from '@/hooks'
+import {reactive, ref} from 'vue'
 import AddOrUpdate from './add-or-update.vue'
-import { IHooksOptions } from '@/hooks/interface'
-import constant from '@/utils/constant'
-import { useUserExportApi } from '@/api/sys/user'
-import { ElMessage, UploadProps } from 'element-plus'
+import {IHooksOptions} from '@/hooks/interface'
 
 const state: IHooksOptions = reactive({
 	dataListUrl: '/sys/user/page',

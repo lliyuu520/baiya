@@ -21,10 +21,10 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref } from 'vue'
-import { ElMessage } from 'element-plus/es'
-import { useUserApi, useUserSubmitApi } from '@/api/sys/user'
-import { useRoleListApi } from '@/api/sys/role'
+import {reactive, ref} from 'vue'
+import {ElMessage} from 'element-plus/es'
+import {useUserApi, useUserSubmitApi} from '@/api/sys/user'
+import {useRoleListApi} from '@/api/sys/role'
 
 const emit = defineEmits(['refreshDataList'])
 

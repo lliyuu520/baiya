@@ -2,7 +2,6 @@ package com.miguoma.by.modules.system.mapper;
 
 import com.miguoma.by.common.base.mapper.IBaseMapper;
 import com.miguoma.by.modules.system.entity.SysRole;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 /**
