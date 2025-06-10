@@ -9,13 +9,7 @@
 			</el-form-item>
 		</el-form>
 		<el-table v-loading="state.dataListLoading" :data="state.dataList" border style="width: 100%" @selection-change="selectionChangeHandle">
-			<el-table-column type="selection" header-align="center" align="center" width="50"></el-table-column>
 			<el-table-column align="center" header-align="center" label="袋码" prop="code"></el-table-column>
-			<el-table-column align="center" header-align="center" label="上传时间" prop="uploadDateTime" width="180">
-				<template #default="scope">
-					{{ scope.row.uploadDateTime ? scope.row.uploadDateTime.replace('T', ' ') : '' }}
-				</template>
-			</el-table-column>
 			<el-table-column align="center" header-align="center" label="拉码时间" prop="pullDateTime" width="180">
 				<template #default="scope">
 					{{ scope.row.pullDateTime ? scope.row.pullDateTime.replace('T', ' ') : '' }}
@@ -24,6 +18,11 @@
 			<el-table-column align="center" header-align="center" label="成品订单号" prop="finishedOrderNo"></el-table-column>
 			<el-table-column align="center" header-align="center" label="半成品订单号" prop="semiFinishedOrderNo"></el-table-column>
 			<el-table-column align="center" header-align="center" label="箱码" prop="boxCode"></el-table-column>
+			<el-table-column align="center" header-align="center" label="上传时间" prop="uploadDateTime" width="180">
+				<template #default="scope">
+					{{ scope.row.uploadDateTime ? scope.row.uploadDateTime.replace('T', ' ') : '' }}
+				</template>
+			</el-table-column>
 		</el-table>
 		<el-pagination
 			:current-page="state.page"
