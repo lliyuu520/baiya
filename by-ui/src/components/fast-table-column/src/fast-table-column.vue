@@ -13,8 +13,8 @@
 				v-if="getDictLabelClass(store.appStore.dictList, props.dictType, scope.row[props.prop])"
 				:type="
 					getDictLabelClass(store.appStore.dictList, props.dictType, scope.row[props.prop]) === 'primary'
-						? ''
-						: getDictLabelClass(store.appStore.dictList, props.dictType, scope.row[props.prop])
+						? 'primary'
+						: getDictLabelClass(store.appStore.dictList, props.dictType, scope.row[props.prop]) as 'success' | 'info' | 'warning' | 'primary' | 'danger'
 				"
 			>
 				{{ getDictLabel(store.appStore.dictList, props.dictType, scope.row[props.prop]) }}
@@ -27,8 +27,8 @@
 </template>
 
 <script setup lang="ts" name="FastTableColumn">
-import store from '@/store'
-import { getDictLabel, getDictLabelClass } from '@/utils/tool'
+import store from '@/store';
+import { getDictLabel, getDictLabelClass } from '@/utils/tool';
 
 const props = defineProps({
 	prop: {

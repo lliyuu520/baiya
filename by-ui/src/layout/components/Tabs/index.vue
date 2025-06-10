@@ -104,9 +104,9 @@ const tabClick = (tab: any) => {
 }
 
 // 点击关闭tab
-const tabRemove = (path: string) => {
+const tabRemove = (name: string | number) => {
 	try {
-		const tab = store.tabsStore.visitedViews.filter((tab: any) => tab.path === path)
+		const tab = store.tabsStore.visitedViews.filter((tab: any) => tab.path === name)
 		if (tab.length > 0) {
 			closeTab(router, tab[0])
 		}

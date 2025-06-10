@@ -11,12 +11,11 @@
       </map>
     </option>
     <option name="className" value="com.miguoma.by.modules.client.controller.ClientController" />
-    <option name="filePath" value="" />
-    <option name="method" value="pullCode" />
-    <option name="methodDescription" value="拉码" />
-    <option name="methodType" value="POST" />
+    <option name="filePath" value="/" />
+    <option name="method" value="getProductionOrderList" />
+    <option name="methodDescription" value="获取订单列表" />
     <option name="module" value="by-admin" />
-    <option name="originUrl" value="/client/pullCode" />
+    <option name="originUrl" value="/client/productionOrderList" />
     <option name="responseParamMap">
       <map>
         <entry key="return">
