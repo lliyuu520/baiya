@@ -12,61 +12,72 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum SysLogModuleEnums {
     /**
-     * 用户管理
+     * 用户
      */
-    USER("用户管理"),
+    USER("用户"),
     /**
-     * 角色管理
+     * 角色
      */
-    ROLE("角色管理"),
+    ROLE("角色"),
     /**
-     * 菜单管理
+     * 菜单
      */
-    MENU("菜单管理"),
+    MENU("菜单"),
     /**
-     * 工厂管理
+     * 工厂
      */
-    FACTORY("工厂管理"),
+    FACTORY("工厂"),
+    
     /**
-     * 车间管理
+     * 车间
      */
-    WORK_SHOP("车间管理"),
+    DEPART_AND_WORK_SHOP("部门&车间"),
+
     /**
-     * 产线管理
+     * 产品
      */
-    PRODUCTION_LINE("产线管理"),
+    PRODUCT("产品"),
     /**
-     * 机台管理
+     * 产品分类
      */
-    MACHINE("机台管理"),
+    PRODUCT_CATEGORY("产品分类"),
     /**
-     * 产品管理
+     * 班组
      */
-    PRODUCT("产品管理"),
+    TEAM("班组"),
+
     /**
-     * 产品分类管理
+     * 班次
      */
-    PRODUCT_CATEGORY("产品分类管理"),
+    SHIFT("班次"),
     /**
-     * 班组管理
+     * 订单
      */
-    TEAM("班组管理"),
+    ORDER("订单"),
     /**
-     * 订单管理
+     * 编码规则
      */
-    ORDER("订单管理"),
-    /**
-     * 编码规则管理
-     */
-    CODE_RULE("编码规则管理"),
+    CODE_RULE("编码规则"),
     /**
      * 采集软件
      */
     CLIENT("采集软件"),
     /**
-     * 二维码关联
+     * 箱物流码
      */
-    QR_CODE_CORRELATION("二维码关联"),
+    RECORD_BOX_CODE("箱物流码"),
+
+    /**
+     * 袋物流码
+     */
+    RECORD_BAG_CODE("袋物流码"),
+
+    /**
+     * 二维码
+     */
+    RECORD_QR_CODE("袋二维码"),
+
+
     ;
 
     private final String desc;

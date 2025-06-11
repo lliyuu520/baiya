@@ -1,10 +1,7 @@
 package com.miguoma.by.common.config;
 
-import cn.dev33.satoken.interceptor.SaInterceptor;
-import cn.hutool.core.date.DatePattern;
-import com.miguoma.by.common.filter.RequestWrapperFilter;
-import com.miguoma.by.common.interceptor.SysLogInterceptor;
-import lombok.RequiredArgsConstructor;
+import java.time.format.DateTimeFormatter;
+
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -15,7 +12,11 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import java.time.format.DateTimeFormatter;
+import com.miguoma.by.common.filter.RequestWrapperFilter;
+
+import cn.dev33.satoken.interceptor.SaInterceptor;
+import cn.hutool.core.date.DatePattern;
+import lombok.RequiredArgsConstructor;
 
 /**
  * WebMvc配置
@@ -26,12 +27,10 @@ import java.time.format.DateTimeFormatter;
 @RequiredArgsConstructor
 public class WebMvcConfig implements WebMvcConfigurer {
 
-    private final ApplicationContext applicationContext;
 
     @Override
     public void addInterceptors(final InterceptorRegistry registry) {
         registry.addInterceptor(new SaInterceptor()).addPathPatterns("/**");
-        registry.addInterceptor(new SysLogInterceptor(applicationContext)).addPathPatterns("/**");
     }
 
     /**

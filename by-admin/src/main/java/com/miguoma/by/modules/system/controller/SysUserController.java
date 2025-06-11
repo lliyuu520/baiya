@@ -1,9 +1,20 @@
 package com.miguoma.by.modules.system.controller;
 
-import cn.dev33.satoken.annotation.SaCheckPermission;
-import cn.hutool.core.util.ObjUtil;
-import cn.hutool.core.util.StrUtil;
+import java.util.List;
+
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.miguoma.by.common.annotation.SysLogCut;
 import com.miguoma.by.common.base.page.PageVO;
+import com.miguoma.by.common.enums.SysLogModuleEnums;
+import com.miguoma.by.common.enums.SysLogTypeEnums;
 import com.miguoma.by.common.exception.BaseException;
 import com.miguoma.by.common.satoken.user.UserDetail;
 import com.miguoma.by.common.utils.Result;
@@ -16,11 +27,11 @@ import com.miguoma.by.modules.system.query.SysUserQuery;
 import com.miguoma.by.modules.system.service.SysUserRoleService;
 import com.miguoma.by.modules.system.service.SysUserService;
 import com.miguoma.by.modules.system.vo.SysUserVO;
+
+import cn.dev33.satoken.annotation.SaCheckPermission;
+import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.util.StrUtil;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-
 
 /**
  * 用户管理
@@ -42,9 +53,9 @@ public class SysUserController {
      */
     @GetMapping("page")
     @SaCheckPermission("sys:user:page")
+    @SysLogCut(module = SysLogModuleEnums.USER, type = SysLogTypeEnums.SELECT)
     public Result<PageVO<SysUserVO>> page(final SysUserQuery query) {
         final PageVO<SysUserVO> page = this.sysUserService.page(query);
-
         return Result.ok(page);
     }
 
@@ -56,16 +67,13 @@ public class SysUserController {
      */
     @GetMapping("{id}")
     @SaCheckPermission("sys:user:info")
+    @SysLogCut(module = SysLogModuleEnums.USER, type = SysLogTypeEnums.VIEW)
     public Result<SysUserVO> get(@PathVariable("id") final Long id) {
         final SysUser entity = this.sysUserService.getById(id);
-
         final SysUserVO vo = SysUserConvert.INSTANCE.convertToVO(entity);
-
         // 用户角色列表
         final List<Long> roleIdList = this.sysUserRoleService.getRoleIdList(id);
         vo.setRoleIdList(roleIdList);
-
-
         return Result.ok(vo);
     }
 
@@ -75,16 +83,14 @@ public class SysUserController {
      * @return
      */
     @GetMapping("info")
+    @SysLogCut(module = SysLogModuleEnums.USER, type = SysLogTypeEnums.VIEW)
     public Result<SysUserVO> info() {
         final Long id = SysUserUtil.getUserInfo().getId();
         final SysUser entity = this.sysUserService.getById(id);
-
         final SysUserVO vo = SysUserConvert.INSTANCE.convertToVO(entity);
-
         // 用户角色列表
         final List<Long> roleIdList = this.sysUserRoleService.getRoleIdList(id);
         vo.setRoleIdList(roleIdList);
-
         return Result.ok(vo);
     }
 
@@ -95,14 +101,12 @@ public class SysUserController {
      * @return
      */
     @PutMapping("password")
+    @SysLogCut(module = SysLogModuleEnums.USER, type = SysLogTypeEnums.UPDATE)
     public Result<String> password(@RequestBody final SysUserPasswordDTO sysUserPasswordDTO) {
         // 原密码不正确
         final UserDetail user = SysUserUtil.getUserInfo();
-
-
         // 修改密码
         this.sysUserService.updatePassword(user.getId(), sysUserPasswordDTO.getNewPassword());
-
         return Result.ok();
     }
 
@@ -114,12 +118,10 @@ public class SysUserController {
      */
     @PostMapping
     @SaCheckPermission("sys:user:save")
+    @SysLogCut(module = SysLogModuleEnums.USER, type = SysLogTypeEnums.INSERT)
     public Result<String> save(@RequestBody final SysUserDTO sysUserDTO) {
-
-
         // 保存
         this.sysUserService.saveOne(sysUserDTO);
-
         return Result.ok();
     }
 
@@ -131,6 +133,7 @@ public class SysUserController {
      */
     @PutMapping
     @SaCheckPermission("sys:user:update")
+    @SysLogCut(module = SysLogModuleEnums.USER, type = SysLogTypeEnums.UPDATE)
     public Result<String> update(@RequestBody final SysUserDTO sysUserDTO) {
         // 如果密码不为空，则进行加密处理
         if (StrUtil.isBlank(sysUserDTO.getPassword())) {
@@ -138,9 +141,7 @@ public class SysUserController {
         } else {
             sysUserDTO.setPassword(sysUserDTO.getPassword());
         }
-
         this.sysUserService.updateOne(sysUserDTO);
-
         return Result.ok();
     }
 
@@ -152,16 +153,13 @@ public class SysUserController {
      */
     @DeleteMapping
     @SaCheckPermission("sys:user:delete")
+    @SysLogCut(module = SysLogModuleEnums.USER, type = SysLogTypeEnums.DELETE)
     public Result<String> delete(final Long id) {
         final Long userId = SysUserUtil.getUserInfo().getId();
         if (ObjUtil.equal(userId, id)) {
             throw new BaseException("不能删除当前用户");
         }
-
         sysUserService.deleteOne(id);
-
         return Result.ok();
     }
-
-
 }

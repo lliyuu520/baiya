@@ -15,7 +15,7 @@
 			"**/node_modules": true,
 			"**/.idea": true,
 			"**/.classpath": true,
-"**/dist": true,
+			"**/dist": true,
 			"**/.project": true,
 			"**/.settings": true,
 			"**/logs": true
