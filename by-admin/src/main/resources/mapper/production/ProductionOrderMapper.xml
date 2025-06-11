@@ -10,29 +10,22 @@
         PRODUCTION_DEPART_AND_WORKSHOP E ON A.PRODUCTION_WORKSHOP_CODE = E.CODE LEFT JOIN
         PRODUCTION_TEAM F ON A.PRODUCTION_TEAM_CODE = F.CODE LEFT JOIN PRODUCTION_SHIFT G ON
         A.PRODUCTION_SHIFT_CODE = G.CODE LEFT JOIN PRODUCTION_PRODUCT_CATEGORY H ON B.CATEGORY_CODE
-        = H.CODE LEFT JOIN PRODUCTION_FACTORY I ON A.PRODUCTION_FACTORY_CODE = I.CODE
-        <where>
+        = H.CODE LEFT JOIN PRODUCTION_FACTORY I ON A.PRODUCTION_FACTORY_CODE = I.CODE <where>
             <if test="query.orderNo != null and query.orderNo != ''">A.ORDER_NO = #{query.orderNo}</if>
             <if
-                    test="query.orderDateBegin!=null">AND A.ORDER_DATE &gt;= #{query.orderDateBegin}
-            </if>
+                test="query.orderDateBegin!=null">AND A.ORDER_DATE &gt;= #{query.orderDateBegin} </if>
             <if
-                    test="query.orderDateEnd!=null">AND A.ORDER_DATE &lt;= #{query.orderDateEnd}
-            </if>
+                test="query.orderDateEnd!=null">AND A.ORDER_DATE &lt;= #{query.orderDateEnd} </if>
             <if
-                    test="query.productType!=null and query.productType!=''">AND A.PRODUCT_TYPE =
-                #{query.productType}
-            </if>
+                test="query.productType!=null and query.productType!=''">AND A.PRODUCT_TYPE =
+        #{query.productType} </if>
             <if
-                    test="query.productionWorkshopName!=null and query.productionWorkshopName!=''">AND
-                E.NAME like '%' || #{query.productionWorkshopName} || '%'
-            </if>
+                test="query.productionWorkshopName!=null and query.productionWorkshopName!=''">AND
+        E.NAME like '%' || #{query.productionWorkshopName} || '%' </if>
             <if
-                    test="query.reworkFlag!=null">AND A.REWORK_FLAG = #{query.reworkFlag}
-            </if>
+                test="query.reworkFlag!=null">AND A.REWORK_FLAG = #{query.reworkFlag} </if>
         </where>
-        order by a.ORDER_DATE desc
-    </select>
+        order by a.ORDER_DATE desc </select>
     <select id="listVO" resultType="com.miguoma.by.modules.production.vo.ProductionOrderVO">select
         a.*, i.NAME as productionFactoryName, d.NAME as productionDepartName, e.NAME as
         productionWorkshopName, f.NAME as productionTeamName, g.NAME as productionShiftName, b.NAME
@@ -53,8 +46,8 @@
             <if test="query.orderDateEnd!=null">AND A.ORDER_DATE &lt;=
                 #{query.orderDateEnd}
             </if>
-            <if test="query.productionWorkshopCode!=null and query.productionWorkshopCode!=''">
-                AND A.PRODUCTION_WORKSHOP_CODE = #{query.productionWorkshopCode}
+            <if test="query.productionWorkshopName!=null and query.productionWorkshopName!=''">
+                AND e.name LIKE CONCAT(#{query.productionWorkshopName}, '%')
             </if>
             OR A.REWORK_FLAG = 1
         </where>

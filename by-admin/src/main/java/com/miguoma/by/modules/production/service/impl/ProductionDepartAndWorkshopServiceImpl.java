@@ -136,13 +136,13 @@ public class ProductionDepartAndWorkshopServiceImpl
     /**
      * 校验车间编码
      *
-     * @param workshopCode
+     * @param workshopName
      * @return
      */
     @Override
-    public Boolean checkWorkshopCode(String workshopCode) {
+    public Boolean checkWorkshopName(String workshopName) {
         LambdaQueryWrapper<ProductionDepartAndWorkshop> wrapper = Wrappers.lambdaQuery();
-        wrapper.eq(ProductionDepartAndWorkshop::getCode, workshopCode);
+        wrapper.likeRight(ProductionDepartAndWorkshop::getName, workshopName);
         return count(wrapper) > 0;
     }
 }

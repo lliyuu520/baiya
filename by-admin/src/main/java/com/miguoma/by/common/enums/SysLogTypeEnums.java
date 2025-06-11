@@ -67,7 +67,27 @@ public enum SysLogTypeEnums {
      * 配置别名
      */
     CONFIG_ALIAS("配置别名"),
-    ;
+    /**
+     * 拉码
+     */
+    PULL_CODE("拉码"),
+    /**
+     * 上传码
+     */
+    UPLOAD_CODE("上传码"),
+
+    /**
+     * 拉取订单
+     */
+    ORDER_LIST("拉取订单"),
+    /**
+     * 登录
+     */
+    LOGIN("登录"),
+    /**
+     * 登出
+     */
+    LOGOUT("登出"),;
 
     private final String desc;
 

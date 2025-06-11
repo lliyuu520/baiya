@@ -49,8 +49,8 @@ public interface ProductionDepartAndWorkshopService extends BaseService<Producti
 
     /**
      * 校验车间编码
-     * @param workshopCode
+     * @param workshopName
      * @return
      */
-    Boolean checkWorkshopCode(String workshopCode);
+    Boolean checkWorkshopName(String workshopName);
 }

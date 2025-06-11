@@ -1,5 +1,6 @@
 package com.miguoma.by.modules.system.controller;
 
+import cn.dev33.satoken.annotation.SaCheckPermission;
 import com.miguoma.by.common.base.page.PageVO;
 import com.miguoma.by.common.utils.Result;
 import com.miguoma.by.modules.system.entity.ErpLog;
@@ -22,10 +23,25 @@ public class ErpLogController {
      * @return
      */
     @GetMapping("/page")
+    @SaCheckPermission(value = "erp:log:page")
     public Result<PageVO<ErpLog>> page(ErpLogQuery query) {
         PageVO<ErpLog> page = sysLogService.pageVO(query);
 
-        return Result.ok();
+        return Result.ok(page);
+    }
+
+    /**
+     * 查询详情
+     *
+     * @param id
+     * @return
+     */
+    @GetMapping("/info")
+    @SaCheckPermission(value = "erp:log:info")
+    public Result<ErpLog> info(Long id) {
+        ErpLog sysLog = sysLogService.getById(id);
+
+        return Result.ok(sysLog);
     }
 
 

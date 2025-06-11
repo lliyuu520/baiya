@@ -9,6 +9,11 @@ import com.miguoma.by.modules.system.entity.ErpLog;
 import com.miguoma.by.modules.system.mapper.ErpLogMapper;
 import com.miguoma.by.modules.system.query.ErpLogQuery;
 import com.miguoma.by.modules.system.service.ErpLogService;
+
+import cn.hutool.core.util.StrUtil;
+
+import java.time.LocalDateTime;
+
 import org.springframework.stereotype.Service;
 
 /**
@@ -42,7 +47,26 @@ public class ErpLogServiceImpl extends BaseServiceImpl<ErpLogMapper, ErpLog> imp
      */
    private  LambdaQueryWrapper<ErpLog> buildQueryWrapper(ErpLogQuery erpLogQuery){
        final LambdaQueryWrapper<ErpLog> queryWrapper = Wrappers.lambdaQuery();
+       final String moduleName = erpLogQuery.getModuleName();
+       if(StrUtil.isNotBlank(moduleName)){
+           queryWrapper.eq(ErpLog::getModuleName,moduleName);
+       }
+       
+       final Integer status = erpLogQuery.getStatus();
+       if(status != null){
+           queryWrapper.eq(ErpLog::getStatus,status);
+       }
+      
+       LocalDateTime operateTimeBegin = erpLogQuery.getOperateTimeBegin();
+       if (operateTimeBegin != null) {
+           queryWrapper.ge(ErpLog::getOperateTime, operateTimeBegin);
+       }
+       LocalDateTime operateTimeEnd = erpLogQuery.getOperateTimeEnd();
+       if (operateTimeEnd != null) {
+           queryWrapper.le(ErpLog::getOperateTime, operateTimeEnd);
+       }
+
        queryWrapper.orderByDesc(ErpLog::getId);
-       return null;
+       return queryWrapper;
    }
 }

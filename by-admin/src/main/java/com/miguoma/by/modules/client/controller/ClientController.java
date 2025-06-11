@@ -7,7 +7,7 @@ import cn.hutool.json.JSONUtil;
 import com.miguoma.by.common.annotation.SysLogCut;
 import com.miguoma.by.common.enums.SysLogModuleEnums;
 import com.miguoma.by.common.enums.SysLogTypeEnums;
-import com.miguoma.by.common.exception.BaseException;
+import com.miguoma.by.common.utils.ClientContextHolder;
 import com.miguoma.by.common.utils.Result;
 import com.miguoma.by.modules.client.dto.PullCodeDTO;
 import com.miguoma.by.modules.client.dto.RecordCodeUploadDTO;
@@ -51,7 +51,8 @@ public class ClientController {
      * @param dto
      * @return
      */
-    @PostMapping("login")
+    @PostMapping("/login")
+    @SysLogCut(module = SysLogModuleEnums.CLIENT, type = SysLogTypeEnums.LOGIN)
     public Result<String> login(@RequestBody TeamLoginDTO dto) {
         final String productionFactoryCode = dto.getProductionFactoryCode();
         final String productionWorkshopCode = dto.getProductionWorkshopCode();
@@ -61,8 +62,7 @@ public class ClientController {
             return Result.error("工厂编码不存在");
         }
 
-
-        final Boolean checkWorkshopCode = productionDepartAndWorkshopService.checkWorkshopCode(productionWorkshopCode);
+        final Boolean checkWorkshopCode = productionDepartAndWorkshopService.checkWorkshopName(productionWorkshopCode);
         if (!checkWorkshopCode) {
             log.error("车间编码不存在:{}", productionWorkshopCode);
             return Result.error("车间编码不存在");
@@ -78,14 +78,11 @@ public class ClientController {
      *
      * @param query
      */
-    @GetMapping("productionOrderList")
-    public Result<List<ProductionOrderVO>> getProductionOrderList(@RequestHeader("Token") String token, ProductionOrderQuery query) {
-//        final TeamLoginDTO teamLoginDTO = getTeamLoginDTO(token);
-
-        // final String productionFactoryCode = teamLoginDTO.getProductionFactoryCode();
-        // final String productionWorkshopCode = teamLoginDTO.getProductionWorkshopCode();
-
-        // query.setProductionWorkshopCode(productionWorkshopCode);
+    @GetMapping("/productionOrderList")
+    @SysLogCut(module = SysLogModuleEnums.CLIENT, type = SysLogTypeEnums.ORDER_LIST)
+    public Result<List<ProductionOrderVO>> getProductionOrderList(ProductionOrderQuery query) {
+        final String workshopName = ClientContextHolder.getWorkshopName();
+        query.setProductionWorkshopCode(workshopName);
         query.setReworkFlag(true);
         final LocalDate orderDateEnd = LocalDateTimeUtil.now().toLocalDate();
         final LocalDate orderDateBegin = orderDateEnd.plusDays(-15);
@@ -95,34 +92,14 @@ public class ClientController {
         return Result.ok(list);
     }
 
-    /**
-     * 获取登录信息
-     *
-     * @param token
-     * @return
-     */
-    private TeamLoginDTO getTeamLoginDTO(@RequestHeader("Token") String token) {
-        TeamLoginDTO teamLoginDTO;
-
-        try {
-            final String decodeStr = Base62.decodeStr(token);
-            teamLoginDTO = JSONUtil.toBean(decodeStr, TeamLoginDTO.class);
-
-        } catch (Exception e) {
-            log.error("登录失败:{}", e.getMessage());
-            throw new BaseException("登录失败,token不正确:{}", token);
-        }
-        return teamLoginDTO;
-    }
-
 
     /**
      * 拉码
      */
-    @PostMapping("pullCode")
-    @SysLogCut(module = SysLogModuleEnums.CLIENT, type = SysLogTypeEnums.INSERT)
-    public Result<PullCodeVO> pullCode(@RequestHeader("Token") String token, @RequestBody PullCodeDTO pullCodeDTO) {
-//        final TeamLoginDTO teamLoginDTO = getTeamLoginDTO(token);
+    @PostMapping("/pullCode")
+    @SysLogCut(module = SysLogModuleEnums.CLIENT, type = SysLogTypeEnums.PULL_CODE)
+    public Result<PullCodeVO> pullCode(@RequestBody PullCodeDTO pullCodeDTO) {
+
         final PullCodeVO pullCodeVO = orderService.pullCode(pullCodeDTO);
         return Result.ok(pullCodeVO);
 
@@ -136,8 +113,9 @@ public class ClientController {
      * @return 采集上传结果
      */
     @PostMapping("/collectUpload")
-    public Result<String> collectUpload(@RequestHeader("Token") String token, @RequestBody RecordCodeUploadDTO recordCodeUploadDTO) {
-        final TeamLoginDTO teamLoginDTO = getTeamLoginDTO(token);
+    @SysLogCut(module = SysLogModuleEnums.CLIENT, type = SysLogTypeEnums.UPLOAD_CODE)
+    public Result<String> collectUpload(@RequestBody RecordCodeUploadDTO recordCodeUploadDTO) {
+
         orderService.collectUpload(recordCodeUploadDTO);
         return Result.ok("采集上传成功");
     }

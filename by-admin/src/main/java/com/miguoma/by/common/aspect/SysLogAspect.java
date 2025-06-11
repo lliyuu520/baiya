@@ -1,8 +1,15 @@
 package com.miguoma.by.common.aspect;
 
-import java.lang.reflect.Method;
-import java.time.LocalDateTime;
-
+import cn.dev33.satoken.stp.StpUtil;
+import cn.hutool.core.util.StrUtil;
+import com.alibaba.fastjson.JSON;
+import com.miguoma.by.common.annotation.SysLogCut;
+import com.miguoma.by.common.utils.ClientContextHolder;
+import com.miguoma.by.common.utils.SysUserUtil;
+import com.miguoma.by.modules.system.entity.SysLog;
+import com.miguoma.by.modules.system.service.SysLogService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -11,14 +18,8 @@ import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
-import com.alibaba.fastjson.JSON;
-import com.miguoma.by.common.annotation.SysLogCut;
-import com.miguoma.by.modules.system.entity.SysLog;
-import com.miguoma.by.modules.system.service.SysLogService;
-
-import cn.dev33.satoken.stp.StpUtil;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.lang.reflect.Method;
+import java.time.LocalDateTime;
 
 /**
  * 系统日志切面
@@ -59,11 +60,18 @@ public class SysLogAspect {
      */
     @Around("logPointCut()")
     public Object around(ProceedingJoinPoint point) throws Throwable {
-        // 执行方法
-        Object result = point.proceed();
-        // 异步保存日志
-        asyncSaveSysLog(point, result);
-        return result;
+        Object result = null;
+        try {
+            // 执行方法
+            result = point.proceed();
+            // 异步保存成功日志
+            asyncSaveSysLog(point, result, 0, null);
+            return result;
+        } catch (Throwable e) {
+            // 异步保存失败日志
+            asyncSaveSysLog(point, e, 1, e.getMessage());
+            throw e;
+        }
     }
 
     /**
@@ -71,10 +79,12 @@ public class SysLogAspect {
      * 记录操作信息、请求参数和响应结果
      *
      * @param joinPoint 连接点
-     * @param result    目标方法的返回值
+     * @param result    目标方法的返回值或异常
+     * @param status    操作状态：0-成功，1-失败
+     * @param errorMsg  错误信息
      */
     @Async("logExecutor")
-    public void asyncSaveSysLog(ProceedingJoinPoint joinPoint, Object result) {
+    public void asyncSaveSysLog(ProceedingJoinPoint joinPoint, Object result, Integer status, String errorMsg) {
         try {
             MethodSignature signature = (MethodSignature) joinPoint.getSignature();
             Method method = signature.getMethod();
@@ -99,7 +109,16 @@ public class SysLogAspect {
 
             // 记录响应结果
             try {
-                String responseResult = JSON.toJSONString(result);
+                String responseResult;
+                if (result instanceof Throwable) {
+                    Throwable throwable = (Throwable) result;
+                    responseResult = String.format("异常类型：%s\n异常信息：%s\n堆栈信息：%s",
+                            throwable.getClass().getName(),
+                            throwable.getMessage(),
+                            throwable.getStackTrace()[0]);
+                } else {
+                    responseResult = JSON.toJSONString(result);
+                }
                 sysLog.setResponseResult(responseResult);
             } catch (Exception e) {
                 log.error("记录响应结果失败", e);
@@ -109,7 +128,13 @@ public class SysLogAspect {
             String username = "anonymous";
             try {
                 if (StpUtil.isLogin()) {
-                    username = StpUtil.getLoginIdAsString();
+                    username = SysUserUtil.getUserInfo().getUsername();
+                } else {
+                    String factoryCode = ClientContextHolder.getFactoryCode();
+                    String workshopCode = ClientContextHolder.getWorkshopName();
+                    if (StrUtil.isNotBlank(factoryCode) || StrUtil.isNotBlank(workshopCode)) {
+                        username = factoryCode + "_" + workshopCode;
+                    }
                 }
             } catch (Exception e) {
                 log.error("获取用户名失败", e);
@@ -117,9 +142,13 @@ public class SysLogAspect {
             sysLog.setOperatorName(username);
 
             // 设置操作时间
-            sysLog.setOperateTime(LocalDateTime.now());
-            // 设置操作状态为正常
-            sysLog.setStatus(0);
+            LocalDateTime now = LocalDateTime.now();
+            sysLog.setOperateTime(now);
+            sysLog.setCreateTime(now);
+            // 设置操作状态
+            sysLog.setStatus(status);
+            // 设置错误信息
+            sysLog.setErrorMsg(errorMsg);
 
             // 保存系统日志
             sysLogService.save(sysLog);

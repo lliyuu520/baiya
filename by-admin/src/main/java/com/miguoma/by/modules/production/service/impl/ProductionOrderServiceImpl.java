@@ -239,7 +239,6 @@ public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderM
         final Integer oneBoxPackageNum = finishProductionProduct.getOneBoxPackageNum();
 
 
-
         // 成品相关信息
         final String finishedOrderNo = finishedProductionOrder.getOrderNo();
         final LocalDate finishedProductionDate = finishedProductionOrder.getProductionDate();
@@ -263,7 +262,7 @@ public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderM
         // 箱号数量
         final Integer boxCodeNum = pullCodeDTO.getBoxCodeNum();
         // 二维码数量
-        final Integer qrCodeNum = oneBoxPackageNum * (boxCodeNum+2);
+        final Integer qrCodeNum = oneBoxPackageNum * (boxCodeNum + 2);
         // 拉码类型
         final String type = pullCodeDTO.getType();
         final Long ruleId = finishedCodeRule.getId();
@@ -356,14 +355,14 @@ public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderM
             }
             boxCodeStrBuilder.append(str);
         }
-        log.info("boxCodeStrBuilder:{}",boxCodeStrBuilder.toString());
+        log.info("boxCodeStrBuilder:{}", boxCodeStrBuilder.toString());
 
         // 半成品相关信息
-        final String  semiFinishedOrderNo = semiFinishedProductionOrder.getOrderNo();
+        final String semiFinishedOrderNo = semiFinishedProductionOrder.getOrderNo();
         final LocalDate semiFinishedProductionDate = semiFinishedProductionOrder.getProductionDate();
         final String semiFinishedProductionDepartCode = semiFinishedProductionOrder.getProductionDepartCode();
         final String semiFinishedProductionWorkshopCode = semiFinishedProductionOrder.getProductionWorkshopCode();
-        final ProductionDepartAndWorkshop semiFinishedProductionDepartAndWorkshop=productionDepartAndWorkshopMapper.getOneByCode(semiFinishedProductionWorkshopCode);
+        final ProductionDepartAndWorkshop semiFinishedProductionDepartAndWorkshop = productionDepartAndWorkshopMapper.getOneByCode(semiFinishedProductionWorkshopCode);
         final Long semiFinishedCodeRuleId = semiFinishedProductionDepartAndWorkshop.getCodeRuleId();
         SysCodeRule semiFinishedSysCodeRule = null;
         if (semiFinishedCodeRuleId != null) {
@@ -648,7 +647,32 @@ public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderM
             }
             pullCodeVO.setLogisticsTypeDataList(logisticsTypeDataList);
             pullCodeVO.setUniversalCode(universalCodeStrBuilder.toString());
+            final List<RecordBoxCode> recordBoxCodeList = new ArrayList<>();
+            final List<RecordBagCode> recordBagCodeList = new ArrayList<>();
 
+            logisticsTypeDataList.forEach(logisticsTypeData -> {
+                final String boxCode = logisticsTypeData.getBoxCode();
+                final String bagCode = logisticsTypeData.getBagCode();
+                final RecordBoxCode recordBoxCode = new RecordBoxCode();
+                recordBoxCode.setFinishedProductOrderId(finishedProductOrderId);
+                recordBoxCode.setSemiFinishedProductOrderId(semiFinishedProductOrderId);
+                recordBoxCode.setCode(boxCode);
+                recordBoxCode.setPullType("LOGISTICS_CODE");
+                recordBoxCode.setRuleId(ruleId);
+                recordBoxCode.setPullDateTime(now);
+                recordBoxCodeList.add(recordBoxCode);
+                RecordBagCode recordBagCode = new RecordBagCode();
+                recordBagCode.setCode(bagCode);
+                recordBagCode.setSemiFinishedProductOrderId(semiFinishedProductOrderId);
+                recordBagCode.setFinishedProductOrderId(finishedProductOrderId);
+                recordBagCode.setBoxCode(boxCode);
+                recordBagCode.setRuleId(ruleId);
+                recordBagCode.setPullDateTime(now);
+                recordBagCodeList.add(recordBagCode);
+
+            });
+            recordBoxCodeService.saveBatch(recordBoxCodeList);
+            recordBagCodeService.saveBatch(recordBagCodeList);
         }
 
         return pullCodeVO;
@@ -663,51 +687,53 @@ public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderM
     @Transactional(rollbackFor = Exception.class)
     public void collectUpload(RecordCodeUploadDTO recordCodeUploadDTO) {
         final LocalDateTime now = LocalDateTimeUtil.now();
-
-        final List<RecordCodeUploadDTO.RecordQrCodeUploadDTO> qrCodeUploadDTOList = recordCodeUploadDTO.getQrCodeUploadDTOList();
-        qrCodeUploadDTOList.forEach(m -> {
-            final String boxCode = m.getBoxCode();
-            final List<String> qrCodeList = m.getQrCodeList();
-            final RecordBoxCode recordBoxCode = recordBoxCodeService.getOneByBoxCode(boxCode);
-            if (recordBoxCode == null) {
-                throw new BaseException("箱码:{}不存在", boxCode);
-            }
-            recordBoxCode.setUploadDateTime(now);
-            recordBoxCodeService.updateById(recordBoxCode);
-            List<RecordQrCode> recordQrCodeList = recordQrCodeService.listByQrCode(qrCodeList);
-            recordQrCodeList.forEach(n -> {
-                n.setUploadDateTime(now);
-            });
-            recordQrCodeService.updateBatchById(recordQrCodeList);
+        // 二维码上传
+        final RecordCodeUploadDTO.RecordQrCodeUploadDTO qrCodeUploadDTO = recordCodeUploadDTO.getQrCodeUploadDTO();
+        final String boxCode = qrCodeUploadDTO.getBoxCode();
+        final List<String> qrCodeList = qrCodeUploadDTO.getQrCodeList();
+        final RecordBoxCode recordBoxCode = recordBoxCodeService.getOneByBoxCode(boxCode);
+        if (recordBoxCode == null) {
+            throw new BaseException("箱码:{}不存在", boxCode);
+        }
+        recordBoxCode.setUploadDateTime(now);
+        recordBoxCodeService.updateById(recordBoxCode);
+        List<RecordQrCode> recordQrCodeList = recordQrCodeService.listByQrCode(qrCodeList);
+        recordQrCodeList.forEach(n -> {
+            n.setUploadDateTime(now);
         });
-        final List<String> boxCodeList = recordCodeUploadDTO.getBoxCodeList();
+        recordQrCodeService.updateBatchById(recordQrCodeList);
+// 箱垛
+
+        final RecordCodeUploadDTO.CribCodeUploadDTO cribCodeUploadDTO = recordCodeUploadDTO.getCribCodeUploadDTO();
+        final String cribCode = cribCodeUploadDTO.getCribCode();
+        final List<String> boxCodeList = cribCodeUploadDTO.getBoxCodeList();
+        List<RecordBoxCode> recordBoxCodeList = recordBoxCodeService.listByBoxCode(boxCodeList);
+        recordBoxCodeList.forEach(n -> {
+            n.setCribCode(cribCode);
+            final LocalDateTime uploadDateTime = n.getUploadDateTime();
+            if (uploadDateTime == null) {
+                n.setUploadDateTime(now);
+            }
+            n.setCribDateTime(now);
+        });
+
+        recordBoxCodeService.updateBatchById(recordBoxCodeList);
+
         boxCodeList.forEach(m -> {
-            final RecordBoxCode recordBoxCode = recordBoxCodeService.getOneByBoxCode(m);
-            if (recordBoxCode == null) {
+            final RecordBoxCode subRecordBoxCode = recordBoxCodeService.getOneByBoxCode(m);
+            if (subRecordBoxCode == null) {
                 throw new BaseException("箱码:{}不存在", m);
             }
-            recordBoxCode.setUploadDateTime(now);
-            recordBoxCodeService.updateById(recordBoxCode);
-            // 这种方式需要把袋码找出来一并处理了
-            List<RecordBagCode> recordBagCodeList = recordBagCodeService.listByBoxCode(m);
-            recordBagCodeList.forEach(n -> {
-                n.setUploadDateTime(now);
-            });
-            recordBagCodeService.updateBatchById(recordBagCodeList);
-        });
-        final List<RecordCodeUploadDTO.CribCodeUploadDTO> cribCodeUploadDTOList = recordCodeUploadDTO.getCribCodeUploadDTOList();
-        cribCodeUploadDTOList.forEach(m -> {
-            final String cribCode = m.getCribCode();
-            final List<String> boxCodeList1 = m.getBoxCodeList();
-            List<RecordBoxCode> recordBoxCodeList = recordBoxCodeService.listByBoxCode(boxCodeList1);
-            recordBoxCodeList.forEach(n -> {
-                n.setCribCode(cribCode);
-                n.setCribDateTime(now);
-            });
+            final String pullType = subRecordBoxCode.getPullType();
+            if (StrUtil.equals(pullType, "LOGISTICS_CODE")) {
+                List<RecordBagCode> recordBagCodeList = recordBagCodeService.listByBoxCode(m);
+                recordBagCodeList.forEach(n -> {
+                    n.setUploadDateTime(now);
+                });
+                recordBagCodeService.updateBatchById(recordBagCodeList);
+            }
 
-            recordBoxCodeService.updateBatchById(recordBoxCodeList);
         });
-
     }
 
     /**

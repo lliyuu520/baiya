@@ -1,5 +1,6 @@
 package com.miguoma.by.modules.system.service.impl;
 
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -9,6 +10,9 @@ import com.miguoma.by.modules.system.entity.SysLog;
 import com.miguoma.by.modules.system.mapper.SysLogMapper;
 import com.miguoma.by.modules.system.query.SysLogQuery;
 import com.miguoma.by.modules.system.service.SysLogService;
+
+import java.time.LocalDateTime;
+
 import org.springframework.stereotype.Service;
 
 /**
@@ -42,7 +46,33 @@ public class SysLogServiceImpl extends BaseServiceImpl<SysLogMapper, SysLog> imp
      */
    private  LambdaQueryWrapper<SysLog> buildQueryWrapper(SysLogQuery sysLogQuery){
        final LambdaQueryWrapper<SysLog> queryWrapper = Wrappers.lambdaQuery();
+
+       final String moduleName = sysLogQuery.getModuleName();
+       if(StrUtil.isNotBlank(moduleName)){
+           queryWrapper.eq(SysLog::getModuleName,moduleName);
+       }
+       final String typeName = sysLogQuery.getTypeName();
+       if(StrUtil.isNotBlank(typeName)){
+           queryWrapper.eq(SysLog::getTypeName,typeName);
+       }
+       final Integer status = sysLogQuery.getStatus();
+       if(status != null){
+           queryWrapper.eq(SysLog::getStatus,status);
+       }
+       final String operatorName = sysLogQuery.getOperatorName();
+       if (StrUtil.isNotBlank(operatorName)) {
+           queryWrapper.eq(SysLog::getOperatorName, operatorName);
+       }
+       LocalDateTime operateTimeBegin = sysLogQuery.getOperateTimeBegin();
+       if(operateTimeBegin != null){    
+           queryWrapper.ge(SysLog::getOperateTime,operateTimeBegin);
+       }
+       LocalDateTime operateTimeEnd = sysLogQuery.getOperateTimeEnd();
+       if(operateTimeEnd != null){
+           queryWrapper.le(SysLog::getOperateTime,operateTimeEnd);
+       }
+       
        queryWrapper.orderByDesc(SysLog::getId);
-       return null;
+       return queryWrapper;
    }
 }

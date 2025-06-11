@@ -15,16 +15,13 @@ public class RecordCodeUploadDTO implements Serializable {
     /**
      * 二维码上传集合
      */
-    private List<RecordQrCodeUploadDTO> qrCodeUploadDTOList = new ArrayList<>();
-    /**
-     * 箱码上传集合
-     */
-    private List<String> boxCodeList = new ArrayList<>();
+    private RecordQrCodeUploadDTO qrCodeUploadDTO ;
+
 
     /**
      * 箱垛上传集合
      */
-    private List<CribCodeUploadDTO> cribCodeUploadDTOList = new ArrayList<>();
+    private CribCodeUploadDTO cribCodeUploadDTO ;
 
     /**
      * 箱垛上传集合
@@ -34,7 +31,7 @@ public class RecordCodeUploadDTO implements Serializable {
         /**
          * 库存编码
          */
-        private String CribCode;
+        private String cribCode;
         /**
          * 二维码集合
          */

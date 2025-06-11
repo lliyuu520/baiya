@@ -2,8 +2,7 @@ package com.miguoma.by.common.config;
 
 import java.time.format.DateTimeFormatter;
 
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
-import org.springframework.context.annotation.Bean;
+import com.miguoma.by.common.interceptor.ClientTokenInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.format.datetime.standard.DateTimeFormatterRegistrar;
@@ -23,11 +22,19 @@ import lombok.RequiredArgsConstructor;
 @Configuration
 @RequiredArgsConstructor
 public class WebMvcConfig implements WebMvcConfigurer {
+    private final ClientTokenInterceptor clientTokenInterceptor;
 
 
     @Override
     public void addInterceptors(final InterceptorRegistry registry) {
-        registry.addInterceptor(new SaInterceptor()).addPathPatterns("/**");
+        registry.addInterceptor(new SaInterceptor())
+                .addPathPatterns("/**")
+                .excludePathPatterns("/erp/**","/client");
+        registry.addInterceptor(clientTokenInterceptor)
+                // 拦截所有客户端相关接口
+                .addPathPatterns("/client/**")
+                // 排除不需要token验证的接口
+                .excludePathPatterns("/client/login");
     }
 
     /**

@@ -1,21 +1,28 @@
 <template>
-	<el-dialog v-model="visible" destroy-on-close title="日志详情" width="700px">
+	<el-dialog v-model="visible" destroy-on-close title="日志详情" width="800px">
 		<el-descriptions :column="2" border>
-			<el-descriptions-item label="操作人">{{ dataForm.operator }}</el-descriptions-item>
-			<el-descriptions-item label="操作类型">{{ dataForm.operateType }}</el-descriptions-item>
-			<el-descriptions-item label="操作模块">{{ dataForm.operateModule }}</el-descriptions-item>
-			<el-descriptions-item label="操作IP">{{ dataForm.operateIp }}</el-descriptions-item>
-			<el-descriptions-item label="请求方法">{{ dataForm.requestMethod }}</el-descriptions-item>
-			<el-descriptions-item label="请求URL">{{ dataForm.requestUrl }}</el-descriptions-item>
+			<el-descriptions-item label="操作人">{{ dataForm.operatorName }}</el-descriptions-item>
+			<el-descriptions-item label="操作类型">{{ dataForm.typeName }}</el-descriptions-item>
+			<el-descriptions-item label="操作模块">{{ dataForm.moduleName }}</el-descriptions-item>
+			<el-descriptions-item label="操作时间">{{ dataForm.operateTime }}</el-descriptions-item>
+			<el-descriptions-item label="响应状态">
+				<el-tag :type="dataForm.status === 0 ? 'success' : 'danger'">
+					{{ dataForm.status === 0 ? '成功' : '失败' }}
+				</el-tag>
+			</el-descriptions-item>
+			<el-descriptions-item></el-descriptions-item>
 			<el-descriptions-item :span="2" label="请求参数">
-				<pre>{{ dataForm.requestParams }}</pre>
+				<div class="json-container">
+					<el-button class="copy-btn" type="primary" link @click="copyContent(dataForm.requestParams)">复制</el-button>
+					<pre class="json-content">{{ formatJson(dataForm.requestParams) }}</pre>
+				</div>
 			</el-descriptions-item>
-			<el-descriptions-item :span="2" label="请求体">
-				<pre>{{ dataForm.requestBody }}</pre>
+			<el-descriptions-item :span="2" label="响应内容">
+				<div class="json-container">
+					<el-button class="copy-btn" type="primary" link @click="copyContent(dataForm.responseResult)">复制</el-button>
+					<pre class="json-content">{{ formatJson(dataForm.responseResult) }}</pre>
+				</div>
 			</el-descriptions-item>
-			<el-descriptions-item label="响应状态">{{ dataForm.responseStatus }}</el-descriptions-item>
-			<el-descriptions-item label="耗时(ms)">{{ dataForm.costTime }}</el-descriptions-item>
-			<el-descriptions-item label="操作时间">{{ dataForm.createTime }}</el-descriptions-item>
 		</el-descriptions>
 		<template #footer>
 			<el-button @click="visible = false">关闭</el-button>
@@ -24,28 +31,40 @@
 </template>
 
 <script lang="ts" setup>
-import {reactive, ref} from "vue";
-import {useLogApi} from "@/api/sys/log/api";
+import { useLogApi } from "@/api/sys/log/api";
+import { ElMessage } from "element-plus";
+import { reactive, ref } from "vue";
 
 const visible = ref(false)
 const dataForm = reactive({
 	id: '',
-	operator: '',
-	operatorId: '',
-	operateType: '',
-	operateModule: '',
-	operateIp: '',
-	requestMethod: '',
-	requestUrl: '',
+	operatorName: '',
+	typeName: '',
+	moduleName: '',
+	operateTime: '',
+	status: 0,
 	requestParams: '',
-	requestBody: '',
-	responseStatus: '',
-	costTime: '',
-	createTime: ''
+	responseResult: ''
 })
 
+const formatJson = (content: string) => {
+	try {
+		if (!content) return '';
+		const obj = JSON.parse(content);
+		return JSON.stringify(obj, null, 2);
+	} catch (e) {
+		return content;
+	}
+}
 
-
+const copyContent = (content: string) => {
+	if (!content) return;
+	navigator.clipboard.writeText(content).then(() => {
+		ElMessage.success('复制成功');
+	}).catch(() => {
+		ElMessage.error('复制失败');
+	});
+}
 
 const init = (id?: string) => {
 	visible.value = true
@@ -62,9 +81,29 @@ defineExpose({
 </script>
 
 <style scoped>
-pre {
+.json-container {
+	position: relative;
+	width: 100%;
+}
+
+.copy-btn {
+	position: absolute;
+	right: 0;
+	top: 0;
+	z-index: 1;
+}
+
+.json-content {
 	margin: 0;
+	padding: 10px;
+	background-color: #f5f7fa;
+	border-radius: 4px;
+	max-height: 300px;
+	overflow-y: auto;
 	white-space: pre-wrap;
 	word-wrap: break-word;
+	font-family: Consolas, Monaco, 'Andale Mono', monospace;
+	font-size: 13px;
+	line-height: 1.5;
 }
 </style>
