@@ -3,7 +3,6 @@ package com.miguoma.by.common.config;
 import java.time.format.DateTimeFormatter;
 
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
@@ -11,8 +10,6 @@ import org.springframework.format.datetime.standard.DateTimeFormatterRegistrar;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-
-import com.miguoma.by.common.filter.RequestWrapperFilter;
 
 import cn.dev33.satoken.interceptor.SaInterceptor;
 import cn.hutool.core.date.DatePattern;
@@ -61,13 +58,5 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .allowCredentials(true);
     }
 
-    @Bean
-    public FilterRegistrationBean<RequestWrapperFilter> requestWrapperFilter() {
-        FilterRegistrationBean<RequestWrapperFilter> registration = new FilterRegistrationBean<>();
-        registration.setFilter(new RequestWrapperFilter());
-        registration.addUrlPatterns("/*");
-        registration.setName("requestWrapperFilter");
-        registration.setOrder(1);
-        return registration;
-    }
+
 }

@@ -24,7 +24,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @RequiredArgsConstructor
 public class MybatisPlusConfig {
 
-    private final Environment environment;
 
     @Bean
     public MybatisPlusInterceptor mybatisPlusInterceptor() {

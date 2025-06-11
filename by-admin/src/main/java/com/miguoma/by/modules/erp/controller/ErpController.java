@@ -2,6 +2,9 @@ package com.miguoma.by.modules.erp.controller;
 
 
 import cn.dev33.satoken.annotation.SaIgnore;
+import com.miguoma.by.common.annotation.ErpLogCut;
+import com.miguoma.by.common.enums.ErpLogModuleEnums;
+import com.miguoma.by.common.enums.ErpLogTypeEnums;
 import com.miguoma.by.common.utils.Result;
 import com.miguoma.by.modules.erp.annotation.SignatureCheck;
 import com.miguoma.by.modules.erp.dto.ErpDepartDTO;
@@ -48,6 +51,7 @@ public class ErpController {
      * @return 创建结果
      */
     @SignatureCheck
+    @ErpLogCut(module = ErpLogModuleEnums.DEPART_AND_WORK_SHOP)
     @PostMapping("/productionDepart/batchCreate")
     public Result<String> batchCreateProductionDepart(@RequestBody List<ErpDepartDTO> erpDepartDTOList) {
         log.info("接收到批量创建生产部门请求:{}", erpDepartDTOList);
@@ -63,6 +67,7 @@ public class ErpController {
      * @return 创建结果
      */
     @SignatureCheck
+    @ErpLogCut(module = ErpLogModuleEnums.PRODUCT_CATEGORY)
     @PostMapping("/productCategory/batchCreate")
     public Result<String> batchCreateProductCategory(@RequestBody List<ErpProductCategoryDTO> erpProductCategoryDTOS) {
         log.info("接收到批量创建产品类别请求:{}", erpProductCategoryDTOS);
@@ -78,6 +83,7 @@ public class ErpController {
      * @return 创建结果
      */
     @SignatureCheck
+    @ErpLogCut(module = ErpLogModuleEnums.PRODUCT)
     @PostMapping("/product/batchCreate")
     public Result<String> batchCreateProduct(@RequestBody List<ErpProductDTO> erpProductDTOList) {
         log.info("接收到批量创建产品请求:{}", erpProductDTOList);
@@ -92,6 +98,7 @@ public class ErpController {
      * @return 创建结果
      */
     @SignatureCheck
+    @ErpLogCut(module = ErpLogModuleEnums.ORDER)
     @PostMapping("/order/create")
     public Result<String> createOrder(@RequestBody ErpOrderDTO erpOrderDTO) {
         log.info("接收到创建订单请求:{}", erpOrderDTO);

@@ -31,7 +31,7 @@ public class BoxCodeController {
      * @return 分页结果
      */
     @GetMapping("/page")
-    @SysLogCut(type = SysLogTypeEnums.SELECT, module = SysLogModuleEnums.CODE_RULE)
+    @SysLogCut(type = SysLogTypeEnums.PAGE, module = SysLogModuleEnums.CODE_RULE)
     @SaCheckPermission(value = "record:boxCode:page")
     public Result<PageVO<RecordBoxCodeVO>> page(RecordBoxCodeQuery recordBoxCodeQuery) {
         PageVO<RecordBoxCodeVO> pageResult = recordBoxCodeService.pageVO(recordBoxCodeQuery);

@@ -32,7 +32,7 @@ public class CodeRuleController {
      * @return 分页结果
      */
     @GetMapping("/page")
-    @SysLogCut(type = SysLogTypeEnums.SELECT, module = SysLogModuleEnums.CODE_RULE)
+    @SysLogCut(type = SysLogTypeEnums.PAGE, module = SysLogModuleEnums.CODE_RULE)
     @SaCheckPermission(value = "sys:codeRule:page")
     public Result<PageVO<SysCodeRuleVO>> page(SysCodeRuleQuery sysCodeRuleQuery) {
         PageVO<SysCodeRuleVO> pageResult = sysCodeRuleService.pageVO(sysCodeRuleQuery);
@@ -99,7 +99,7 @@ public class CodeRuleController {
      * @return 编码规则详情
      */
     @GetMapping("/info")
-    @SysLogCut(type = SysLogTypeEnums.SELECT, module = SysLogModuleEnums.CODE_RULE)
+    @SysLogCut(type = SysLogTypeEnums.PAGE, module = SysLogModuleEnums.CODE_RULE)
     @SaCheckPermission(value = "sys:codeRule:info")
     public Result<SysCodeRuleVO> info(Long id) {
         SysCodeRuleVO codeRuleVO = sysCodeRuleService.getOneById(id);

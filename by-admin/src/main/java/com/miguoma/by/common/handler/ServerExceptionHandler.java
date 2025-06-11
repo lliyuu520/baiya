@@ -61,7 +61,7 @@ public class ServerExceptionHandler {
      */
     @ExceptionHandler(IllegalArgumentException.class)
     public Result<String> handleIllegalArgumentException(IllegalArgumentException ex) {
-        ServerExceptionHandler.log.error(ex.getMessage(), ex);
+       log.error(ex.getMessage(), ex);
         return Result.error(ex.getMessage());
     }
 
@@ -73,7 +73,7 @@ public class ServerExceptionHandler {
      */
     @ExceptionHandler(NoSuchElementException.class)
     public Result<String> handleException(NoSuchElementException ex) {
-        ServerExceptionHandler.log.error(ex.getMessage(), ex);
+       log.error(ex.getMessage(), ex);
         return Result.error("数据不存在");
     }
 
@@ -86,7 +86,7 @@ public class ServerExceptionHandler {
      */
     @ExceptionHandler(Exception.class)
     public Result<String> handleException(Exception ex) {
-        ServerExceptionHandler.log.error(ex.getMessage(), ex);
+       log.error(ex.getMessage(), ex);
         return Result.error(500, "服务器异常，请稍后再试");
     }
 

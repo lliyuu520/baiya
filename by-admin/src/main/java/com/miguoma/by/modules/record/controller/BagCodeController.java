@@ -31,7 +31,7 @@ public class BagCodeController {
      * @return 分页结果
      */
     @GetMapping("/page")
-    @SysLogCut(type = SysLogTypeEnums.SELECT, module = SysLogModuleEnums.CODE_RULE)
+    @SysLogCut(type = SysLogTypeEnums.PAGE, module = SysLogModuleEnums.CODE_RULE)
     @SaCheckPermission(value = "record:bagCode:page")
     public Result<PageVO<RecordBagCodeVO>> page(RecordBagCodeQuery recordBagCodeQuery) {
         PageVO<RecordBagCodeVO> pageResult = recordBagCodeService.pageVO(recordBagCodeQuery);

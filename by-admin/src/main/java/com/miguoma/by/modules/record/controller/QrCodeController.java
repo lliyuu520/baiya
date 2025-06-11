@@ -31,7 +31,7 @@ public class QrCodeController {
      * @return 分页结果
      */
     @GetMapping("/page")
-    @SysLogCut(type = SysLogTypeEnums.SELECT, module = SysLogModuleEnums.CODE_RULE)
+    @SysLogCut(type = SysLogTypeEnums.PAGE, module = SysLogModuleEnums.CODE_RULE)
     @SaCheckPermission(value = "record:qrCode:page")
     public Result<PageVO<RecordQrCodeVO>> page(RecordQrCodeQuery recordQrCodeQuery) {
         PageVO<RecordQrCodeVO> pageResult = recordQrCodeService.pageVO(recordQrCodeQuery);

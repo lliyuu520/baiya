@@ -28,7 +28,7 @@ public class ThreadPoolConfiguration implements AsyncConfigurer {
         taskExecutor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
         taskExecutor.setWaitForTasksToCompleteOnShutdown(true);
         taskExecutor.setAwaitTerminationSeconds(60);
-        taskExecutor.setThreadNamePrefix("HAOZI-Thread-");
+        taskExecutor.setThreadNamePrefix("Thread-");
         taskExecutor.initialize();
 
         return taskExecutor.getThreadPoolExecutor();

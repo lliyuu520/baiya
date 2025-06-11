@@ -36,7 +36,7 @@ public class ProductionTeamController {
      * @return
      */
     @GetMapping("/page")
-    @SysLogCut(type = SysLogTypeEnums.SELECT, module = SysLogModuleEnums.TEAM)
+    @SysLogCut(type = SysLogTypeEnums.PAGE, module = SysLogModuleEnums.TEAM)
     @SaCheckPermission(value = "production:team:page")
     public Result<PageVO<ProductionTeamVO>> page(ProductionTeamQuery productionTeamQuery) {
         PageVO<ProductionTeamVO> pageResult = productionTeamService.pageVO(productionTeamQuery);

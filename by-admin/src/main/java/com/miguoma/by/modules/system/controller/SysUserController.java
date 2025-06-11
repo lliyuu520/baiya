@@ -53,7 +53,7 @@ public class SysUserController {
      */
     @GetMapping("page")
     @SaCheckPermission("sys:user:page")
-    @SysLogCut(module = SysLogModuleEnums.USER, type = SysLogTypeEnums.SELECT)
+    @SysLogCut(module = SysLogModuleEnums.USER, type = SysLogTypeEnums.PAGE)
     public Result<PageVO<SysUserVO>> page(final SysUserQuery query) {
         final PageVO<SysUserVO> page = this.sysUserService.page(query);
         return Result.ok(page);

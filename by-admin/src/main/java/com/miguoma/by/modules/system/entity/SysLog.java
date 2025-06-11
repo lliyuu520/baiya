@@ -14,7 +14,6 @@ import lombok.EqualsAndHashCode;
  * @author AI Assistant
  */
 @Data
-@TableName("sys_log")
 @EqualsAndHashCode(callSuper = true)
 public class SysLog extends BaseEntity {
 

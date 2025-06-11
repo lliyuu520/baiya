@@ -39,7 +39,7 @@ public class ProductionDepartAndWorkshopController {
      * @return 分页结果
      */
     @GetMapping("/page")
-    @SysLogCut(type = SysLogTypeEnums.SELECT, module = SysLogModuleEnums.FACTORY)
+    @SysLogCut(type = SysLogTypeEnums.PAGE, module = SysLogModuleEnums.DEPART_AND_WORK_SHOP)
     @SaCheckPermission(value = "production:departAndWorkshop:page")
     public Result<PageVO<ProductionDepartAndWorkshopVO>> page(
             ProductionDepartAndWorkshopQuery productionDepartAndWorkshopQuery) {
@@ -55,6 +55,7 @@ public class ProductionDepartAndWorkshopController {
      * @return
      */
     @GetMapping("/info")
+    @SysLogCut(type = SysLogTypeEnums.PAGE, module = SysLogModuleEnums.DEPART_AND_WORK_SHOP)
     public Result<ProductionDepartAndWorkshop> info(Long id) {
         ProductionDepartAndWorkshop productionDepartAndWorkshop = productionDepartAndWorkshopService.getById(id);
         return Result.ok(productionDepartAndWorkshop);
@@ -81,6 +82,7 @@ public class ProductionDepartAndWorkshopController {
      * 配置别名
      */
     @PostMapping("/configAlias")
+    @SysLogCut(type = SysLogTypeEnums.CONFIG_ALIAS, module = SysLogModuleEnums.DEPART_AND_WORK_SHOP)
     public Result<Void> configAlias(@RequestBody ProductionDepartAndWorkshopDTO productionDepartAndWorkshopDTO) {
         productionDepartAndWorkshopService.configAlias(productionDepartAndWorkshopDTO);
         return Result.ok();
@@ -92,6 +94,7 @@ public class ProductionDepartAndWorkshopController {
      * @param productionDepartAndWorkshopDTO
      * @return
      */
+    @SysLogCut(type = SysLogTypeEnums.CONFIG_CODE_RULE, module = SysLogModuleEnums.DEPART_AND_WORK_SHOP)
     @PostMapping("/configCodeRule")
     public Result<Void> configCodeRule(@RequestBody ProductionDepartAndWorkshopDTO productionDepartAndWorkshopDTO) {
         productionDepartAndWorkshopService.configCodeRule(productionDepartAndWorkshopDTO);

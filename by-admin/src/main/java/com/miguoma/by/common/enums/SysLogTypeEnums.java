@@ -28,7 +28,7 @@ public enum SysLogTypeEnums {
     /**
      * 查询操作日志类型，用于记录查询数据的操作。
      */
-    SELECT("查询"),
+    PAGE("查询"),
     /**
      * 查看
      */
@@ -57,7 +57,17 @@ public enum SysLogTypeEnums {
     /**
      * 撤销返工 
      */
-    CANCEL_REWORK("撤销返工");
+    CANCEL_REWORK("撤销返工"),
+
+    /**
+     * 配置规则
+     */
+    CONFIG_CODE_RULE("配置编码规则"),
+    /**
+     * 配置别名
+     */
+    CONFIG_ALIAS("配置别名"),
+    ;
 
     private final String desc;
 

@@ -36,7 +36,7 @@ public class ProductionOrderController {
      * @return 分页结果
      */
     @GetMapping("/page")
-    @SysLogCut(type = SysLogTypeEnums.SELECT, module = SysLogModuleEnums.ORDER)
+    @SysLogCut(type = SysLogTypeEnums.PAGE, module = SysLogModuleEnums.ORDER)
     @SaCheckPermission(value = "production:order:page")
     public Result<PageVO<ProductionOrderVO>> page(ProductionOrderQuery orderQuery) {
         PageVO<ProductionOrderVO> pageResult = productionOrderService.pageVO(orderQuery);

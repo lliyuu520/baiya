@@ -41,7 +41,7 @@ public class ProductionProductController {
      * @return 分页结果
      */
     @GetMapping("/page")
-    @SysLogCut(type = SysLogTypeEnums.SELECT, module = SysLogModuleEnums.PRODUCT)
+    @SysLogCut(type = SysLogTypeEnums.PAGE, module = SysLogModuleEnums.PRODUCT)
     @SaCheckPermission(value = "production:product:page")
     public Result<PageVO<ProductionProductVO>> page(ProductionProductQuery productQuery) {
         PageVO<ProductionProductVO> pageResult = productionProductService.pageVO(productQuery);

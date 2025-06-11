@@ -36,7 +36,7 @@ public class ProductionFactoryController {
      * @return 分页结果
      */
     @GetMapping("/page")
-    @SysLogCut(type = SysLogTypeEnums.SELECT, module = SysLogModuleEnums.FACTORY)
+    @SysLogCut(type = SysLogTypeEnums.PAGE, module = SysLogModuleEnums.FACTORY)
     @SaCheckPermission(value = "production:factory:page")
     public Result<PageVO<ProductionFactoryVO>> page(ProductionFactoryQuery productionFactoryQuery) {
         PageVO<ProductionFactoryVO> pageResult = productionFactoryService.pageVO(productionFactoryQuery);

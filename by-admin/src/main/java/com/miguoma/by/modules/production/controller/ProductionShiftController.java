@@ -37,7 +37,7 @@ public class ProductionShiftController {
      * @return 分页结果
      */
     @GetMapping("/page")
-    @SysLogCut(type = SysLogTypeEnums.SELECT, module = SysLogModuleEnums.PRODUCTION_LINE)
+    @SysLogCut(type = SysLogTypeEnums.PAGE, module = SysLogModuleEnums.SHIFT)
     @SaCheckPermission(value = "production:shift:page")
     public Result<PageVO<ProductionShiftVO>> page(ProductionShiftQuery productionShiftQuery) {
         PageVO<ProductionShiftVO> pageResult = productionShiftService.pageVO(productionShiftQuery);

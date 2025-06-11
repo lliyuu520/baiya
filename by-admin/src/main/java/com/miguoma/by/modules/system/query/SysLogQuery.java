@@ -16,6 +16,6 @@ public class SysLogQuery extends BaseQuery {
     /**
      * 操作模块
      */
-    private String module;
+    private String moduleName;
 
 }
