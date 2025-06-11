@@ -4,6 +4,39 @@
 			<el-form-item label="箱码">
 				<el-input v-model="state.queryForm.code" clearable></el-input>
 			</el-form-item>
+			<el-form-item label="拉码类型">
+				<el-select v-model="state.queryForm.pullType" clearable>
+					<el-option v-for="item in pullTypeList" :key="item.code" :label="item.desc" :value="item.code"></el-option>
+				</el-select>
+			</el-form-item>
+			<el-form-item label="成品订单号">
+				<el-input v-model="state.queryForm.finishedOrderNo" clearable></el-input>
+			</el-form-item>
+			<el-form-item label="半成品订单号">
+				<el-input v-model="state.queryForm.semiFinishedOrderNo" clearable></el-input>
+			</el-form-item>
+			<el-form-item label="是否上传">
+				<el-select v-model="state.queryForm.uploadFlag" clearable>
+					<el-option label="是" value="true"></el-option>
+					<el-option label="否" value="false"></el-option>
+				</el-select>
+			</el-form-item>
+			
+			<el-form-item label="上传时间" v-if="state.queryForm.uploadFlag">
+				<el-date-picker v-model="state.queryForm.uploadDateTimeRange" value-format="YYYY-MM-DD HH:mm:ss" format="YYYY-MM-DD HH:mm:ss" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期"></el-date-picker>
+			</el-form-item>
+			<el-form-item label="是否组垛">
+				<el-select v-model="state.queryForm.cribFlag" clearable>
+					<el-option label="是" value="true"></el-option>
+					<el-option label="否" value="false"></el-option>
+				</el-select>
+			</el-form-item>
+			<el-form-item label="组垛时间" v-if="state.queryForm.cribFlag">
+				<el-date-picker v-model="state.queryForm.cribDateTimeRange" value-format="YYYY-MM-DD HH:mm:ss" format="YYYY-MM-DD HH:mm:ss" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期"></el-date-picker>
+			</el-form-item>
+			<el-form-item label="垛码" v-if="state.queryForm.cribFlag">
+				<el-input v-model="state.queryForm.cribCode" clearable></el-input>
+			</el-form-item>
 			<el-form-item>
 				<el-button @click="getDataList()">查询</el-button>
 			</el-form-item>
@@ -21,13 +54,20 @@
 					{{ filterPullType(scope.row.pullType) }}
 				</template>
 			</el-table-column>
-			
+
 			<el-table-column align="center" header-align="center" label="成品订单号" prop="finishedOrderNo"></el-table-column>
 			<el-table-column align="center" header-align="center" label="半成品订单号" prop="semiFinishedOrderNo"></el-table-column>
 			<el-table-column align="center" header-align="center" label="上传时间" prop="uploadDateTime" width="180">
 				<template #default="scope">
 					{{ scope.row.uploadDateTime ? scope.row.uploadDateTime.replace('T', ' ') : '' }}
 				</template>
+			</el-table-column>
+			<el-table-column align="center" header-align="center" label="垛码" prop="cribCode"></el-table-column>
+			<el-table-column align="center" header-align="center" label="组垛时间" prop="cribDateTime" width="180">	
+				<template #default="scope">
+					{{ scope.row.cribDateTime ? scope.row.cribDateTime.replace('T', ' ') : '' }}
+				</template>
+				
 			</el-table-column>
 		</el-table>
 		<el-pagination
@@ -51,7 +91,15 @@ import {onMounted, reactive} from "vue";
 const state: IHooksOptions = reactive({
 	dataListUrl: '/record/boxCode/page',
 	queryForm: {
-		code: ''
+		code: '',
+		uploadFlag: '',
+		cribFlag: '',
+		finishedOrderNo: '',
+		semiFinishedOrderNo: '',
+		cribCode: '',
+		uploadDateTimeRange: [],
+		cribDateTimeRange: [],
+		pullType: '',
 	}
 })
 

@@ -4,6 +4,24 @@
 			<el-form-item label="袋码">
 				<el-input v-model="state.queryForm.code" clearable></el-input>
 			</el-form-item>
+			<el-form-item label="是否上传">
+				<el-select v-model="state.queryForm.uploadFlag" clearable>
+					<el-option label="是" value="true"></el-option>
+					<el-option label="否" value="false"></el-option>
+				</el-select>
+			</el-form-item>
+			<el-form-item label="上传时间" v-if="state.queryForm.uploadFlag">
+				<el-date-picker v-model="state.queryForm.uploadDateTimeRange" value-format="YYYY-MM-DD HH:mm:ss" format="YYYY-MM-DD HH:mm:ss" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期"></el-date-picker>
+			</el-form-item>
+			<el-form-item label="箱码" v-if="state.queryForm.uploadFlag">
+				<el-input v-model="state.queryForm.boxCode" clearable></el-input>
+			</el-form-item>
+			<el-form-item label="成品订单号">
+				<el-input v-model="state.queryForm.finishedOrderNo" clearable></el-input>
+			</el-form-item>
+			<el-form-item label="半成品订单号">
+				<el-input v-model="state.queryForm.semiFinishedOrderNo" clearable></el-input>
+			</el-form-item>
 			<el-form-item>
 				<el-button @click="getDataList()">查询</el-button>
 			</el-form-item>
@@ -45,7 +63,12 @@ import {onMounted, reactive} from "vue";
 const state: IHooksOptions = reactive({
 	dataListUrl: '/record/bagCode/page',
 	queryForm: {
-		code: ''
+		code: '',
+		uploadFlag: '',
+		finishedOrderNo: '',
+		semiFinishedOrderNo: '',
+		boxCode: '',
+		uploadDateTimeRange: []
 	}
 })
 

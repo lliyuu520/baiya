@@ -2,6 +2,7 @@ package com.miguoma.by.modules.production.service.impl;
 
 import cn.hutool.core.codec.Base32;
 import cn.hutool.core.codec.Base62;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -691,49 +692,53 @@ public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderM
         final RecordCodeUploadDTO.RecordQrCodeUploadDTO qrCodeUploadDTO = recordCodeUploadDTO.getQrCodeUploadDTO();
         final String boxCode = qrCodeUploadDTO.getBoxCode();
         final List<String> qrCodeList = qrCodeUploadDTO.getQrCodeList();
-        final RecordBoxCode recordBoxCode = recordBoxCodeService.getOneByBoxCode(boxCode);
-        if (recordBoxCode == null) {
-            throw new BaseException("箱码:{}不存在", boxCode);
+        if (StrUtil.isNotBlank(boxCode) && CollUtil.isNotEmpty(qrCodeList)) {
+            final RecordBoxCode recordBoxCode = recordBoxCodeService.getOneByBoxCode(boxCode);
+            if (recordBoxCode == null) {
+                throw new BaseException("箱码:{}不存在", boxCode);
+            }
+            recordBoxCode.setUploadDateTime(now);
+            recordBoxCodeService.updateById(recordBoxCode);
+            List<RecordQrCode> recordQrCodeList = recordQrCodeService.listByQrCode(qrCodeList);
+            recordQrCodeList.forEach(n -> {
+                n.setUploadDateTime(now);
+                n.setBoxCode(boxCode);
+            });
+            recordQrCodeService.updateBatchById(recordQrCodeList);
         }
-        recordBoxCode.setUploadDateTime(now);
-        recordBoxCodeService.updateById(recordBoxCode);
-        List<RecordQrCode> recordQrCodeList = recordQrCodeService.listByQrCode(qrCodeList);
-        recordQrCodeList.forEach(n -> {
-            n.setUploadDateTime(now);
-        });
-        recordQrCodeService.updateBatchById(recordQrCodeList);
-// 箱垛
 
         final RecordCodeUploadDTO.CribCodeUploadDTO cribCodeUploadDTO = recordCodeUploadDTO.getCribCodeUploadDTO();
         final String cribCode = cribCodeUploadDTO.getCribCode();
         final List<String> boxCodeList = cribCodeUploadDTO.getBoxCodeList();
-        List<RecordBoxCode> recordBoxCodeList = recordBoxCodeService.listByBoxCode(boxCodeList);
-        recordBoxCodeList.forEach(n -> {
-            n.setCribCode(cribCode);
-            final LocalDateTime uploadDateTime = n.getUploadDateTime();
-            if (uploadDateTime == null) {
-                n.setUploadDateTime(now);
-            }
-            n.setCribDateTime(now);
-        });
-
-        recordBoxCodeService.updateBatchById(recordBoxCodeList);
-
-        boxCodeList.forEach(m -> {
-            final RecordBoxCode subRecordBoxCode = recordBoxCodeService.getOneByBoxCode(m);
-            if (subRecordBoxCode == null) {
-                throw new BaseException("箱码:{}不存在", m);
-            }
-            final String pullType = subRecordBoxCode.getPullType();
-            if (StrUtil.equals(pullType, "LOGISTICS_CODE")) {
-                List<RecordBagCode> recordBagCodeList = recordBagCodeService.listByBoxCode(m);
-                recordBagCodeList.forEach(n -> {
+        if (StrUtil.isNotBlank(cribCode) && CollUtil.isNotEmpty(boxCodeList)) {
+            List<RecordBoxCode> recordBoxCodeList = recordBoxCodeService.listByBoxCode(boxCodeList);
+            recordBoxCodeList.forEach(n -> {
+                n.setCribCode(cribCode);
+                final LocalDateTime uploadDateTime = n.getUploadDateTime();
+                if (uploadDateTime == null) {
                     n.setUploadDateTime(now);
-                });
-                recordBagCodeService.updateBatchById(recordBagCodeList);
-            }
+                }
+                n.setCribDateTime(now);
+            });
 
-        });
+            recordBoxCodeService.updateBatchById(recordBoxCodeList);
+
+            boxCodeList.forEach(m -> {
+                final RecordBoxCode subRecordBoxCode = recordBoxCodeService.getOneByBoxCode(m);
+                if (subRecordBoxCode == null) {
+                    throw new BaseException("箱码:{}不存在", m);
+                }
+                final String pullType = subRecordBoxCode.getPullType();
+                if (StrUtil.equals(pullType, "LOGISTICS_CODE")) {
+                    List<RecordBagCode> recordBagCodeList = recordBagCodeService.listByBoxCode(m);
+                    recordBagCodeList.forEach(n -> {
+                        n.setUploadDateTime(now);
+                    });
+                    recordBagCodeService.updateBatchById(recordBagCodeList);
+                }
+
+            });
+        }
     }
 
     /**

@@ -13,6 +13,14 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class RecordBoxCodeVO extends RecordBoxCode {
-   
+    /**
+     * 成品订单号
+     */
+    private String finishedOrderNo;
+
+    /**
+     * 半成品订单号
+     */
+    private String semiFinishedOrderNo;
 
 } 

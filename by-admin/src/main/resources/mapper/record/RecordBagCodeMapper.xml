@@ -14,7 +14,25 @@
         inner join production_order c on a.semi_finished_product_order_id = c.id
         <where>
             <if test="query.code != null and query.code != ''">
-             a.code = #{query.code}
+                a.code = #{query.code}
+            </if>
+            <if test="query.finishedOrderNo != null and query.finishedOrderNo != ''">
+             and   b.order_no = #{query.finishedOrderNo}
+            </if>
+            <if test="query.semiFinishedOrderNo != null and query.semiFinishedOrderNo != ''">
+           and    c.order_no = #{query.semiFinishedOrderNo}
+            </if>
+            <if test="query.boxCode != null and query.boxCode != ''">
+               and a.box_code = #{query.boxCode}
+            </if>
+            <if test="query.uploadDateTimeBegin != null">
+               and a.upload_date_time &gt;= #{query.uploadDateTimeBegin}
+            </if>
+            <if test="query.uploadDateTimeEnd != null">
+               and a.upload_date_time &lt;= #{query.uploadDateTimeEnd}
+            </if>
+            <if test="query.uploadFlag != null">
+               and a.upload_date_time is not null
             </if>
         </where>
         order by a.id desc
