@@ -50,7 +50,7 @@ public class ErpController {
      * @param erpDepartDTOList 生产部门信息
      * @return 创建结果
      */
-    @SignatureCheck
+    @SignatureCheck(required = false)
     @ErpLogCut(module = ErpLogModuleEnums.DEPART_AND_WORK_SHOP)
     @PostMapping("/productionDepart/batchCreate")
     public Result<String> batchCreateProductionDepart(@RequestBody List<ErpDepartDTO> erpDepartDTOList) {
@@ -66,7 +66,7 @@ public class ErpController {
      * @param erpProductCategoryDTOS 产品类别信息
      * @return 创建结果
      */
-    @SignatureCheck
+    @SignatureCheck(required = false)
     @ErpLogCut(module = ErpLogModuleEnums.PRODUCT_CATEGORY)
     @PostMapping("/productCategory/batchCreate")
     public Result<String> batchCreateProductCategory(@RequestBody List<ErpProductCategoryDTO> erpProductCategoryDTOS) {
@@ -82,7 +82,7 @@ public class ErpController {
      * @param erpProductDTOList 产品信息
      * @return 创建结果
      */
-    @SignatureCheck
+    @SignatureCheck(required = false)
     @ErpLogCut(module = ErpLogModuleEnums.PRODUCT)
     @PostMapping("/product/batchCreate")
     public Result<String> batchCreateProduct(@RequestBody List<ErpProductDTO> erpProductDTOList) {
@@ -97,7 +97,7 @@ public class ErpController {
      * @param erpOrderDTO 订单信息
      * @return 创建结果
      */
-    @SignatureCheck
+    @SignatureCheck(required = false)
     @ErpLogCut(module = ErpLogModuleEnums.ORDER)
     @PostMapping("/order/create")
     public Result<String> createOrder(@RequestBody ErpOrderDTO erpOrderDTO) {
