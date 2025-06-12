@@ -2,3 +2,4 @@
 cursor/logs/by-admin/by-admin.log
 /.fastRequest/config/fastRequestCurrentProjectConfig.json
 /logs/by-admin/**
+/.idea/.cache/.Apifox_Helper/.toolWindow.db

@@ -3,20 +3,21 @@
   <component name="fastRequestCurrentParamGroup">
     <option name="bodyParamMap">
       <map>
-        <entry key="recordCodeUploadDTO">
+        <entry key="erpOrderDTO">
           <value>
             <Object />
           </value>
         </entry>
       </map>
     </option>
-    <option name="className" value="com.miguoma.by.modules.client.controller.ClientController" />
-    <option name="filePath" value="/" />
-    <option name="method" value="collectUpload" />
-    <option name="methodDescription" value="采集上传" />
+    <option name="clasDescription" value="ERP接口" />
+    <option name="className" value="com.miguoma.by.modules.erp.controller.ErpController" />
+    <option name="filePath" value="" />
+    <option name="method" value="createOrder" />
+    <option name="methodDescription" value="创建订单" />
     <option name="methodType" value="POST" />
     <option name="module" value="by-admin" />
-    <option name="originUrl" value="/client/collectUpload" />
+    <option name="originUrl" value="/erp/order/create" />
     <option name="responseParamMap">
       <map>
         <entry key="return">
@@ -27,6 +28,6 @@
       </map>
     </option>
     <option name="returnDocument" value="{&quot;code&quot;:&quot;No comment,Type =Number&quot;,&quot;msg&quot;:&quot;No comment,Type =String&quot;,&quot;data&quot;:{&quot;java.lang.String&quot;:&quot;No comment,Type =String&quot;}}" />
-    <option name="url" value="/client/pullCode" />
+    <option name="url" value="/erp/order/create" />
   </component>
 </project>
