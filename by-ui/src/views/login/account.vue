@@ -23,22 +23,13 @@ const router = useRouter()
 const loginFormRef = ref()
 
 const loginForm = reactive({
-	username: 'admin',
-	password: '123456'
+	username: '',
+	password: ''
 })
 
 const loginRules = ref({
 	username: [{ required: true, message: '必填项', trigger: 'blur' }],
 	password: [{ required: true, message: '必填项', trigger: 'blur' }]
-})
-let intervalId: any
-onMounted(() => {
-	intervalId = setInterval(() => {
-		onLogin()
-	}, 1000)
-})
-onBeforeUnmount(() => {
-	clearInterval(intervalId)
 })
 
 const onLogin = () => {
