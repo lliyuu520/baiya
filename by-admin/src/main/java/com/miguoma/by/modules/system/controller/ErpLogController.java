@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class ErpLogController {
 
-    private final ErpLogService sysLogService;
+    private final ErpLogService erpLogService;
 
     /**
      * @param query
@@ -25,7 +25,7 @@ public class ErpLogController {
     @GetMapping("/page")
     @SaCheckPermission(value = "erp:log:page")
     public Result<PageVO<ErpLog>> page(ErpLogQuery query) {
-        PageVO<ErpLog> page = sysLogService.pageVO(query);
+        PageVO<ErpLog> page = erpLogService.pageVO(query);
 
         return Result.ok(page);
     }
@@ -39,7 +39,7 @@ public class ErpLogController {
     @GetMapping("/info")
     @SaCheckPermission(value = "erp:log:info")
     public Result<ErpLog> info(Long id) {
-        ErpLog sysLog = sysLogService.getById(id);
+        ErpLog sysLog = erpLogService.getById(id);
 
         return Result.ok(sysLog);
     }
