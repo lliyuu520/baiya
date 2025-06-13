@@ -34,12 +34,12 @@ public class ErpOrderDTO implements Serializable {
     private String productionWorkshopCode;
 
     /**
-     * 生产班次 编码
+     * 生产班组 编码
      */
     private String productionShiftCode;
 
     /**
-     * 生产班组 编码
+     * 生产班次 编码
      */
     private String productionTeamCode;
 

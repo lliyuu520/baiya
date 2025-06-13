@@ -37,6 +37,11 @@ public class SysCodeRuleDTO implements Serializable {
     private List<SysCodeRuleDetailDTO> boxCodeRuleList;
 
     /**
+     * 内箱码规则详情
+     */
+    private List<SysCodeRuleDetailDTO> innerBoxCodeRuleList;
+
+    /**
      * 袋码规则详情
      */
     private List<SysCodeRuleDetailDTO> bagCodeRuleList;

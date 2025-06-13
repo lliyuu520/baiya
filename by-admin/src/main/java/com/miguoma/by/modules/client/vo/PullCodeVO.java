@@ -44,7 +44,27 @@ public class PullCodeVO implements Serializable {
         /**
          * 箱码数据
          */
-        private List<String> boxCodeList = new ArrayList<>();
+        private List<BoxCodeData> boxCodeDataList = new ArrayList<>();
+
+    }
+
+
+    /**
+     * 箱码
+     */
+    @Data
+    public static class BoxCodeData implements Serializable {
+
+        /**
+         * 箱码
+         */
+        private String boxCode;
+
+        /**
+         *  内箱码
+         */
+        private String innerBoxCode;
+
 
     }
 
@@ -62,6 +82,11 @@ public class PullCodeVO implements Serializable {
          * 袋码
          */
         private String bagCode  ;
+
+        /**
+         * 内箱码
+         */
+        private String innerBoxCode;
 
 
     }

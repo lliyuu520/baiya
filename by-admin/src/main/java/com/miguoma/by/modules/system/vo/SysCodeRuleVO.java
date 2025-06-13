@@ -19,6 +19,11 @@ public class SysCodeRuleVO extends SysCodeRule {
     List<SysCodeRuleDetailVO> boxCodeRuleList   = new ArrayList<>();
 
     /**
+     * 内箱编码规则明细
+     */
+    List<SysCodeRuleDetailVO> innerBoxCodeRuleList = new ArrayList<>();
+
+    /**
      * 袋子编码规则明细
      */
     List<SysCodeRuleDetailVO> bagCodeRuleList = new ArrayList<>();

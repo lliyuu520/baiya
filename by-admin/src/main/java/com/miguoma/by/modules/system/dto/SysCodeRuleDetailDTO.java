@@ -22,10 +22,7 @@ public class SysCodeRuleDetailDTO implements Serializable {
      */
     private String encodeType;
 
-    /**
-     * 排序号
-     */
-    private Integer weight;
+
 
     /**
      * 开始索引(1代表第一个)
@@ -39,4 +36,19 @@ public class SysCodeRuleDetailDTO implements Serializable {
      * 值
      */
     private String constant;
+
+    /**
+     * 长度
+     */
+    private Long length;
+
+    /**
+     * 随机类型 {@link RandomTypeEnums}
+     */
+    private String randomType;
+
+    /**
+     * 偏移年份
+     */
+    private Integer offsetYears;
 } 

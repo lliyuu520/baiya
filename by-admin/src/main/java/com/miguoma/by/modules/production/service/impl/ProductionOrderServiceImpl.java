@@ -356,7 +356,96 @@ public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderM
             }
             boxCodeStrBuilder.append(str);
         }
-        log.info("boxCodeStrBuilder:{}", boxCodeStrBuilder.toString());
+
+        // 内箱码
+        final List<SysCodeRuleDetail> innerBoxCodeRuleDetailList = sysCodeRuleDetailMapper.selectListByRuleIdSAndType(finishedCodeRule.getId(), RuleTypeEnums.INNER_BOX.getCode());
+
+        StringBuilder innerBoxCodeStrBuilder = new StringBuilder();
+        for (SysCodeRuleDetail m : innerBoxCodeRuleDetailList) {
+            final String sourceField = m.getSourceField();
+            final String constant = m.getConstant();
+            final Integer indexBegin = m.getIndexBegin();
+            final Integer indexEnd = m.getIndexEnd();
+            final String encodeType = m.getEncodeType();
+
+            String str = "";
+            //限用日期
+            if (StrUtil.equals(sourceField, SourceFiledEnums.FINISHED_LIMITED_USE_DATE.getCode())) {
+                final LocalDate limitedUseDate = finishedProductionDate.plusYears(3);
+                str = LocalDateTimeUtil.format(limitedUseDate, "yyyyMMdd");
+                str = StrUtil.sub(str, indexBegin, indexEnd);
+                // 修改编码方式
+                if (StrUtil.equals(encodeType, EncodeTypeEnums.BASE_62.getCode())) {
+                    str = Base62.encode(str);
+                }
+                if (StrUtil.equals(encodeType, EncodeTypeEnums.BASE_32.getCode())) {
+                    str = Base32.encode(str);
+                }
+            }
+            // 部门编码
+            if (StrUtil.equals(sourceField, SourceFiledEnums.FINISHED_PRODUCTION_DEPART_CODE.getCode())) {
+                str = finishedProductionDepartCode;
+                str = StrUtil.sub(str, indexBegin, indexEnd);
+                // 修改编码方式
+                if (StrUtil.equals(encodeType, EncodeTypeEnums.BASE_62.getCode())) {
+                    str = Base62.encode(str);
+                }
+                if (StrUtil.equals(encodeType, EncodeTypeEnums.BASE_32.getCode())) {
+                    str = Base32.encode(str);
+                }
+            }
+            // 车间编码
+            if (StrUtil.equals(sourceField, SourceFiledEnums.FINISHED_PRODUCTION_WORKSHOP_CODE.getCode())) {
+                str = finishedProductionWorkshopCode;
+                str = StrUtil.sub(str, indexBegin, indexEnd);
+                // 修改编码方式
+                if (StrUtil.equals(encodeType, EncodeTypeEnums.BASE_62.getCode())) {
+                    str = Base62.encode(str);
+                }
+                if (StrUtil.equals(encodeType, EncodeTypeEnums.BASE_32.getCode())) {
+                    str = Base32.encode(str);
+                }
+            }
+            // 订单编码
+            if (StrUtil.equals(sourceField, SourceFiledEnums.FINISHED_ORDER_CODE.getCode())) {
+                str = finishedOrderNo;
+                str = StrUtil.sub(str, indexBegin, indexEnd);
+                // 修改编码方式
+                if (StrUtil.equals(encodeType, EncodeTypeEnums.BASE_62.getCode())) {
+                    str = Base62.encode(str);
+                }
+                if (StrUtil.equals(encodeType, EncodeTypeEnums.BASE_32.getCode())) {
+                    str = Base32.encode(str);
+                }
+            }
+            // 产品编码
+            if (StrUtil.equals(sourceField, SourceFiledEnums.FINISHED_PRODUCT_CODE.getCode())) {
+                str = finishProductCode;
+                str = StrUtil.sub(str, indexBegin, indexEnd);
+                // 修改编码方式
+                if (StrUtil.equals(encodeType, EncodeTypeEnums.BASE_62.getCode())) {
+                    str = Base62.encode(str);
+                }
+                if (StrUtil.equals(encodeType, EncodeTypeEnums.BASE_32.getCode())) {
+                    str = Base32.encode(str);
+                }
+            }
+            // 箱号 需要填充 使用占位符即可
+            if (StrUtil.equals(sourceField, SourceFiledEnums.BOX_NO.getCode())) {
+                str = "{}";
+
+            }
+            // 常量
+            if (StrUtil.equals(sourceField, SourceFiledEnums.CONSTANT.getCode())) {
+                str = constant;
+            }
+            innerBoxCodeStrBuilder.append(str);
+        }
+
+
+
+
+
 
         // 半成品相关信息
         final String semiFinishedOrderNo = semiFinishedProductionOrder.getOrderNo();
@@ -591,11 +680,15 @@ public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderM
 
         int boxNoEnd = boxNoBegin + boxCodeNum;
         List<String> boxCodeList = new ArrayList<>();
+        List<String> innerBoxCodeList = new ArrayList<>();
         List<String> bagCodeList = new ArrayList<>();
+
         for (int i = boxNoBegin; i < boxNoEnd; i++) {
             String boxNo = StrUtil.fillBefore(String.valueOf(i), '0', 4);
             boxCodeList.add(StrUtil.format(boxCodeStrBuilder, boxNo));
             bagCodeList.add(StrUtil.format(bagCodeStrBuilder, boxNo));
+            innerBoxCodeList.add(StrUtil.format(innerBoxCodeStrBuilder, boxNo));
+
         }
 
         // 写入箱码
@@ -612,7 +705,20 @@ public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderM
             final PullCodeVO.QrCodeTypeData qrCodeTypeData = new PullCodeVO.QrCodeTypeData();
             pullCodeVO.setQrCodeTypeData(qrCodeTypeData);
             qrCodeTypeData.setQrCodeList(list);
-            qrCodeTypeData.setBoxCodeList(boxCodeList);
+            List<PullCodeVO.BoxCodeData> boxCodeDataList = new ArrayList<>();
+            for (int i = 0; i < boxCodeList.size(); i++) {
+                final PullCodeVO.BoxCodeData boxCodeData = new PullCodeVO.BoxCodeData();
+                final String boxCode = boxCodeList.get(i);
+                final String innerBoxCode = innerBoxCodeList.get(i);
+                boxCodeData.setBoxCode(boxCode);
+                boxCodeData.setInnerBoxCode(innerBoxCode);
+                boxCodeDataList.add(boxCodeData);
+            }
+
+
+
+
+            qrCodeTypeData.setBoxCodeDataList(boxCodeDataList);
 
             final List<RecordBoxCode> recordBoxCodeList = boxCodeList.stream().map(m -> {
                 final RecordBoxCode recordBoxCode = new RecordBoxCode();

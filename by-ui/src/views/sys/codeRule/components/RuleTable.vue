@@ -18,7 +18,7 @@
                     <el-icon class="drag-handle"><Rank /></el-icon>
                 </template>
             </el-table-column>
-            <el-table-column label="来源字段" width="280">
+            <el-table-column label="来源字段" width="180">
                 <template #default="{ row }">
                     <el-select v-model="row.sourceField" class="form-input" @change="handleSourceFieldChange(row)">
                         <el-option v-for="sourceField in sourceFieldList" :key="sourceField.code" :label="sourceField.name" :value="sourceField.code" />
@@ -28,34 +28,59 @@
             <el-table-column align="center" label="开始索引" width="90">
                 <template #default="{ row }">
                     <el-input-number v-model="row.indexBegin" :controls="false" :min="-1" class="input-number-mini" 
-                    :disabled=" row.sourceField === 'SPECIFY_BOX_NO' || row.sourceField === 'CONSTANT' || row.sourceField === 'BOX_NO'" />
+                    :disabled=" row.sourceField === 'SPECIFY_BOX_NO' || row.sourceField === 'CONSTANT' || row.sourceField === 'BOX_NO' || row.sourceField === 'RANDOM_STRING' || row.sourceField === 'FINISHED_TEAM_CODE' || row.sourceField === 'SEMI_FINISHED_TEAM_CODE'" />
                 </template>
             </el-table-column>
             <el-table-column align="center" label="结束索引" width="90">
                 <template #default="{ row }">
                     <el-input-number v-model="row.indexEnd" :controls="false" :min="-1" class="input-number-mini" 
-                    :disabled=" row.sourceField === 'SPECIFY_BOX_NO' || row.sourceField === 'CONSTANT' || row.sourceField === 'BOX_NO'" />
+                    :disabled=" row.sourceField === 'SPECIFY_BOX_NO' || row.sourceField === 'CONSTANT' || row.sourceField === 'BOX_NO' || row.sourceField === 'RANDOM_STRING' || row.sourceField === 'FINISHED_TEAM_CODE' || row.sourceField === 'SEMI_FINISHED_TEAM_CODE'" />
                 </template>
             </el-table-column>
-            <el-table-column align="center" label="编码类型" width="230">
+            <el-table-column align="center" label="编码类型" width="180">
                 <template #default="{ row }">
                     <el-select v-model="row.encodeType" class="form-input input-encode" 
-                    :disabled=" row.sourceField === 'SPECIFY_BOX_NO' || row.sourceField === 'CONSTANT' || row.sourceField === 'BOX_NO'" >
+                    :disabled=" row.sourceField === 'SPECIFY_BOX_NO' || row.sourceField === 'CONSTANT' || row.sourceField === 'BOX_NO' || row.sourceField === 'FINISHED_TEAM_CODE' || row.sourceField === 'SEMI_FINISHED_TEAM_CODE'" >
 
                         <el-option v-for="type in encodeTypeList" :key="type.code" :label="type.name" :value="type.code" />
                     </el-select>
                 </template>
             </el-table-column>
-            <el-table-column align="center" label="取值" width="120">
+            <el-table-column align="center" label="长度" width="80">
                 <template #default="{ row }">
-                    <el-input v-model="row.constant" class="input-constant" 
-                    :disabled="row.sourceField !== 'CONSTANT'&&row.sourceField !== 'SPECIFY_BOX_NO'" />
+                    <el-input-number v-model="row.length" :controls="false" :min="0" class="input-number-mini" 
+                      :disabled=" row.sourceField !== 'BOX_NO' && row.sourceField !== 'RANDOM_STRING'"
+                    />
                 </template>
             </el-table-column>
 
-            <el-table-column :resizable="false" align="center" label="操作" width="60">
+            <el-table-column align="center" label="取值" width="200">
+                <template #default="{ row }">
+                    <el-input v-if="row.sourceField === 'CONSTANT' || row.sourceField === 'SPECIFY_BOX_NO'"
+                        v-model="row.constant" 
+                        class="input-constant" />
+                    <el-select v-else-if="row.sourceField === 'RANDOM_STRING'"
+                        v-model="row.randomType"
+                        class="form-input">
+                        <el-option
+                            v-for="type in randomTypeList"
+                            :key="type.code"
+                            :label="type.name"
+                            :value="type.code"
+                        />
+                    </el-select>
+                    <el-input v-else
+                        v-model="row.constant"
+                        class="input-constant"
+                        disabled />
+                </template>
+            </el-table-column>
+
+            <el-table-column :resizable="false" align="center" label="操作" width="160">
                 <template #default="{ $index }">
+                    <el-button b :icon="ArrowUp" circle title="在上方插入" type="primary" @click="insertRule($index, 'above')" />
                     <el-button b :icon="Delete" circle title="删除" type="danger" @click="removeRule($index)" />
+                    <el-button b :icon="ArrowDown" circle title="在下方插入" type="primary" @click="insertRule($index, 'below')" />
                 </template>
             </el-table-column>
         </el-table>
@@ -64,16 +89,16 @@
 </template>
 
 <script lang="ts" setup>
-import {Delete, Plus, Rank} from "@element-plus/icons-vue";
-import {computed} from "vue";
-import type {RuleDetail, SourceFieldOption} from "../config/ruleTypes";
-import {encodeTypeList} from "../config/ruleTypes";
+import { ArrowDown, ArrowUp, Delete, Plus, Rank } from "@element-plus/icons-vue";
+import { computed } from "vue";
+import type { RuleDetail, SourceFieldOption } from "../config/ruleTypes";
+import { encodeTypeList, randomTypeList } from "../config/ruleTypes";
 
 const props = defineProps<{
     ruleList: RuleDetail[]
     sourceFieldList: SourceFieldOption[]
     isEditMode: boolean
-    type: 'boxCode' | 'bagCode' | 'universalCode'
+    type: 'boxCode' | 'innerBoxCode' | 'bagCode' | 'universalCode'
 }>()
 
 const emit = defineEmits<{
@@ -85,6 +110,8 @@ const addButtonTitle = computed(() => {
     switch (props.type) {
         case 'boxCode':
             return '新增箱码规则'
+        case 'innerBoxCode':
+            return '新增箱内码规则'
         case 'bagCode':
             return '新增袋码规则'
         case 'universalCode':
@@ -95,13 +122,25 @@ const addButtonTitle = computed(() => {
 })
 
 const handleSourceFieldChange = (row: RuleDetail) => {
+    // 当选择箱号或指定箱号时，设置默认值
+    row.indexBegin = 0
+    row.indexEnd = -1
+    row.encodeType = 'BASE_10'
+    row.constant = ''
     
-        // 当选择箱号或指定箱号时，设置默认值
-        row.indexBegin = 0
-        row.indexEnd = -1
-        row.encodeType = 'BASE_10'
-        row.constant = ''
-    
+    // 当选择随机字符串时，设置默认随机类型
+    if (row.sourceField === 'RANDOM_STRING') {
+        row.randomType = 'NUMBER'
+        // 设置 RANDOM_TYPE 为随机类型
+        row.constant = row.randomType
+    } else {
+        row.randomType = ''
+    }
+
+    // 当选择班次时，设置结束索引为1
+    if (row.sourceField === 'FINISHED_TEAM_CODE' || row.sourceField === 'SEMI_FINISHED_TEAM_CODE') {
+        row.indexEnd = 1
+    }
 }
 
 const addRule = () => {
@@ -112,7 +151,10 @@ const addRule = () => {
         indexEnd: -1,
         weight: props.ruleList.length,
         encodeType: 'BASE_10',
-        constant: ''
+        constant: '',
+        length: 0,
+        randomType: '',
+        offsetYears: 0
     }
 
     const newList = [...props.ruleList, newRule]
@@ -127,6 +169,29 @@ const removeRule = (index: number) => {
         item.weight = idx
     })
     emit('update:ruleList', newList)
+}
+
+const insertRule = (index: number, position: 'above' | 'below') => {
+    const newRule: RuleDetail = {
+        id: Date.now(),
+        sourceField: '',
+        indexBegin: 0,
+        indexEnd: 0,
+        encodeType: 'BASE_10',
+        constant: '',
+        weight: 0,
+        length: 0,
+        randomType: '',
+        offsetYears: 0
+    }
+    
+    const insertIndex = position === 'above' ? index : index + 1
+    props.ruleList.splice(insertIndex, 0, newRule)
+    
+    // 更新所有规则的weight
+    props.ruleList.forEach((item, idx) => {
+        item.weight = idx
+    })
 }
 
 const onDragEnd = (evt: any) => {

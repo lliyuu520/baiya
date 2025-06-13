@@ -144,6 +144,11 @@
             <artifactId>ojdbc8</artifactId>
             <version>21.9.0.0</version>
         </dependency>
+        <dependency>
+            <groupId>com.jcraft</groupId>
+            <artifactId>jsch</artifactId>
+            <version>0.1.55</version>
+        </dependency>
 
     </dependencies>
 
@@ -191,7 +196,6 @@
             </plugin>
         </plugins>
     </build>
-
 
 
 </project>

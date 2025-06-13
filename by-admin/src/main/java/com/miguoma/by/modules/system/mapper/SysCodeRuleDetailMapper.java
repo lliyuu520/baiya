@@ -23,8 +23,7 @@ public interface SysCodeRuleDetailMapper extends BaseMapper<SysCodeRuleDetail> {
     default List<SysCodeRuleDetail> selectListByRuleIdSAndType(Long ruleId, String type) {
         final LambdaQueryWrapper<SysCodeRuleDetail> lambdaQuery = Wrappers.lambdaQuery();
         lambdaQuery.eq(SysCodeRuleDetail::getRuleId, ruleId)
-                .eq(SysCodeRuleDetail::getRuleType, type)
-                .orderByAsc(SysCodeRuleDetail::getWeight);
+                .eq(SysCodeRuleDetail::getRuleType, type);
         return selectList(lambdaQuery);
     }
 

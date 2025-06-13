@@ -52,5 +52,10 @@ public class RecordBoxCode  extends BaseEntity {
      * 垛码
      */
     private String cribCode;
+
+    /**
+     * 内码
+     */
+    private String innerCode;
    
 }

@@ -14,6 +14,10 @@ public enum RuleTypeEnums {
      * 箱码
      */
     BOX("BOX_CODE", "箱码"),
+    /**
+     * 内箱码
+     */
+    INNER_BOX("INNER_BOX_CODE", "内箱码"),
 
     /**
      * 袋码

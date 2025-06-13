@@ -126,6 +126,11 @@ public class SysCodeRuleServiceImpl extends BaseServiceImpl<SysCodeRuleMapper, S
             allDetails.addAll(convertRuleDetails(dto.getUniversalCodeRuleList(), codeRuleId, RuleTypeEnums.UNIVERSAL_CODE.getCode()));
         }
 
+        // 处理内箱码规则
+        if (dto.getInnerBoxCodeRuleList() != null) {
+            allDetails.addAll(convertRuleDetails(dto.getInnerBoxCodeRuleList(), codeRuleId, RuleTypeEnums.INNER_BOX.getCode()));
+        }
+
         // 批量保存规则详情
         if (!allDetails.isEmpty()) {
             allDetails.forEach(sysCodeRuleDetailMapper::insert);
@@ -151,8 +156,11 @@ public class SysCodeRuleServiceImpl extends BaseServiceImpl<SysCodeRuleMapper, S
                     sysCodeRuleDetail.setIndexBegin(detail.getIndexBegin());
                     sysCodeRuleDetail.setIndexEnd(detail.getIndexEnd());
                     sysCodeRuleDetail.setSourceField(detail.getSourceField());
-                    sysCodeRuleDetail.setWeight(detail.getWeight());
                     sysCodeRuleDetail.setConstant(detail.getConstant());
+                    sysCodeRuleDetail.setLength(detail.getLength());
+                    sysCodeRuleDetail.setRandomType(detail.getRandomType());
+                    sysCodeRuleDetail.setOffsetYears(detail.getOffsetYears());
+
                     return sysCodeRuleDetail;
                 })
                 .collect(Collectors.toList());
@@ -198,6 +206,10 @@ public class SysCodeRuleServiceImpl extends BaseServiceImpl<SysCodeRuleMapper, S
         if (dto.getBoxCodeRuleList() != null) {
             allDetails.addAll(convertRuleDetails(dto.getBoxCodeRuleList(), codeRuleId, RuleTypeEnums.BOX.getCode()));
         }
+        // 处理内箱码规则
+        if (dto.getInnerBoxCodeRuleList() != null) {
+            allDetails.addAll(convertRuleDetails(dto.getInnerBoxCodeRuleList(), codeRuleId, RuleTypeEnums.INNER_BOX.getCode()));
+        }
 
         // 处理袋码规则
         if (dto.getBagCodeRuleList() != null) {
@@ -228,6 +240,10 @@ public class SysCodeRuleServiceImpl extends BaseServiceImpl<SysCodeRuleMapper, S
         final List<SysCodeRuleDetail> boxSysCodeRuleDetails = sysCodeRuleDetailMapper
                 .selectListByRuleIdSAndType(sysCodeRule.getId(), RuleTypeEnums.BOX.getCode());
         codeRuleVO.setBoxCodeRuleList(SysCodeRuleDetailConvert.INSTANCE.convertList(boxSysCodeRuleDetails));
+
+        final List<SysCodeRuleDetail> innerBoxSysCodeRuleDetails = sysCodeRuleDetailMapper
+                .selectListByRuleIdSAndType(sysCodeRule.getId(), RuleTypeEnums.INNER_BOX.getCode());
+                codeRuleVO.setInnerBoxCodeRuleList(SysCodeRuleDetailConvert.INSTANCE.convertList(innerBoxSysCodeRuleDetails));
         final List<SysCodeRuleDetail> bagSysCodeRuleDetails = sysCodeRuleDetailMapper
                 .selectListByRuleIdSAndType(sysCodeRule.getId(), RuleTypeEnums.BAG.getCode());
         codeRuleVO.setBagCodeRuleList(SysCodeRuleDetailConvert.INSTANCE.convertList(bagSysCodeRuleDetails));
@@ -269,27 +285,7 @@ public class SysCodeRuleServiceImpl extends BaseServiceImpl<SysCodeRuleMapper, S
 
     }
 
-    /**
-     * 获取当前的编码规则
-     *
-     * @return
-     */
-    @Override
-    public SysCodeRuleVO getCurrentCodeRule() {
-        SysCodeRule sysCodeRule = baseMapper.selectEnabled();
-        SysCodeRuleVO codeRuleVO = SysCodeRuleConvert.INSTANCE.convertToVO(sysCodeRule);
-        final List<SysCodeRuleDetail> boxSysCodeRuleDetails = sysCodeRuleDetailMapper
-                .selectListByRuleIdSAndType(sysCodeRule.getId(), RuleTypeEnums.BOX.getCode());
-        codeRuleVO.setBoxCodeRuleList(SysCodeRuleDetailConvert.INSTANCE.convertList(boxSysCodeRuleDetails));
-        final List<SysCodeRuleDetail> bagSysCodeRuleDetails = sysCodeRuleDetailMapper
-                .selectListByRuleIdSAndType(sysCodeRule.getId(), RuleTypeEnums.BAG.getCode());
-        codeRuleVO.setBagCodeRuleList(SysCodeRuleDetailConvert.INSTANCE.convertList(bagSysCodeRuleDetails));
-        final List<SysCodeRuleDetail> qrSysCodeRuleDetails = sysCodeRuleDetailMapper.selectListByRuleIdSAndType(
-                sysCodeRule.getId(),
-                RuleTypeEnums.UNIVERSAL_CODE.getCode());
-        codeRuleVO.setUniversalCodeRuleList(SysCodeRuleDetailConvert.INSTANCE.convertList(qrSysCodeRuleDetails));
-        return codeRuleVO;
-    }
+
 
     /**
      * 获取编码规则列表

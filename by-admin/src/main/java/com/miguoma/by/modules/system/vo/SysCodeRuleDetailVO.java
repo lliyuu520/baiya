@@ -9,13 +9,7 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class SysCodeRuleDetailVO extends SysCodeRuleDetail implements Comparable<Integer> {
+public class SysCodeRuleDetailVO extends SysCodeRuleDetail {
 
-    /**
-     * 排序规则 由小到大排序
-     */
-    @Override
-    public int compareTo(Integer o) {
-        return this.getWeight().compareTo(o);
-    }
+  
 }

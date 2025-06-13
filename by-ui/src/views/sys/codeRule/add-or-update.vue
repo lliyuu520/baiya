@@ -19,7 +19,7 @@
 				<el-row :gutter="20">
 					<el-col :span="24">
 						<el-form-item label="二维码前缀" prop="qrCodeUrlPrefix">
-							<el-input v-model="dataForm.qrCodeUrlPrefix" class="form-input input-value"></el-input>
+							<el-input v-model="dataForm.qrCodeUrlPrefix" class="form-input long-input-value"></el-input>
 						</el-form-item>
 					</el-col>
 				</el-row>
@@ -32,6 +32,15 @@
 									:isEditMode="isEditMode"
 									:sourceFieldList="boxCodeSourceFieldList"
 									type="boxCode"
+									@drag-end="onDragEnd"
+								/>
+							</el-tab-pane>
+							<el-tab-pane label="箱内码规则" name="innerBoxCode">
+								<rule-table
+									v-model:ruleList="dataForm.innerBoxCodeRuleList"
+									:isEditMode="isEditMode"
+									:sourceFieldList="innerBoxCodeSourceFieldList"
+									type="innerBoxCode"
 									@drag-end="onDragEnd"
 								/>
 							</el-tab-pane>
@@ -72,7 +81,7 @@ import Sortable from "sortablejs";
 import {computed, nextTick, reactive, ref, watch} from "vue";
 import RuleTable from "./components/RuleTable.vue";
 import type {RuleDetail} from "./config/ruleTypes";
-import {bagCodeSourceFieldList, boxCodeSourceFieldList, universalCodeSourceFieldList} from "./config/ruleTypes";
+import {bagCodeSourceFieldList, boxCodeSourceFieldList, innerBoxCodeSourceFieldList, universalCodeSourceFieldList} from "./config/ruleTypes";
 
 const emit = defineEmits(['refreshDataList'])
 
@@ -86,6 +95,7 @@ const dataForm = reactive({
 	qrCodeUrlPrefix: '',
 	name: '',
 	boxCodeRuleList: [] as RuleDetail[],
+	innerBoxCodeRuleList: [] as RuleDetail[],
 	bagCodeRuleList: [] as RuleDetail[],
 	universalCodeRuleList: [] as RuleDetail[]
 })
@@ -96,6 +106,7 @@ const resetDataForm = () => {
 	dataForm.name = ''
   dataForm.qrCodeUrlPrefix = ''
 	dataForm.boxCodeRuleList = []
+	dataForm.innerBoxCodeRuleList = []
 	dataForm.bagCodeRuleList = []
 	dataForm.universalCodeRuleList = []
 }
@@ -121,6 +132,13 @@ const onDragEnd = (evt: any) => {
 				currRow = dataForm.boxCodeRuleList.splice(oldIndex, 1)[0]
 				dataForm.boxCodeRuleList.splice(newIndex, 0, currRow)
 				dataForm.boxCodeRuleList.forEach((item, index) => {
+					item.weight = index
+				})
+				break
+			case 'innerBoxCode':
+				currRow = dataForm.innerBoxCodeRuleList.splice(oldIndex, 1)[0]
+				dataForm.innerBoxCodeRuleList.splice(newIndex, 0, currRow)
+				dataForm.innerBoxCodeRuleList.forEach((item, index) => {
 					item.weight = index
 				})
 				break
@@ -292,6 +310,13 @@ defineExpose({
 .input-value {
 	width: 120px;
 	max-width: 120px;
+	height: 36px;
+	border-radius: 8px;
+}
+
+.long-input-value {	
+	width: 240px;
+	max-width: 240px;
 	height: 36px;
 	border-radius: 8px;
 }

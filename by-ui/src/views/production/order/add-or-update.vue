@@ -20,13 +20,13 @@
 					<el-option v-for="item in workshopList" :key="item.code" :label="item.name" :value="item.code"></el-option>
 				</el-select>
 			</el-form-item>
-			<el-form-item label="生产班次" prop="productionShiftCode">
-				<el-select v-model="dataForm.productionShiftCode" class="form-input" placeholder="请选择生产班次" filterable>
+			<el-form-item label="生产班组" prop="productionShiftCode">
+				<el-select v-model="dataForm.productionShiftCode" class="form-input" placeholder="请选择生产班组" filterable>
 					<el-option v-for="item in shiftList" :key="item.code" :label="item.name" :value="item.code"></el-option>
 				</el-select>
 			</el-form-item>
-			<el-form-item label="生产班组" prop="productionTeamCode">
-				<el-select v-model="dataForm.productionTeamCode" class="form-input" placeholder="请选择生产班组" filterable>
+			<el-form-item label="生产班次" prop="productionTeamCode">
+				<el-select v-model="dataForm.productionTeamCode" class="form-input" placeholder="请选择生产班次" filterable>
 					<el-option v-for="item in teamList" :key="item.code" :label="item.name" :value="item.code"></el-option>
 				</el-select>
 			</el-form-item>

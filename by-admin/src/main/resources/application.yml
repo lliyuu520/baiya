@@ -58,3 +58,13 @@ signature:
         app_baiya_prod: 'md55gb3xOrX2MENE8WDB9mHjRzbyg8pl'
         # 可以添加更多应用配置
         # app_id_3: "secret_key_3"
+ssh:
+    tunnel:
+        enabled: true
+        host: 192.168.81.117
+        port: 22
+        username: blmtest
+        password: D8nxZo2ngxklrU$zOMEecixn%945672
+        local-port: 1521
+        remote-host: 192.168.81.117
+        remote-port: 1521

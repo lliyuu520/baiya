@@ -62,12 +62,6 @@ public interface SysCodeRuleService extends BaseService<SysCodeRule> {
     
     
 
-    /**
-     * 
-     * 获取当前的编码规则
-     * @return
-     */
-    SysCodeRuleVO getCurrentCodeRule();
 
     /**
      * 获取编码规则列表

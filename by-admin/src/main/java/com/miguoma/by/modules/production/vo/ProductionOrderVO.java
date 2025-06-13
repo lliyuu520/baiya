@@ -36,11 +36,11 @@ public class ProductionOrderVO extends ProductionOrder {
      */
     private String productionWorkshopName;
     /**
-     * 生产班次名称
+     * 生产班组名称
      */
     private String productionShiftName;
     /**
-     * 生产班组名称
+     * 生产班次名称
      */
     private String productionTeamName;
     /**
