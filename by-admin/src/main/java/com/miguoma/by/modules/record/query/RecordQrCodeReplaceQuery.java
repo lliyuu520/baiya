@@ -3,7 +3,6 @@ package com.miguoma.by.modules.record.query;
 
 import cn.hutool.core.util.ArrayUtil;
 import com.miguoma.by.common.base.query.BaseQuery;
-
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -35,20 +34,31 @@ public class RecordQrCodeReplaceQuery extends BaseQuery {
     /**
      * 上传时间范围
      */
-    private LocalDateTime[] submitDateTimeRange;
+    private LocalDateTime[] submitDatetimeRange;
 
-    public LocalDateTime getSubmitDateTimeBegin() {
-        if (ArrayUtil.isNotEmpty(submitDateTimeRange)) {
-            return submitDateTimeRange[0];
+    /**
+     * 上传时间开始
+     */
+    private LocalDateTime submitDatetimeBegin;
+
+    /**
+     * 上传时间结束
+     */
+    private LocalDateTime submitDatetimeEnd;
+
+
+    public LocalDateTime getSubmitDatetimeBegin() {
+        if (ArrayUtil.isNotEmpty(submitDatetimeRange)) {
+            return submitDatetimeRange[0];
         }
         return null;
     }
 
-    public LocalDateTime getSubmitDateTimeEnd() {
-        if (ArrayUtil.isNotEmpty(submitDateTimeRange)) {
-            return submitDateTimeRange[1];
+    public LocalDateTime getSubmitDatetimeEnd() {
+        if (ArrayUtil.isNotEmpty(submitDatetimeRange)) {
+            return submitDatetimeRange[1];
         }
         return null;
     }
- 
+
 }

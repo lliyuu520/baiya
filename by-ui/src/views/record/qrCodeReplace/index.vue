@@ -8,12 +8,11 @@
 				<el-input v-model="state.queryForm.replaceCode" clearable></el-input>
 			</el-form-item>
 			<el-form-item label="上传时间">
-				<el-date-picker v-model="state.queryForm.submitDateTimeRange" value-format="YYYY-MM-DD HH:mm:ss" format="YYYY-MM-DD HH:mm:ss" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期"></el-date-picker>
+				<el-date-picker v-model="state.queryForm.submitDatetimeRange" value-format="YYYY-MM-DD HH:mm:ss" format="YYYY-MM-DD HH:mm:ss" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期"></el-date-picker>
 			</el-form-item>
 			<el-form-item label="是否执行">
 				<el-select v-model="state.queryForm.handleFlag" clearable>
-					<el-option label="是" value="true"></el-option>
-					<el-option label="否" value="false"></el-option>
+					<el-option v-for="item in handleFlagOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
 				</el-select>
 			</el-form-item>
 
@@ -23,23 +22,24 @@
 		</el-form>
 		<el-table v-loading="state.dataListLoading" :data="state.dataList" border style="width: 100%" @selection-change="selectionChangeHandle">
 			<el-table-column align="center" header-align="center" label="原始二维码" prop="originalQrCode"></el-table-column>
-			<el-table-column align="center" header-align="center" label="替换二维码" prop="replaceCode"></el-table-column>
-			<el-table-column align="center" header-align="center" label="上传用户" prop="submitUserName" ></el-table-column>
-			<el-table-column align="center" header-align="center" label="上传时间" prop="submitDateTime">
+			<el-table-column align="center" header-align="center" label="替换二维码" prop="replaceQrCode"></el-table-column>
+			<el-table-column align="center" header-align="center" label="上传用户" prop="submitUsername" ></el-table-column>
+			<el-table-column align="center" header-align="center" label="上传时间" prop="submitDatetime">
 				<template #default="scope">
-					{{ scope.row.submitDateTime ? scope.row.submitDateTime.replace('T', ' ') : '' }}
+					{{ formatDateTime(scope.row.submitDatetime) }}
 				</template>
-			</el-table-column>
-			<el-table-column align="center" header-align="center" label="是否执行" prop="handleFlag">
-				<template #default="scope">
-					{{ scope.row.handleFlag ? '是' : '否' }}
-				</template>	
 			</el-table-column>
 			<el-table-column align="center" header-align="center" label="执行时间" prop="handleDateTime">
 				<template #default="scope">
-					{{ scope.row.handleDateTime ? scope.row.handleDateTime.replace('T', ' ') : '' }}
+					{{ formatDateTime(scope.row.handleDateTime) }}
 				</template>
 			</el-table-column>
+			<el-table-column align="center" header-align="center" label="状态" prop="handleFlag">
+				<template #default="scope">
+					{{ filterHandleFlag(scope.row.handleFlag) }}
+				</template>	
+			</el-table-column>
+			<el-table-column align="center" header-align="center" label="失败原因" prop="failReason"></el-table-column>
 
 		</el-table>
 		<el-pagination
@@ -56,9 +56,10 @@
 </template>
 
 <script lang="ts" setup>
-import {useCrud} from "@/hooks";
-import {IHooksOptions} from "@/hooks/interface";
-import {onMounted, reactive} from "vue";
+import { useCrud } from "@/hooks";
+import { IHooksOptions } from "@/hooks/interface"
+import { formatDateTime } from "@/utils/tool";
+import { reactive } from "vue";
 
 const state: IHooksOptions = reactive({
 	dataListUrl: '/record/qrCodeReplace/page',
@@ -66,9 +67,28 @@ const state: IHooksOptions = reactive({
 		originalQrCode: '',
 		replaceCode: '',
 		handleFlag: '',
-		submitDateTimeRange: []
+		submitDatetimeRange: []
 	}
 })
+
+const handleFlagOptions = [
+	{
+		value: 'WAITING',
+		label: '待处理'
+	},
+	{
+		value: 'SUCCESS',
+		label: '已处理'
+	},
+	{
+		value: 'FAIL',
+		label: '失败'
+	}
+]
+
+const filterHandleFlag = (value: string) => {
+	return handleFlagOptions.find(item => item.value === value)?.label
+}
 
 
 

@@ -44,9 +44,9 @@
 		<el-table v-loading="state.dataListLoading" :data="state.dataList" border style="width: 100%" @selection-change="selectionChangeHandle">
 			<el-table-column align="center" header-align="center" label="箱码" prop="code"></el-table-column>
 			
-			<el-table-column align="center" header-align="center" label="拉码时间" prop="pullDateTime" width="180">
+			<el-table-column align="center" header-align="center" label="拉取时间" prop="pullDateTime">
 				<template #default="scope">
-					{{ scope.row.pullDateTime ? scope.row.pullDateTime.replace('T', ' ') : '' }}
+					{{ formatDateTime(scope.row.pullDateTime) }}
 				</template>
 			</el-table-column>
 			<el-table-column align="center" header-align="center" label="拉码类型" prop="pullType">
@@ -57,17 +57,16 @@
 
 			<el-table-column align="center" header-align="center" label="成品订单号" prop="finishedOrderNo"></el-table-column>
 			<el-table-column align="center" header-align="center" label="半成品订单号" prop="semiFinishedOrderNo"></el-table-column>
-			<el-table-column align="center" header-align="center" label="上传时间" prop="uploadDateTime" width="180">
+			<el-table-column align="center" header-align="center" label="上传时间" prop="uploadDateTime">
 				<template #default="scope">
-					{{ scope.row.uploadDateTime ? scope.row.uploadDateTime.replace('T', ' ') : '' }}
+					{{ formatDateTime(scope.row.uploadDateTime) }}
 				</template>
 			</el-table-column>
 			<el-table-column align="center" header-align="center" label="垛码" prop="cribCode"></el-table-column>
-			<el-table-column align="center" header-align="center" label="组垛时间" prop="cribDateTime" width="180">	
+			<el-table-column align="center" header-align="center" label="入库时间" prop="cribDateTime">
 				<template #default="scope">
-					{{ scope.row.cribDateTime ? scope.row.cribDateTime.replace('T', ' ') : '' }}
+					{{ formatDateTime(scope.row.cribDateTime) }}
 				</template>
-				
 			</el-table-column>
 		</el-table>
 		<el-pagination
@@ -84,9 +83,10 @@
 </template>
 
 <script lang="ts" setup>
-import {useCrud} from "@/hooks";
-import {IHooksOptions} from "@/hooks/interface";
-import {onMounted, reactive} from "vue";
+import { useCrud } from "@/hooks";
+import { IHooksOptions } from "@/hooks/interface";
+import { formatDateTime } from "@/utils/tool";
+import { reactive } from "vue";
 
 const state: IHooksOptions = reactive({
 	dataListUrl: '/record/boxCode/page',

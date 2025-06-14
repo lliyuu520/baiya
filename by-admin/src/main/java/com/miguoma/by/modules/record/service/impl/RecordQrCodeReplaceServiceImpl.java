@@ -70,13 +70,13 @@ public class RecordQrCodeReplaceServiceImpl extends BaseServiceImpl<RecordQrCode
         if (StrUtil.isNotBlank(handleFlag)) {
             lambdaQuery.eq(RecordQrCodeReplace::getHandleFlag, handleFlag);
         }
-        final LocalDateTime submitDateTimeBegin = query.getSubmitDateTimeBegin();
-        if (submitDateTimeBegin != null) {
-            lambdaQuery.ge(RecordQrCodeReplace::getSubmitDatetime, submitDateTimeBegin);
+        final LocalDateTime submitDatetimeBegin = query.getSubmitDatetimeBegin();
+        if (submitDatetimeBegin != null) {
+            lambdaQuery.ge(RecordQrCodeReplace::getSubmitDatetime, submitDatetimeBegin);
         }
-        final LocalDateTime submitDateTimeEnd = query.getSubmitDateTimeEnd();
-        if (submitDateTimeEnd != null) {
-            lambdaQuery.le(RecordQrCodeReplace::getSubmitDatetime, submitDateTimeEnd);
+        final LocalDateTime submitDatetimeEnd = query.getSubmitDatetimeEnd();
+        if (submitDatetimeEnd != null) {
+            lambdaQuery.le(RecordQrCodeReplace::getSubmitDatetime, submitDatetimeEnd);
         }
         lambdaQuery.orderByDesc(RecordQrCodeReplace::getId);
         return lambdaQuery;

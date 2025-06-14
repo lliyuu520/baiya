@@ -1,5 +1,6 @@
 import type {App, Plugin} from 'vue'
 import constant from '@/utils/constant'
+import moment from 'moment'
 
 // 把路径转换成驼峰命名
 export const pathToCamel = (path: string): string => {
@@ -86,4 +87,8 @@ export const withInstall = <T>(component: T, alias?: string) => {
 		}
 	}
 	return component as T & Plugin
+}
+
+export const formatDateTime = (dateTime: string) => {
+	return dateTime ? moment(dateTime).format('YYYY-MM-DD HH:mm:ss') : ''
 }
