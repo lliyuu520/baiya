@@ -1,11 +1,15 @@
 package com.miguoma.by.modules.record.service.impl;
 
-import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.date.LocalDateTimeUtil;
-import cn.hutool.core.util.StrUtil;
+import java.time.LocalDateTime;
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.miguoma.by.common.base.page.PageVO;
 import com.miguoma.by.common.base.service.impl.BaseServiceImpl;
 import com.miguoma.by.common.satoken.user.UserDetail;
@@ -18,13 +22,12 @@ import com.miguoma.by.modules.record.mapper.RecordQrCodeMapper;
 import com.miguoma.by.modules.record.mapper.RecordQrCodeReplaceMapper;
 import com.miguoma.by.modules.record.query.RecordQrCodeReplaceQuery;
 import com.miguoma.by.modules.record.service.RecordQrCodeReplaceService;
+
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.date.LocalDateTimeUtil;
+import cn.hutool.core.util.StrUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDateTime;
-import java.util.List;
 
 /**
  * 二维码替换记录服务实现类
@@ -32,7 +35,8 @@ import java.util.List;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class RecordQrCodeReplaceServiceImpl extends BaseServiceImpl<RecordQrCodeReplaceMapper, RecordQrCodeReplace> implements RecordQrCodeReplaceService {
+public class RecordQrCodeReplaceServiceImpl extends BaseServiceImpl<RecordQrCodeReplaceMapper, RecordQrCodeReplace>
+        implements RecordQrCodeReplaceService {
     private final RecordQrCodeMapper recordQrCodeMapper;
 
     /**
@@ -104,7 +108,7 @@ public class RecordQrCodeReplaceServiceImpl extends BaseServiceImpl<RecordQrCode
         recordQrCodeReplace.setHandleFlag(ReplaceHandleFlagEnums.WAITING.getCode());
         recordQrCodeReplace.setOriginalQrCode(originalQrCode);
         recordQrCodeReplace.setReplaceQrCode(replaceQrCode);
-        if(oneByCode != null){
+        if (oneByCode != null) {
             recordQrCodeReplace.setHandleFlag(ReplaceHandleFlagEnums.FAIL.getCode());
             recordQrCodeReplace.setFailReason("替换二维码已存在");
             save(recordQrCodeReplace);
@@ -120,7 +124,6 @@ public class RecordQrCodeReplaceServiceImpl extends BaseServiceImpl<RecordQrCode
         this.save(recordQrCodeReplace);
     }
 
-
     /**
      * 查询未处理的记录
      *
@@ -135,8 +138,12 @@ public class RecordQrCodeReplaceServiceImpl extends BaseServiceImpl<RecordQrCode
         // 7天内的
         lambdaQuery.ge(RecordQrCodeReplace::getSubmitDatetime, now.minusDays(7));
         lambdaQuery.orderByAsc(RecordQrCodeReplace::getId);
-        lambdaQuery.last("AND ROWNUM <= 50");
-        final List<RecordQrCodeReplace> recordQrCodeReplaceList = list(lambdaQuery);
+
+        // 使用分页对象，每页50条
+        Page<RecordQrCodeReplace> page = new Page<>(1, 50);
+        final Page<RecordQrCodeReplace> recordQrCodeReplacePage = page(page, lambdaQuery);
+        final List<RecordQrCodeReplace> recordQrCodeReplaceList = recordQrCodeReplacePage.getRecords();
+
         if (CollUtil.isEmpty(recordQrCodeReplaceList)) {
             log.info("没有未处理的数据");
             return;

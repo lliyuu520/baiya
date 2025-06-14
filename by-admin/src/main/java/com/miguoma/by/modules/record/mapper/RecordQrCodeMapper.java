@@ -28,6 +28,13 @@ public interface RecordQrCodeMapper extends IBaseMapper<RecordQrCode> {
     IPage<RecordQrCodeVO> pageVO(IPage<RecordQrCode> page, @Param("query") RecordQrCodeQuery query);
 
     /**
+     *  根据二维码查询
+     * @param code
+     * @return
+     */
+    RecordQrCodeVO getVOByCode(@Param("code") String code);
+
+    /**
      * 根据二维码获取记录
      * 
      * @param code 二维码

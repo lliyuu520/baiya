@@ -54,6 +54,17 @@ public class RecordQrCodeServiceImpl extends BaseServiceImpl<RecordQrCodeMapper,
     }
 
     /**
+     * 查看二维码信息
+     *
+     * @param code
+     * @return
+     */
+    @Override
+    public RecordQrCodeVO getVOByCode(String code) {
+        return baseMapper.getVOByCode(code);
+    }
+
+    /**
      * 查询成品数量
      *
      * @param finishedProductionOrderId 成品生产订单ID

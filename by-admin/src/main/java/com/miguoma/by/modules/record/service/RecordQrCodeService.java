@@ -33,6 +33,13 @@ public interface RecordQrCodeService extends BaseService<RecordQrCode> {
     PageVO<RecordQrCodeVO> pageVO(RecordQrCodeQuery recordQrCodeQuery);
 
     /**
+     * 查看二维码信息
+     * @param code
+     * @return
+     */
+    RecordQrCodeVO getVOByCode(String code);
+
+    /**
      * 查询成品数量
      *
      * @param finishedProductionOrderId 成品生产订单ID
@@ -47,4 +54,7 @@ public interface RecordQrCodeService extends BaseService<RecordQrCode> {
      * @return 半成品数量
      */
     Long getCountBySemiFinishedProductionOrderId(Long semiFinishedProductionOrderId);
+
+
+
 }

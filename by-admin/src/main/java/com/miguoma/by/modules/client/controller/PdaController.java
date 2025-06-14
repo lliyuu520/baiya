@@ -11,15 +11,14 @@ import com.miguoma.by.modules.client.dto.RecordQrCodeReplaceDTO;
 import com.miguoma.by.modules.record.entity.RecordQrCodeReplace;
 import com.miguoma.by.modules.record.query.RecordQrCodeReplaceQuery;
 import com.miguoma.by.modules.record.service.RecordQrCodeReplaceService;
+import com.miguoma.by.modules.record.service.RecordQrCodeService;
+import com.miguoma.by.modules.record.vo.RecordQrCodeVO;
 import com.miguoma.by.modules.system.dto.SysAccountLoginDTO;
 import com.miguoma.by.modules.system.service.SysAuthService;
 import com.miguoma.by.modules.system.vo.SysTokenVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * pda控制器
@@ -37,7 +36,7 @@ public class PdaController {
     private final SysAuthService sysAuthService;
 
     private final RecordQrCodeReplaceService recordQrCodeReplaceService;
-
+    private final RecordQrCodeService recordQrCodeService;
 
     /**
      * 登录
@@ -66,7 +65,7 @@ public class PdaController {
      *
      * @param query 查询条件
      */
-    @PostMapping("/recordQrCodeReplace/page")
+    @GetMapping("/recordQrCodeReplace/page")
     @SysLogCut(module = SysLogModuleEnums.PDA, type = SysLogTypeEnums.PAGE)
     public Result<PageVO<RecordQrCodeReplace>> recordQrCodeReplacePage(RecordQrCodeReplaceQuery query) {
         final PageVO<RecordQrCodeReplace> recordQrCodeReplacePageVO = recordQrCodeReplaceService.pageVO(query);
@@ -82,6 +81,16 @@ public class PdaController {
         recordQrCodeReplaceService.saveOne(recordQrCodeReplaceDTO);
         return Result.ok();
 
+    }
+
+    /**
+     * 查看二维码信息
+     */
+    @GetMapping("/recordQrcode/info")
+    @SysLogCut(module = SysLogModuleEnums.RECORD_QR_CODE, type = SysLogTypeEnums.VIEW)
+    public Result<RecordQrCodeVO> recordQrcodeInfo(String code) {
+        final RecordQrCodeVO recordQrCodeReplace = recordQrCodeService.getVOByCode(code);
+        return Result.ok(recordQrCodeReplace);
     }
 
 
