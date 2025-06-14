@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/record/bagCode")
-public class BagCodeController {
+public class RecordBagCodeController {
 
     private final RecordBagCodeService recordBagCodeService;
 
@@ -31,7 +31,7 @@ public class BagCodeController {
      * @return 分页结果
      */
     @GetMapping("/page")
-    @SysLogCut(type = SysLogTypeEnums.PAGE, module = SysLogModuleEnums.CODE_RULE)
+    @SysLogCut(type = SysLogTypeEnums.PAGE, module = SysLogModuleEnums.RECORD_BAG_CODE)
     @SaCheckPermission(value = "record:bagCode:page")
     public Result<PageVO<RecordBagCodeVO>> page(RecordBagCodeQuery recordBagCodeQuery) {
         PageVO<RecordBagCodeVO> pageResult = recordBagCodeService.pageVO(recordBagCodeQuery);

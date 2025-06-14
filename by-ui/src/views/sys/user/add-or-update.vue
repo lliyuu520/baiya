@@ -7,8 +7,8 @@
 			<el-form-item prop="password" label="密码">
 				<el-input v-model="dataForm.password" type="password" placeholder="密码"></el-input>
 			</el-form-item>
-			<el-form-item prop="roleIdList" label="所属部门">
-				<el-select v-model="dataForm.roleIdList" multiple placeholder="所属部门" style="width: 100%">
+			<el-form-item prop="roleIdList" label="角色">
+				<el-select v-model="dataForm.roleIdList" multiple placeholder="角色" style="width: 100%">
 					<el-option v-for="role in roleList" :key="role.id" :label="role.name" :value="role.id"></el-option>
 				</el-select>
 			</el-form-item>

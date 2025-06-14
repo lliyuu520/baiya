@@ -17,7 +17,7 @@
 			<el-table-column label="操作" fixed="right" header-align="center" align="center" width="200">
 				<template #default="scope">
 					<el-button v-auth="'sys:role:update'" type="primary" link @click="addOrUpdateHandle(scope.row.id)">菜单权限</el-button>
-					<el-button v-auth="'sys:role:update'" type="primary" link @click="roleFieldHandle(scope.row.id)">字段权限</el-button>
+					<!-- <el-button v-auth="'sys:role:update'" type="primary" link @click="roleFieldHandle(scope.row.id)">字段权限</el-button> -->
 					<el-button v-auth="'sys:role:delete'" type="primary" link @click="deleteHandle(scope.row.id)">删除</el-button>
 				</template>
 			</el-table-column>

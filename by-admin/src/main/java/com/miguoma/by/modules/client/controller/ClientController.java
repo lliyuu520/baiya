@@ -26,6 +26,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 /**
+ * 采集软件控制器
  * @author liliangyu
  */
 @Slf4j

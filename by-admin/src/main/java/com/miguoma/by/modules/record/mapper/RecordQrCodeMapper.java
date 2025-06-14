@@ -1,6 +1,8 @@
 package com.miguoma.by.modules.record.mapper;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.miguoma.by.common.base.mapper.IBaseMapper;
 import com.miguoma.by.modules.record.entity.RecordQrCode;
 import com.miguoma.by.modules.record.query.RecordQrCodeQuery;
@@ -24,4 +26,17 @@ public interface RecordQrCodeMapper extends IBaseMapper<RecordQrCode> {
      * @return 分页结果
      */
     IPage<RecordQrCodeVO> pageVO(IPage<RecordQrCode> page, @Param("query") RecordQrCodeQuery query);
+
+    /**
+     * 根据二维码获取记录
+     * 
+     * @param code 二维码
+     * @return 记录
+     */
+    default RecordQrCode getOneByCode(String code) {
+        LambdaQueryWrapper<RecordQrCode> lambdaQuery = Wrappers.lambdaQuery(RecordQrCode.class);
+        lambdaQuery.eq(RecordQrCode::getCode, code);
+        return selectOne(lambdaQuery);
+    }
+
 }

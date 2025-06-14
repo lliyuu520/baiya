@@ -63,6 +63,10 @@ public enum SysLogModuleEnums {
      */
     CLIENT("采集软件"),
     /**
+     * PDA
+     */
+    PDA("PDA"),
+    /**
      * 箱物流码
      */
     RECORD_BOX_CODE("箱物流码"),
@@ -76,6 +80,12 @@ public enum SysLogModuleEnums {
      * 二维码
      */
     RECORD_QR_CODE("袋二维码"),
+                    
+    /**
+     * 二维码替换记录
+     */
+    RECORD_QR_CODE_REPLACE("二维码替换记录"),
+    
 
 
     ;

@@ -1,10 +1,14 @@
 package com.miguoma.by.modules.production.service.impl;
 
-import cn.hutool.core.codec.Base32;
-import cn.hutool.core.codec.Base62;
-import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.date.LocalDateTimeUtil;
-import cn.hutool.core.util.StrUtil;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.miguoma.by.common.base.page.PageVO;
 import com.miguoma.by.common.base.service.impl.BaseServiceImpl;
@@ -21,13 +25,20 @@ import com.miguoma.by.modules.production.entity.ProductionDepartAndWorkshop;
 import com.miguoma.by.modules.production.entity.ProductionOrder;
 import com.miguoma.by.modules.production.entity.ProductionProduct;
 import com.miguoma.by.modules.production.enums.ProductTypeEnum;
-import com.miguoma.by.modules.production.mapper.*;
+import com.miguoma.by.modules.production.mapper.ProductionDepartAndWorkshopMapper;
+import com.miguoma.by.modules.production.mapper.ProductionOrderMapper;
+import com.miguoma.by.modules.production.mapper.ProductionProductMapper;
+import com.miguoma.by.modules.production.mapper.ProductionShiftMapper;
+import com.miguoma.by.modules.production.mapper.ProductionTeamMapper;
 import com.miguoma.by.modules.production.query.ProductionOrderQuery;
 import com.miguoma.by.modules.production.service.ProductionOrderService;
 import com.miguoma.by.modules.production.vo.ProductionOrderVO;
 import com.miguoma.by.modules.record.entity.RecordBagCode;
 import com.miguoma.by.modules.record.entity.RecordBoxCode;
 import com.miguoma.by.modules.record.entity.RecordQrCode;
+import com.miguoma.by.modules.record.entity.RecordQrCodeReplace;
+import com.miguoma.by.modules.record.mapper.RecordQrCodeMapper;
+import com.miguoma.by.modules.record.mapper.RecordQrCodeReplaceMapper;
 import com.miguoma.by.modules.record.service.RecordBagCodeService;
 import com.miguoma.by.modules.record.service.RecordBoxCodeService;
 import com.miguoma.by.modules.record.service.RecordQrCodeService;
@@ -38,16 +49,15 @@ import com.miguoma.by.modules.system.enums.RuleTypeEnums;
 import com.miguoma.by.modules.system.enums.SourceFiledEnums;
 import com.miguoma.by.modules.system.mapper.SysCodeRuleDetailMapper;
 import com.miguoma.by.modules.system.mapper.SysCodeRuleMapper;
+
+import cn.hutool.core.codec.Base32;
+import cn.hutool.core.codec.Base62;
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.date.LocalDateTimeUtil;
+import cn.hutool.core.thread.ThreadUtil;
+import cn.hutool.core.util.StrUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * 生产订单服务实现类
@@ -57,7 +67,8 @@ import java.util.List;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderMapper, ProductionOrder> implements ProductionOrderService {
+public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderMapper, ProductionOrder>
+        implements ProductionOrderService {
 
     private final SysCodeRuleMapper sysCodeRuleMapper;
     private final SysCodeRuleDetailMapper sysCodeRuleDetailMapper;
@@ -70,6 +81,8 @@ public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderM
     private final ProductionShiftMapper productionShiftMapper;
     private final ProductionTeamMapper productionTeamMapper;
     private final ProductionDepartAndWorkshopMapper productionDepartAndWorkshopMapper;
+    private final RecordQrCodeMapper recordQrCodeMapper;
+    private final RecordQrCodeReplaceMapper recordQrCodeReplaceMapper;
 
     /**
      * 分页查询生产订单列表
@@ -156,7 +169,6 @@ public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderM
         removeById(id);
     }
 
-
     /**
      * 返工
      *
@@ -224,14 +236,14 @@ public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderM
             throw new BaseException("半成品订单不存在");
         }
 
-
         final String finishProductCode = finishedProductionOrder.getProductCode();
         final ProductionProduct finishProductionProduct = productionProductMapper.getOneByCode(finishProductCode);
         if (finishProductionProduct == null) {
             throw new BaseException("成品产品不存在");
         }
         final String semiFinishedProductCode = semiFinishedProductionOrder.getProductCode();
-        final ProductionProduct semiFinishedProductionProduct = productionProductMapper.getOneByCode(semiFinishedProductCode);
+        final ProductionProduct semiFinishedProductionProduct = productionProductMapper
+                .getOneByCode(semiFinishedProductCode);
         if (semiFinishedProductionProduct == null) {
             throw new BaseException("半成品产品不存在");
         }
@@ -239,13 +251,13 @@ public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderM
         // 按照成品产品的包装比例
         final Integer oneBoxPackageNum = finishProductionProduct.getOneBoxPackageNum();
 
-
         // 成品相关信息
         final String finishedOrderNo = finishedProductionOrder.getOrderNo();
         final LocalDate finishedProductionDate = finishedProductionOrder.getProductionDate();
         final String finishedProductionDepartCode = finishedProductionOrder.getProductionDepartCode();
         final String finishedProductionWorkshopCode = finishedProductionOrder.getProductionWorkshopCode();
-        final ProductionDepartAndWorkshop fineshedProductionDepartAndWorkshop = productionDepartAndWorkshopMapper.getOneByCode(finishedProductionWorkshopCode);
+        final ProductionDepartAndWorkshop fineshedProductionDepartAndWorkshop = productionDepartAndWorkshopMapper
+                .getOneByCode(finishedProductionWorkshopCode);
         final Long finishedCodeRuleId = fineshedProductionDepartAndWorkshop.getCodeRuleId();
         SysCodeRule finishedCodeRule = null;
         if (finishedCodeRuleId != null) {
@@ -273,7 +285,8 @@ public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderM
         refreshBoxNo(finishedProductionOrder, boxNoBegin, boxCodeNum);
 
         // 箱码
-        final List<SysCodeRuleDetail> boxCodeRuleDetailList = sysCodeRuleDetailMapper.selectListByRuleIdSAndType(finishedCodeRule.getId(), RuleTypeEnums.BOX.getCode());
+        final List<SysCodeRuleDetail> boxCodeRuleDetailList = sysCodeRuleDetailMapper
+                .selectListByRuleIdSAndType(finishedCodeRule.getId(), RuleTypeEnums.BOX.getCode());
 
         StringBuilder boxCodeStrBuilder = new StringBuilder();
         for (SysCodeRuleDetail m : boxCodeRuleDetailList) {
@@ -284,7 +297,7 @@ public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderM
             final String encodeType = m.getEncodeType();
 
             String str = "";
-            //限用日期
+            // 限用日期
             if (StrUtil.equals(sourceField, SourceFiledEnums.FINISHED_LIMITED_USE_DATE.getCode())) {
                 final LocalDate limitedUseDate = finishedProductionDate.plusYears(3);
                 str = LocalDateTimeUtil.format(limitedUseDate, "yyyyMMdd");
@@ -358,7 +371,8 @@ public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderM
         }
 
         // 内箱码
-        final List<SysCodeRuleDetail> innerBoxCodeRuleDetailList = sysCodeRuleDetailMapper.selectListByRuleIdSAndType(finishedCodeRule.getId(), RuleTypeEnums.INNER_BOX.getCode());
+        final List<SysCodeRuleDetail> innerBoxCodeRuleDetailList = sysCodeRuleDetailMapper
+                .selectListByRuleIdSAndType(finishedCodeRule.getId(), RuleTypeEnums.INNER_BOX.getCode());
 
         StringBuilder innerBoxCodeStrBuilder = new StringBuilder();
         for (SysCodeRuleDetail m : innerBoxCodeRuleDetailList) {
@@ -369,7 +383,7 @@ public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderM
             final String encodeType = m.getEncodeType();
 
             String str = "";
-            //限用日期
+            // 限用日期
             if (StrUtil.equals(sourceField, SourceFiledEnums.FINISHED_LIMITED_USE_DATE.getCode())) {
                 final LocalDate limitedUseDate = finishedProductionDate.plusYears(3);
                 str = LocalDateTimeUtil.format(limitedUseDate, "yyyyMMdd");
@@ -442,17 +456,13 @@ public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderM
             innerBoxCodeStrBuilder.append(str);
         }
 
-
-
-
-
-
         // 半成品相关信息
         final String semiFinishedOrderNo = semiFinishedProductionOrder.getOrderNo();
         final LocalDate semiFinishedProductionDate = semiFinishedProductionOrder.getProductionDate();
         final String semiFinishedProductionDepartCode = semiFinishedProductionOrder.getProductionDepartCode();
         final String semiFinishedProductionWorkshopCode = semiFinishedProductionOrder.getProductionWorkshopCode();
-        final ProductionDepartAndWorkshop semiFinishedProductionDepartAndWorkshop = productionDepartAndWorkshopMapper.getOneByCode(semiFinishedProductionWorkshopCode);
+        final ProductionDepartAndWorkshop semiFinishedProductionDepartAndWorkshop = productionDepartAndWorkshopMapper
+                .getOneByCode(semiFinishedProductionWorkshopCode);
         final Long semiFinishedCodeRuleId = semiFinishedProductionDepartAndWorkshop.getCodeRuleId();
         SysCodeRule semiFinishedSysCodeRule = null;
         if (semiFinishedCodeRuleId != null) {
@@ -465,9 +475,9 @@ public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderM
             throw new BaseException("编码规则不存在");
         }
 
-
         // 袋码
-        final List<SysCodeRuleDetail> bagCodeRuleDetailList = sysCodeRuleDetailMapper.selectListByRuleIdSAndType(semiFinishedSysCodeRule.getId(), RuleTypeEnums.BAG.getCode());
+        final List<SysCodeRuleDetail> bagCodeRuleDetailList = sysCodeRuleDetailMapper
+                .selectListByRuleIdSAndType(semiFinishedSysCodeRule.getId(), RuleTypeEnums.BAG.getCode());
         StringBuilder bagCodeStrBuilder = new StringBuilder();
         for (SysCodeRuleDetail m : bagCodeRuleDetailList) {
             final String sourceField = m.getSourceField();
@@ -502,7 +512,7 @@ public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderM
                     str = Base32.encode(str);
                 }
             }
-            //限用日期
+            // 限用日期
             if (StrUtil.equals(sourceField, SourceFiledEnums.SEMI_FINISHED_LIMITED_USE_DATE.getCode())) {
                 final LocalDate limitedUseDate = semiFinishedProductionDate.plusYears(3);
                 str = LocalDateTimeUtil.format(limitedUseDate, "yyyyMMdd");
@@ -573,7 +583,8 @@ public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderM
         }
 
         // 万用码
-        final List<SysCodeRuleDetail> universalCodeRuleDetailList = sysCodeRuleDetailMapper.selectListByRuleIdSAndType(semiFinishedSysCodeRule.getId(), RuleTypeEnums.UNIVERSAL_CODE.getCode());
+        final List<SysCodeRuleDetail> universalCodeRuleDetailList = sysCodeRuleDetailMapper
+                .selectListByRuleIdSAndType(semiFinishedSysCodeRule.getId(), RuleTypeEnums.UNIVERSAL_CODE.getCode());
         StringBuilder universalCodeStrBuilder = new StringBuilder();
         for (SysCodeRuleDetail m : universalCodeRuleDetailList) {
             final String sourceField = m.getSourceField();
@@ -608,7 +619,7 @@ public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderM
                     str = Base32.encode(str);
                 }
             }
-            //限用日期
+            // 限用日期
             if (StrUtil.equals(sourceField, SourceFiledEnums.SEMI_FINISHED_LIMITED_USE_DATE.getCode())) {
                 final LocalDate limitedUseDate = semiFinishedProductionDate.plusYears(3);
                 str = LocalDateTimeUtil.format(limitedUseDate, "yyyyMMdd");
@@ -715,9 +726,6 @@ public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderM
                 boxCodeDataList.add(boxCodeData);
             }
 
-
-
-
             qrCodeTypeData.setBoxCodeDataList(boxCodeDataList);
 
             final List<RecordBoxCode> recordBoxCodeList = boxCodeList.stream().map(m -> {
@@ -811,6 +819,10 @@ public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderM
                 n.setBoxCode(boxCode);
             });
             recordQrCodeService.updateBatchById(recordQrCodeList);
+            // 需要另启一个线程 去执行二维码替换记录
+            ThreadUtil.execute(() -> {
+                handleReplace(recordQrCodeList);
+            });
         }
 
         final RecordCodeUploadDTO.CribCodeUploadDTO cribCodeUploadDTO = recordCodeUploadDTO.getCribCodeUploadDTO();
@@ -956,7 +968,8 @@ public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderM
                 m.setBoxCodeCount(recordBoxCodeService.getCountBySemiFinishedProductionOrderId(id));
             }
             final String productionWorkshopCode = m.getProductionWorkshopCode();
-            final ProductionDepartAndWorkshop productionDepartAndWorkshop = productionDepartAndWorkshopMapper.getOneByCode(productionWorkshopCode);
+            final ProductionDepartAndWorkshop productionDepartAndWorkshop = productionDepartAndWorkshopMapper
+                    .getOneByCode(productionWorkshopCode);
 
             final String productionTeamCode = m.getProductionTeamCode();
             // 取第一个字符
@@ -968,6 +981,32 @@ public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderM
             m.setPrintCode(sub + alias);
 
         }
+
+    }
+
+    /**
+     * 处理替换
+     *
+     * @param recordQrCodeList
+     */
+    public void handleReplace(List<RecordQrCode> recordQrCodeList) {
+        final LocalDateTime now = LocalDateTimeUtil.now();
+        recordQrCodeList.parallelStream().forEach(m -> {
+            final String code = m.getCode();
+
+            final List<RecordQrCodeReplace> recordQrCodeReplaces = recordQrCodeReplaceMapper
+                    .selectNotHandleListByOriginalQrCode(code);
+            if (CollUtil.isEmpty(recordQrCodeReplaces)) {
+                return;
+            }
+            recordQrCodeReplaces.forEach(n -> {
+                n.setHandleFlag(true);
+                n.setHandleDatetime(now);
+                recordQrCodeReplaceMapper.updateById(n);
+                m.setCode(n.getReplaceQrCode());
+                recordQrCodeMapper.updateById(m);
+            });
+        });
 
     }
 }

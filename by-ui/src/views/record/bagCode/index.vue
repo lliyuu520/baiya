@@ -72,9 +72,7 @@ const state: IHooksOptions = reactive({
 	}
 })
 
-onMounted(() => {
-	getDataList()
-})
+
 
 const { getDataList, selectionChangeHandle, sizeChangeHandle, currentChangeHandle } = useCrud(state)
 </script> 

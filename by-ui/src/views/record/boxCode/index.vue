@@ -103,9 +103,7 @@ const state: IHooksOptions = reactive({
 	}
 })
 
-onMounted(() => {
-	getDataList()
-})
+
 
 const pullTypeList = [
 	{
