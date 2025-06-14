@@ -4,7 +4,6 @@ import cn.dev33.satoken.stp.SaTokenInfo;
 import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.miguoma.by.common.enums.UserTypeEnum;
 import com.miguoma.by.common.exception.BaseException;
 import com.miguoma.by.common.satoken.user.UserDetail;
 import com.miguoma.by.common.utils.SysUserUtil;
