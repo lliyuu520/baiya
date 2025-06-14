@@ -10,7 +10,7 @@
 			<el-form-item label="上传时间">
 				<el-date-picker v-model="state.queryForm.submitDatetimeRange" value-format="YYYY-MM-DD HH:mm:ss" format="YYYY-MM-DD HH:mm:ss" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期"></el-date-picker>
 			</el-form-item>
-			<el-form-item label="是否执行">
+			<el-form-item label="状态">
 				<el-select v-model="state.queryForm.handleFlag" clearable>
 					<el-option v-for="item in handleFlagOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
 				</el-select>
