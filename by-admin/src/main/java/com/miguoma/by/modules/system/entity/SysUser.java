@@ -23,11 +23,6 @@ public class SysUser extends BaseEntity {
     private String password;
 
 
-    /**
-     * 用户类型
-     * {@link UserTypeEnum}
-     */
-    private String userType;    
 
 
 }

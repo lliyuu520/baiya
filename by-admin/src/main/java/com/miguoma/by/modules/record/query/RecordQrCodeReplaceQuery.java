@@ -30,7 +30,7 @@ public class RecordQrCodeReplaceQuery extends BaseQuery {
     /**
      * 处理状态
      */
-    private Boolean handleFlag;
+    private String handleFlag;
 
     /**
      * 上传时间范围

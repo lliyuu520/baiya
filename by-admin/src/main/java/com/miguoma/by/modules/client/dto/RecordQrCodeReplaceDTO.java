@@ -16,5 +16,9 @@ public class RecordQrCodeReplaceDTO  implements Serializable{
      * 替换二维码
      */
     private String replaceQrCode;
+    /**
+     * 替换原因
+     */
+    private String replaceReason;
 
 }

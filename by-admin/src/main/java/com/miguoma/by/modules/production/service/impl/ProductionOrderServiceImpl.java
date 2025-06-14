@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -54,7 +55,6 @@ import cn.hutool.core.codec.Base32;
 import cn.hutool.core.codec.Base62;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.LocalDateTimeUtil;
-import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.StrUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -819,10 +819,7 @@ public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderM
                 n.setBoxCode(boxCode);
             });
             recordQrCodeService.updateBatchById(recordQrCodeList);
-            // 需要另启一个线程 去执行二维码替换记录
-            ThreadUtil.execute(() -> {
-                handleReplace(recordQrCodeList);
-            });
+
         }
 
         final RecordCodeUploadDTO.CribCodeUploadDTO cribCodeUploadDTO = recordCodeUploadDTO.getCribCodeUploadDTO();
@@ -945,6 +942,11 @@ public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderM
 
     }
 
+    /**
+     * 填充数据
+     * @param m
+     */
+
     private void accept(ProductionOrderVO m) {
         final String productCode = m.getProductCode();
         final ProductionProduct productionProduct = productionProductMapper.getOneByCode(productCode);
@@ -984,29 +986,5 @@ public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderM
 
     }
 
-    /**
-     * 处理替换
-     *
-     * @param recordQrCodeList
-     */
-    public void handleReplace(List<RecordQrCode> recordQrCodeList) {
-        final LocalDateTime now = LocalDateTimeUtil.now();
-        recordQrCodeList.parallelStream().forEach(m -> {
-            final String code = m.getCode();
 
-            final List<RecordQrCodeReplace> recordQrCodeReplaces = recordQrCodeReplaceMapper
-                    .selectNotHandleListByOriginalQrCode(code);
-            if (CollUtil.isEmpty(recordQrCodeReplaces)) {
-                return;
-            }
-            recordQrCodeReplaces.forEach(n -> {
-                n.setHandleFlag(true);
-                n.setHandleDatetime(now);
-                recordQrCodeReplaceMapper.updateById(n);
-                m.setCode(n.getReplaceQrCode());
-                recordQrCodeMapper.updateById(m);
-            });
-        });
-
-    }
 }

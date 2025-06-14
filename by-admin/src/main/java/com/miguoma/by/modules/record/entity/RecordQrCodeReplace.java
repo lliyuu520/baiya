@@ -1,11 +1,11 @@
 package com.miguoma.by.modules.record.entity;
 
-import java.time.LocalDateTime;
-
 import com.miguoma.by.common.base.entity.BaseEntity;
-
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
+import java.time.LocalDateTime;
+
 /**
  * 二维码替换记录
  */
@@ -40,14 +40,21 @@ public class RecordQrCodeReplace extends BaseEntity {
      * 处理时间
      */
     private LocalDateTime handleDatetime;
-  
+
     /**
-     * 处理状态
+     * 处理状态 未处理 成功, 失败
      */
-    private Boolean handleFlag;
+    private String handleFlag;
+    /**
+     * 替换原因
+     */
 
+    private String replaceReason;
 
-
+    /**
+     * 失败原因
+     */
+    private String failReason;
 
 
 }

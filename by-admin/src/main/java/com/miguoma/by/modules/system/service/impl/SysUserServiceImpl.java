@@ -1,7 +1,7 @@
 package com.miguoma.by.modules.system.service.impl;
 
 import cn.dev33.satoken.secure.SaSecureUtil;
-import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.comparator.CompareUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -20,6 +20,8 @@ import com.miguoma.by.modules.system.vo.SysUserVO;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * 用户管理
@@ -101,21 +103,27 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUser> 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void updateOne(SysUserDTO sysUserDTO) {
-        SysUser entity = SysUserConvert.INSTANCE.convertFromDTO(sysUserDTO);
 
+        final String username = sysUserDTO.getUsername();
+        final String password = sysUserDTO.getPassword();
+        final Long userId = sysUserDTO.getId();
         // 判断用户名是否存在
-        SysUser user = baseMapper.getByUsername(entity.getUsername());
-        if (user != null && ObjUtil.equals(user.getId(), entity.getId())) {
-            throw new BaseException("用户名已经存在");
+        SysUser userDB = baseMapper.getByUsername(username);
+        if (userDB != null) {
+            final Long userDBId = userDB.getId();
+            final int compare = CompareUtil.compare(userDBId, userId);
+            if (compare != 0) {
+                throw new BaseException("用户名已经存在");
+            }
         }
-        entity.setPassword(SaSecureUtil.sha256(sysUserDTO.getPassword()));
-
-
+        final SysUser sysUser = getById(userId);
+        sysUser.setPassword(SaSecureUtil.sha256(password));
         // 更新用户
-        updateById(entity);
+        updateById(sysUser);
 
         // 更新用户角色关系
-        sysUserRoleService.saveOrUpdate(entity.getId(), sysUserDTO.getRoleIdList());
+        final List<Long> roleIdList = sysUserDTO.getRoleIdList();
+        sysUserRoleService.saveOrUpdate(userId, roleIdList);
 
 
     }

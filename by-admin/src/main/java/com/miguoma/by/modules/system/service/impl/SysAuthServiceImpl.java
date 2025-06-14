@@ -46,7 +46,6 @@ public class SysAuthServiceImpl implements SysAuthService {
         
         final LambdaQueryWrapper<SysUser> wrapper = Wrappers.lambdaQuery();
         wrapper.eq(SysUser::getUsername, username);
-        wrapper.eq(SysUser::getUserType, UserTypeEnum.ADMIN.getCode());
         wrapper.eq(SysUser::getPassword, password);
         final SysUser sysUser = sysUserService.getOne(wrapper);
         if (sysUser == null) {

@@ -1,15 +1,15 @@
 package com.miguoma.by.common.config;
 
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.Configuration;
-
+import cn.hutool.core.util.ArrayUtil;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
-
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 
 /**
  * SSH隧道服务类
@@ -25,6 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 public class SshTunnelConfiguration {
 
     private final SshTunnelConfig sshTunnelConfig;
+    private final Environment environment;
     private Session session;
 
     /**
@@ -36,18 +37,23 @@ public class SshTunnelConfiguration {
      */
     @PostConstruct
     public void init() {
-        if (sshTunnelConfig.isEnabled()) {
-            try {
-                JSch jsch = new JSch();
-                session = jsch.getSession(sshTunnelConfig.getUsername(), sshTunnelConfig.getHost(), sshTunnelConfig.getPort());
-                session.setPassword(sshTunnelConfig.getPassword());
-                session.setConfig("StrictHostKeyChecking", "no");
-                session.connect();
+        final String[] activeProfiles = environment.getActiveProfiles();
+        if (ArrayUtil.contains(activeProfiles, "local")) {
 
-                session.setPortForwardingL(sshTunnelConfig.getLocalPort(), sshTunnelConfig.getRemoteHost(), sshTunnelConfig.getRemotePort());
-                log.info("SSH tunnel established successfully!!!!!!!!!!!!!!!!!!!!!!!");
-            } catch (Exception e) {
-                throw new RuntimeException("Failed to establish SSH tunnel", e);
+
+            if (sshTunnelConfig.isEnabled()) {
+                try {
+                    JSch jsch = new JSch();
+                    session = jsch.getSession(sshTunnelConfig.getUsername(), sshTunnelConfig.getHost(), sshTunnelConfig.getPort());
+                    session.setPassword(sshTunnelConfig.getPassword());
+                    session.setConfig("StrictHostKeyChecking", "no");
+                    session.connect();
+
+                    session.setPortForwardingL(sshTunnelConfig.getLocalPort(), sshTunnelConfig.getRemoteHost(), sshTunnelConfig.getRemotePort());
+                    log.info("SSH tunnel established successfully!!!!!!!!!!!!!!!!!!!!!!!");
+                } catch (Exception e) {
+                    throw new RuntimeException("Failed to establish SSH tunnel", e);
+                }
             }
         }
     }
