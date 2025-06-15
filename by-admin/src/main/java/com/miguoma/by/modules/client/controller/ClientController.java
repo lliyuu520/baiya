@@ -83,7 +83,7 @@ public class ClientController {
     @SysLogCut(module = SysLogModuleEnums.CLIENT, type = SysLogTypeEnums.ORDER_LIST)
     public Result<List<ProductionOrderVO>> getProductionOrderList(ProductionOrderQuery query) {
         final String workshopName = ClientContextHolder.getWorkshopName();
-        query.setProductionWorkshopCode(workshopName);
+        query.setProductionWorkshopName(workshopName);
         query.setReworkFlag(true);
 //        log.info("获取订单列表:{}", query);
         final LocalDate orderDateEnd = LocalDateTimeUtil.now().toLocalDate();
