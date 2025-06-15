@@ -85,6 +85,7 @@ public class ClientController {
         final String workshopName = ClientContextHolder.getWorkshopName();
         query.setProductionWorkshopCode(workshopName);
         query.setReworkFlag(true);
+        log.info("获取订单列表:{}", query);
         final LocalDate orderDateEnd = LocalDateTimeUtil.now().toLocalDate();
         final LocalDate orderDateBegin = orderDateEnd.plusDays(-15);
         query.setOrderDateBegin(orderDateBegin);
