@@ -9,7 +9,7 @@ import java.io.Serializable;
  * @author liliangyu
  */
 @Data
-public class TeamLoginDTO implements Serializable {
+public class MachineLoginDTO implements Serializable {
 
     /** 产线编码 */
     private String productionWorkshopCode;

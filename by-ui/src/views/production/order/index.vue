@@ -17,7 +17,10 @@
 					<el-option value="SEMI_FINISHED_PRODUCT" label="半成品"></el-option>
 				</el-select>
 			</el-form-item>
-			<el-form-item label="生产车间">
+      <el-form-item label="车间">
+        <el-input v-model="state.queryForm.productionDepartName" clearable></el-input>
+      </el-form-item>
+			<el-form-item label="产线">
 				<el-input v-model="state.queryForm.productionWorkshopName" clearable></el-input>
 			</el-form-item>
 			<el-form-item>
@@ -32,14 +35,13 @@
 			<el-table-column align="center" header-align="center" label="单据编号" prop="orderNo"></el-table-column>
 			<el-table-column align="center" header-align="center" label="单据日期" prop="orderDate"></el-table-column>
 			<el-table-column align="center" header-align="center" label="生产日期" prop="productionDate"></el-table-column>
-
 			<el-table-column align="center" header-align="center" label="订单类型" prop="productType">
 				<template #default="scope">
 					{{ scope.row.productType === 'FINISHED_PRODUCT' ? '成品' : '半成品' }}
 				</template>
 			</el-table-column>
-			<el-table-column align="center" header-align="center" label="部门" prop="productionDepartName"></el-table-column>
-			<el-table-column align="center" header-align="center" label="车间" prop="productionWorkshopName"></el-table-column>
+			<el-table-column align="center" header-align="center" label="车间" prop="productionDepartName"></el-table-column>
+			<el-table-column align="center" header-align="center" label="产线" prop="productionWorkshopName"></el-table-column>
 			<el-table-column align="center" header-align="center" label="班组" prop="productionShiftName"></el-table-column>
 			<el-table-column align="center" header-align="center" label="班次" prop="productionTeamName"></el-table-column>
 			<el-table-column align="center" header-align="center" label="产品" prop="productName"></el-table-column>
@@ -92,7 +94,8 @@ const state: IHooksOptions = reactive({
 		orderNo: '',
 		reworkFlag: null,
 		productType: null,
-		productionWorkshopName: null
+		productionWorkshopName: null,
+    productionDepartName: null
 	}
 })
 

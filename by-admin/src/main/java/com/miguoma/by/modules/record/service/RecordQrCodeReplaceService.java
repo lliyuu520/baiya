@@ -6,8 +6,6 @@ import com.miguoma.by.modules.client.dto.RecordQrCodeReplaceDTO;
 import com.miguoma.by.modules.record.entity.RecordQrCodeReplace;
 import com.miguoma.by.modules.record.query.RecordQrCodeReplaceQuery;
 
-import java.util.List;
-
 /**
  * 二维码替换记录服务接口
  */
@@ -27,12 +25,12 @@ public interface RecordQrCodeReplaceService extends BaseService<RecordQrCodeRepl
      *
      * @param recordQrCodeReplaceDTO 替换记录DTO
      */
-    void saveOne(RecordQrCodeReplaceDTO recordQrCodeReplaceDTO);
+    String saveOne(RecordQrCodeReplaceDTO recordQrCodeReplaceDTO);
 
     /**
      *  处理未处理的记录
      * @return
      */
-   void HandleNotHandleData();
+   void handleNotHandleData();
 
 }

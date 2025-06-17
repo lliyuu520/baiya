@@ -1,5 +1,6 @@
 package com.miguoma.by.common.utils;
 
+import com.miguoma.by.modules.client.dto.MachineLoginDTO;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -21,62 +22,30 @@ import lombok.extern.slf4j.Slf4j;
 public class ClientContextHolder {
 
     /**
-     * 工厂代码
-     * 用于存储当前请求对应的工厂代码
-     * 在拦截器中从 token 解析并设置
-     * 在业务代码中可以通过 getFactoryCode() 方法获取
+     * 涩北登录信息
      */
-    private static final ThreadLocal<String> FACTORY_CODE = new ThreadLocal<>();
+    private static final ThreadLocal<MachineLoginDTO> MACHINE_LOGIN_DTO_THREAD_LOCAL = new ThreadLocal<>();
 
     /**
-     * 车间代码
-     * 用于存储当前请求对应的车间代码
-     * 在拦截器中从 token 解析并设置
-     * 在业务代码中可以通过 getWorkshopCode() 方法获取
+     *  设置机器登录信息
+     * @param machineLoginDTO
      */
-    private static final ThreadLocal<String> WORKSHOP_NAME = new ThreadLocal<>();
-
-    /**
-     * 设置工厂代码
-     * 通常在拦截器中调用，用于存储从 token 解析出的工厂代码
-     *
-     * @param factoryCode 工厂代码
-     */
-    public static void setFactoryCode(String factoryCode) {
-        FACTORY_CODE.set(factoryCode);
+    public static void setMachineLoginDTO(MachineLoginDTO machineLoginDTO) {
+        MACHINE_LOGIN_DTO_THREAD_LOCAL.set(machineLoginDTO);
     }
 
     /**
-     * 获取工厂代码
-     * 在业务代码中调用，获取当前请求对应的工厂代码
-     * 如果未设置，则返回 null
-     *
-     * @return 工厂代码，如果未设置则返回 null
+     *  获取机器登录信息
+     * @return
      */
-    public static String getFactoryCode() {
-        return FACTORY_CODE.get();
+    public static MachineLoginDTO getMachineLoginDTO() {
+        return MACHINE_LOGIN_DTO_THREAD_LOCAL.get();
     }
 
-    /**
-     * 设置车间代码
-     * 通常在拦截器中调用，用于存储从 token 解析出的车间代码
-     *
-     * @param workshopName 车间代码
-     */
-    public static void setWorkshopName(String workshopName) {
-        WORKSHOP_NAME.set(workshopName);
-    }
 
-    /**
-     * 获取车间代码
-     * 在业务代码中调用，获取当前请求对应的车间代码
-     * 如果未设置，则返回 null
-     *
-     * @return 车间代码，如果未设置则返回 null
-     */
-    public static String getWorkshopName() {
-        return WORKSHOP_NAME.get();
-    }
+
+
+
 
     /**
      * 清除所有 ThreadLocal 变量
@@ -84,7 +53,7 @@ public class ClientContextHolder {
      * 通常在拦截器的 afterCompletion 方法中调用
      */
     public static void clear() {
-        FACTORY_CODE.remove();
-        WORKSHOP_NAME.remove();
+        MACHINE_LOGIN_DTO_THREAD_LOCAL.remove();
+
     }
 }

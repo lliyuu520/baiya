@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.time.LocalDate;
+import java.util.List;
 
 /**
  * 产品查询对象 用于封装产品查询条件
@@ -24,12 +25,26 @@ public class ProductionOrderQuery extends BaseQuery {
      */
     private String productType;
     /**
-     * 生产车间名称
+     * 生产产线名称
      */
     private String productionWorkshopName;
+    /**
+     * 生产车间名称
+     */
+    private String productionDepartName;
+    /**
+     * 生产车间编号
+     */
+    private String productionDepartCode;
 
     /**
      * 生产车间编号
+     */
+    private List<String> productionDepartCodeList;
+
+
+    /**
+     * 生产产线编号
      */
     private String productionWorkshopCode;
 

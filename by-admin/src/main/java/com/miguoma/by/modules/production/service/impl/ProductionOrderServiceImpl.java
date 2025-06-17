@@ -1,15 +1,10 @@
 package com.miguoma.by.modules.production.service.impl;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
+import cn.hutool.core.codec.Base32;
+import cn.hutool.core.codec.Base62;
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.date.LocalDateTimeUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.miguoma.by.common.base.page.PageVO;
 import com.miguoma.by.common.base.service.impl.BaseServiceImpl;
@@ -26,18 +21,13 @@ import com.miguoma.by.modules.production.entity.ProductionDepartAndWorkshop;
 import com.miguoma.by.modules.production.entity.ProductionOrder;
 import com.miguoma.by.modules.production.entity.ProductionProduct;
 import com.miguoma.by.modules.production.enums.ProductTypeEnum;
-import com.miguoma.by.modules.production.mapper.ProductionDepartAndWorkshopMapper;
-import com.miguoma.by.modules.production.mapper.ProductionOrderMapper;
-import com.miguoma.by.modules.production.mapper.ProductionProductMapper;
-import com.miguoma.by.modules.production.mapper.ProductionShiftMapper;
-import com.miguoma.by.modules.production.mapper.ProductionTeamMapper;
+import com.miguoma.by.modules.production.mapper.*;
 import com.miguoma.by.modules.production.query.ProductionOrderQuery;
 import com.miguoma.by.modules.production.service.ProductionOrderService;
 import com.miguoma.by.modules.production.vo.ProductionOrderVO;
 import com.miguoma.by.modules.record.entity.RecordBagCode;
 import com.miguoma.by.modules.record.entity.RecordBoxCode;
 import com.miguoma.by.modules.record.entity.RecordQrCode;
-import com.miguoma.by.modules.record.entity.RecordQrCodeReplace;
 import com.miguoma.by.modules.record.mapper.RecordQrCodeMapper;
 import com.miguoma.by.modules.record.mapper.RecordQrCodeReplaceMapper;
 import com.miguoma.by.modules.record.service.RecordBagCodeService;
@@ -50,14 +40,16 @@ import com.miguoma.by.modules.system.enums.RuleTypeEnums;
 import com.miguoma.by.modules.system.enums.SourceFiledEnums;
 import com.miguoma.by.modules.system.mapper.SysCodeRuleDetailMapper;
 import com.miguoma.by.modules.system.mapper.SysCodeRuleMapper;
-
-import cn.hutool.core.codec.Base32;
-import cn.hutool.core.codec.Base62;
-import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.date.LocalDateTimeUtil;
-import cn.hutool.core.util.StrUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 生产订单服务实现类
@@ -944,45 +936,41 @@ public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderM
 
     /**
      * 填充数据
+     *
      * @param m
      */
 
     private void accept(ProductionOrderVO m) {
         final String productCode = m.getProductCode();
-        final ProductionProduct productionProduct = productionProductMapper.getOneByCode(productCode);
-        if (productionProduct != null) {
-            final LocalDate productionDate = m.getProductionDate();
-            if (productionDate != null) {
-                final String productionDateStr = LocalDateTimeUtil.format(productionDate, "yyyyMMdd");
-                m.setProductionBatchNo(WebBase62.encode(Long.parseLong(productionDateStr)));
-                final LocalDate limitedUseDate = productionDate.plusYears(3);
-                m.setLimitedUseDateStr(LocalDateTimeUtil.format(limitedUseDate, "yyyyMMdd"));
-            }
-            final Integer oneBoxPackageNum = productionProduct.getOneBoxPackageNum();
-            m.setOneBoxPackageNum(oneBoxPackageNum);
-            final String productType = m.getProductType();
-            final Long id = m.getId();
-            if (StrUtil.equals(ProductTypeEnum.FINISHED_PRODUCT.getCode(), productType)) {
-                m.setBoxCodeCount(recordBoxCodeService.getCountByFinishedProductionOrderId(id));
-
-            }
-            if (StrUtil.equals(ProductTypeEnum.SEMI_FINISHED_PRODUCT.getCode(), productType)) {
-                m.setBoxCodeCount(recordBoxCodeService.getCountBySemiFinishedProductionOrderId(id));
-            }
-            final String productionWorkshopCode = m.getProductionWorkshopCode();
-            final ProductionDepartAndWorkshop productionDepartAndWorkshop = productionDepartAndWorkshopMapper
-                    .getOneByCode(productionWorkshopCode);
-
-            final String productionTeamCode = m.getProductionTeamCode();
-            // 取第一个字符
-            final String sub = StrUtil.sub(productionTeamCode, 0, 1);
-            String alias = "";
-            if (productionDepartAndWorkshop != null) {
-                alias = productionDepartAndWorkshop.getAlias();
-            }
-            m.setPrintCode(sub + alias);
+        final LocalDate productionDate = m.getProductionDate();
+        if (productionDate != null) {
+            final String productionDateStr = LocalDateTimeUtil.format(productionDate, "yyyyMMdd");
+            m.setProductionBatchNo(WebBase62.encode(Long.parseLong(productionDateStr)));
+            final LocalDate limitedUseDate = productionDate.plusYears(3);
+            m.setLimitedUseDateStr(LocalDateTimeUtil.format(limitedUseDate, "yyyyMMdd"));
+        }
+        final String productType = m.getProductType();
+        final Long id = m.getId();
+        if (StrUtil.equals(ProductTypeEnum.FINISHED_PRODUCT.getCode(), productType)) {
+            m.setBoxCodeCount(recordBoxCodeService.getCountByFinishedProductionOrderId(id));
 
         }
+        if (StrUtil.equals(ProductTypeEnum.SEMI_FINISHED_PRODUCT.getCode(), productType)) {
+            m.setBoxCodeCount(recordBoxCodeService.getCountBySemiFinishedProductionOrderId(id));
+        }
+        final String productionWorkshopCode = m.getProductionWorkshopCode();
+        final ProductionDepartAndWorkshop productionDepartAndWorkshop = productionDepartAndWorkshopMapper
+                .getOneByCode(productionWorkshopCode);
+
+        final String productionTeamCode = m.getProductionTeamCode();
+        // 取第一个字符
+        final String sub = StrUtil.sub(productionTeamCode, 0, 1);
+        String alias = "";
+        if (productionDepartAndWorkshop != null) {
+            alias = productionDepartAndWorkshop.getAlias();
+        }
+        m.setPrintCode(sub + alias);
+
 
     }
 

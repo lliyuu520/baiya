@@ -1,12 +1,10 @@
 package com.miguoma.by.modules.record.service.impl;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.date.LocalDateTimeUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -14,20 +12,21 @@ import com.miguoma.by.common.base.page.PageVO;
 import com.miguoma.by.common.base.service.impl.BaseServiceImpl;
 import com.miguoma.by.common.satoken.user.UserDetail;
 import com.miguoma.by.common.utils.SysUserUtil;
-import com.miguoma.by.modules.client.dto.RecordQrCodeReplaceDTO;
-import com.miguoma.by.modules.record.entity.RecordQrCode;
-import com.miguoma.by.modules.record.entity.RecordQrCodeReplace;
+import com.miguoma.by.modules.client.dto.RecordBoxCodeReplaceDTO;
+import com.miguoma.by.modules.record.entity.RecordBoxCode;
+import com.miguoma.by.modules.record.entity.RecordBoxCodeReplace;
 import com.miguoma.by.modules.record.enums.ReplaceHandleFlagEnums;
-import com.miguoma.by.modules.record.mapper.RecordQrCodeMapper;
-import com.miguoma.by.modules.record.mapper.RecordQrCodeReplaceMapper;
-import com.miguoma.by.modules.record.query.RecordQrCodeReplaceQuery;
-import com.miguoma.by.modules.record.service.RecordQrCodeReplaceService;
-
-import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.date.LocalDateTimeUtil;
-import cn.hutool.core.util.StrUtil;
+import com.miguoma.by.modules.record.mapper.RecordBoxCodeMapper;
+import com.miguoma.by.modules.record.mapper.RecordBoxCodeReplaceMapper;
+import com.miguoma.by.modules.record.query.RecordBoxCodeReplaceQuery;
+import com.miguoma.by.modules.record.service.RecordBoxCodeReplaceService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * 二维码替换记录服务实现类
@@ -35,17 +34,17 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class RecordQrCodeReplaceServiceImpl extends BaseServiceImpl<RecordQrCodeReplaceMapper, RecordQrCodeReplace>
-        implements RecordQrCodeReplaceService {
-    private final RecordQrCodeMapper recordQrCodeMapper;
+public class RecordBoxCodeReplaceServiceImpl extends BaseServiceImpl<RecordBoxCodeReplaceMapper, RecordBoxCodeReplace>
+        implements RecordBoxCodeReplaceService {
+    private final RecordBoxCodeMapper recordBoxCodeMapper;
 
     /**
      * 分页查询
      */
     @Override
-    public PageVO<RecordQrCodeReplace> pageVO(RecordQrCodeReplaceQuery query) {
+    public PageVO<RecordBoxCodeReplace> pageVO(RecordBoxCodeReplaceQuery query) {
 
-        IPage<RecordQrCodeReplace> resultPage = this.page(getPage(query), buildWrapper(query));
+        IPage<RecordBoxCodeReplace> resultPage = this.page(getPage(query), buildWrapper(query));
 
         return PageVO.of(resultPage);
     }
@@ -56,105 +55,105 @@ public class RecordQrCodeReplaceServiceImpl extends BaseServiceImpl<RecordQrCode
      * @param query
      * @return
      */
-    private LambdaQueryWrapper<RecordQrCodeReplace> buildWrapper(RecordQrCodeReplaceQuery query) {
-        LambdaQueryWrapper<RecordQrCodeReplace> lambdaQuery = Wrappers.lambdaQuery(RecordQrCodeReplace.class);
-        String originalQrCode = query.getOriginalQrCode();
-        if (StrUtil.isNotBlank(originalQrCode)) {
-            lambdaQuery.eq(RecordQrCodeReplace::getOriginalQrCode, originalQrCode);
+    private LambdaQueryWrapper<RecordBoxCodeReplace> buildWrapper(RecordBoxCodeReplaceQuery query) {
+        LambdaQueryWrapper<RecordBoxCodeReplace> lambdaQuery = Wrappers.lambdaQuery(RecordBoxCodeReplace.class);
+        String originalBoxCode = query.getOriginalBoxCode();
+        if (StrUtil.isNotBlank(originalBoxCode)) {
+            lambdaQuery.eq(RecordBoxCodeReplace::getOriginalBoxCode, originalBoxCode);
         }
-        String replaceQrCode = query.getReplaceQrCode();
-        if (StrUtil.isNotBlank(replaceQrCode)) {
-            lambdaQuery.eq(RecordQrCodeReplace::getReplaceQrCode, replaceQrCode);
+        String replaceBoxCode = query.getReplaceBoxCode();
+        if (StrUtil.isNotBlank(replaceBoxCode)) {
+            lambdaQuery.eq(RecordBoxCodeReplace::getReplaceBoxCode, replaceBoxCode);
         }
         String handleFlag = query.getHandleFlag();
         if (StrUtil.isNotBlank(handleFlag)) {
-            lambdaQuery.eq(RecordQrCodeReplace::getHandleFlag, handleFlag);
+            lambdaQuery.eq(RecordBoxCodeReplace::getHandleFlag, handleFlag);
         }
         final LocalDateTime submitDatetimeBegin = query.getSubmitDatetimeBegin();
         if (submitDatetimeBegin != null) {
-            lambdaQuery.ge(RecordQrCodeReplace::getSubmitDatetime, submitDatetimeBegin);
+            lambdaQuery.ge(RecordBoxCodeReplace::getSubmitDatetime, submitDatetimeBegin);
         }
         final LocalDateTime submitDatetimeEnd = query.getSubmitDatetimeEnd();
         if (submitDatetimeEnd != null) {
-            lambdaQuery.le(RecordQrCodeReplace::getSubmitDatetime, submitDatetimeEnd);
+            lambdaQuery.le(RecordBoxCodeReplace::getSubmitDatetime, submitDatetimeEnd);
         }
-        lambdaQuery.orderByDesc(RecordQrCodeReplace::getId);
+        lambdaQuery.orderByDesc(RecordBoxCodeReplace::getId);
         return lambdaQuery;
     }
 
     /**
      * 保存一条记录
      *
-     * @param recordQrCodeReplaceDTO
+     * @param recordBoxCodeReplaceDTO
      */
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void saveOne(RecordQrCodeReplaceDTO recordQrCodeReplaceDTO) {
+    public void saveOne(RecordBoxCodeReplaceDTO recordBoxCodeReplaceDTO) {
         UserDetail userInfo = SysUserUtil.getUserInfo();
         Long userId = userInfo.getId();
         String username = userInfo.getUsername();
         final LocalDateTime now = LocalDateTimeUtil.now();
 
-        String originalQrCode = recordQrCodeReplaceDTO.getOriginalQrCode();
-        String replaceQrCode = recordQrCodeReplaceDTO.getReplaceQrCode();
-        final RecordQrCode oneByCode = recordQrCodeMapper.getOneByCode(replaceQrCode);
-        RecordQrCode recordQrCode = recordQrCodeMapper.getOneByCode(originalQrCode);
+        String originalBoxCode = recordBoxCodeReplaceDTO.getOriginalBoxCode();
+        String replaceBoxCode = recordBoxCodeReplaceDTO.getReplaceBoxCode();
+        final RecordBoxCode replaceBoxCodeEntity = recordBoxCodeMapper.getOneByCode(replaceBoxCode);
+        final RecordBoxCode originalBoxCodeEntity = recordBoxCodeMapper.getOneByCode(originalBoxCode);
 
-        RecordQrCodeReplace recordQrCodeReplace = new RecordQrCodeReplace();
-        recordQrCodeReplace.setSubmitUserId(userId);
-        recordQrCodeReplace.setSubmitUsername(username);
-        recordQrCodeReplace.setSubmitDatetime(now);
-        recordQrCodeReplace.setHandleFlag(ReplaceHandleFlagEnums.WAITING.getCode());
-        recordQrCodeReplace.setOriginalQrCode(originalQrCode);
-        recordQrCodeReplace.setReplaceQrCode(replaceQrCode);
-        if (oneByCode != null) {
-            recordQrCodeReplace.setHandleFlag(ReplaceHandleFlagEnums.FAIL.getCode());
-            recordQrCodeReplace.setFailReason("替换二维码已存在");
-            save(recordQrCodeReplace);
+        RecordBoxCodeReplace recordBoxCodeReplace = new RecordBoxCodeReplace();
+        recordBoxCodeReplace.setSubmitUserId(userId);
+        recordBoxCodeReplace.setSubmitUsername(username);
+        recordBoxCodeReplace.setSubmitDatetime(now);
+        recordBoxCodeReplace.setHandleFlag(ReplaceHandleFlagEnums.WAITING.getCode());
+        recordBoxCodeReplace.setOriginalBoxCode(originalBoxCode);
+        recordBoxCodeReplace.setReplaceBoxCode(replaceBoxCode);
+
+        if(StrUtil.equals(replaceBoxCode, originalBoxCode)){
+            recordBoxCodeReplace.setHandleFlag(ReplaceHandleFlagEnums.FAIL.getCode());
+            recordBoxCodeReplace.setFailReason("原箱码与替换箱码相同");
+            save(recordBoxCodeReplace);
             return;
         }
 
-        if (recordQrCode != null) {
-            recordQrCodeReplace.setHandleFlag(ReplaceHandleFlagEnums.SUCCESS.getCode());
-            recordQrCodeReplace.setHandleDatetime(now);
-            recordQrCode.setCode(replaceQrCode);
-            recordQrCodeMapper.updateById(recordQrCode);
-        }
-        this.save(recordQrCodeReplace);
-    }
-
-    /**
-     * 查询未处理的记录
-     *
-     * @return
-     */
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void handleNotHandleData() {
-        final LocalDateTime now = LocalDateTimeUtil.now();
-        final LambdaQueryWrapper<RecordQrCodeReplace> lambdaQuery = Wrappers.lambdaQuery();
-        lambdaQuery.eq(RecordQrCodeReplace::getHandleFlag, ReplaceHandleFlagEnums.WAITING.getCode());
-        // 7天内的
-        lambdaQuery.ge(RecordQrCodeReplace::getSubmitDatetime, now.minusDays(7));
-        lambdaQuery.orderByAsc(RecordQrCodeReplace::getId);
-
-        // 使用分页对象，每页50条
-        Page<RecordQrCodeReplace> page = new Page<>(1, 50);
-        final Page<RecordQrCodeReplace> recordQrCodeReplacePage = page(page, lambdaQuery);
-        final List<RecordQrCodeReplace> recordQrCodeReplaceList = recordQrCodeReplacePage.getRecords();
-
-        if (CollUtil.isEmpty(recordQrCodeReplaceList)) {
-            log.info("没有未处理的数据");
+        if(replaceBoxCodeEntity == null){
+            recordBoxCodeReplace.setHandleFlag(ReplaceHandleFlagEnums.FAIL.getCode());
+            recordBoxCodeReplace.setFailReason("未找到该替换箱码");
+            save(recordBoxCodeReplace);
             return;
         }
-
-        recordQrCodeReplaceList.forEach(recordQrCodeReplace -> {
-            final RecordQrCodeReplaceDTO recordQrCodeReplaceDTO = new RecordQrCodeReplaceDTO();
-            recordQrCodeReplaceDTO.setOriginalQrCode(recordQrCodeReplace.getOriginalQrCode());
-            recordQrCodeReplaceDTO.setReplaceQrCode(recordQrCodeReplace.getReplaceQrCode());
-            recordQrCodeReplaceDTO.setReplaceReason(recordQrCodeReplace.getReplaceReason());
-            saveOne(recordQrCodeReplaceDTO);
-        });
+        if(originalBoxCodeEntity == null){
+            recordBoxCodeReplace.setHandleFlag(ReplaceHandleFlagEnums.FAIL.getCode());
+            recordBoxCodeReplace.setFailReason("未找到该原箱码");
+            save(recordBoxCodeReplace);
+            return;
+        }
+        final String originalCribCode = originalBoxCodeEntity.getCribCode();
+        if(StrUtil.isNotBlank(originalCribCode)){
+            recordBoxCodeReplace.setHandleFlag(ReplaceHandleFlagEnums.FAIL.getCode());
+            recordBoxCodeReplace.setFailReason("原箱码已组垛");
+            save(recordBoxCodeReplace);
+            return;
+        }
+        final String replaceCribCode = replaceBoxCodeEntity.getCribCode();
+        if(StrUtil.isBlank(replaceCribCode)){
+            recordBoxCodeReplace.setHandleFlag(ReplaceHandleFlagEnums.FAIL.getCode());
+            recordBoxCodeReplace.setFailReason("替换箱码未组垛");
+            save(recordBoxCodeReplace);
+            return;
+        }
+        LambdaUpdateWrapper<RecordBoxCode> originalLambdaUpdate = Wrappers.lambdaUpdate(RecordBoxCode.class);
+        originalLambdaUpdate.eq(RecordBoxCode::getCode, originalBoxCode);
+        originalLambdaUpdate.set(RecordBoxCode::getCribCode, replaceCribCode);
+        recordBoxCodeMapper.update(null,originalLambdaUpdate);
+        LambdaUpdateWrapper<RecordBoxCode> replaceLambdaUpdate = Wrappers.lambdaUpdate(RecordBoxCode.class);
+        replaceLambdaUpdate.eq(RecordBoxCode::getCode, replaceBoxCode);
+        replaceLambdaUpdate.set(RecordBoxCode::getCribCode, null);
+        recordBoxCodeMapper.update(null,replaceLambdaUpdate);
+        recordBoxCodeReplace.setHandleFlag(ReplaceHandleFlagEnums.SUCCESS.getCode());
+        recordBoxCodeReplace.setHandleDatetime(now);
+        
+        this.save(recordBoxCodeReplace);
     }
+
+
 }

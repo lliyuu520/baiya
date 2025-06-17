@@ -90,7 +90,7 @@ public class RecordQrCodeReplaceServiceImpl extends BaseServiceImpl<RecordQrCode
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void saveOne(RecordQrCodeReplaceDTO recordQrCodeReplaceDTO) {
+    public String saveOne(RecordQrCodeReplaceDTO recordQrCodeReplaceDTO) {
         UserDetail userInfo = SysUserUtil.getUserInfo();
         Long userId = userInfo.getId();
         String username = userInfo.getUsername();
@@ -98,8 +98,9 @@ public class RecordQrCodeReplaceServiceImpl extends BaseServiceImpl<RecordQrCode
 
         String originalQrCode = recordQrCodeReplaceDTO.getOriginalQrCode();
         String replaceQrCode = recordQrCodeReplaceDTO.getReplaceQrCode();
-        final RecordQrCode oneByCode = recordQrCodeMapper.getOneByCode(replaceQrCode);
-        RecordQrCode recordQrCode = recordQrCodeMapper.getOneByCode(originalQrCode);
+        String replaceReason = recordQrCodeReplaceDTO.getReplaceReason();
+        final RecordQrCode replaceQrCodeEntity = recordQrCodeMapper.getOneByCode(replaceQrCode);
+        RecordQrCode originalQrCodeEntity = recordQrCodeMapper.getOneByCode(originalQrCode);
 
         RecordQrCodeReplace recordQrCodeReplace = new RecordQrCodeReplace();
         recordQrCodeReplace.setSubmitUserId(userId);
@@ -108,20 +109,49 @@ public class RecordQrCodeReplaceServiceImpl extends BaseServiceImpl<RecordQrCode
         recordQrCodeReplace.setHandleFlag(ReplaceHandleFlagEnums.WAITING.getCode());
         recordQrCodeReplace.setOriginalQrCode(originalQrCode);
         recordQrCodeReplace.setReplaceQrCode(replaceQrCode);
-        if (oneByCode != null) {
+        recordQrCodeReplace.setReplaceReason(replaceReason);
+        String failReason = null;
+        if (StrUtil.equals(replaceQrCode, originalQrCode)) {
             recordQrCodeReplace.setHandleFlag(ReplaceHandleFlagEnums.FAIL.getCode());
-            recordQrCodeReplace.setFailReason("替换二维码已存在");
+            failReason = "替换二维码与源二维码相同";
+            recordQrCodeReplace.setFailReason(failReason);
             save(recordQrCodeReplace);
-            return;
+            return failReason;
+
         }
 
-        if (recordQrCode != null) {
-            recordQrCodeReplace.setHandleFlag(ReplaceHandleFlagEnums.SUCCESS.getCode());
-            recordQrCodeReplace.setHandleDatetime(now);
-            recordQrCode.setCode(replaceQrCode);
-            recordQrCodeMapper.updateById(recordQrCode);
+        if (replaceQrCodeEntity == null) {
+            recordQrCodeReplace.setHandleFlag(ReplaceHandleFlagEnums.FAIL.getCode());
+            failReason="替换二维码不存在";
+            recordQrCodeReplace.setFailReason(failReason);
+            save(recordQrCodeReplace);
+            return failReason;
+        }
+        if (originalQrCodeEntity == null) {
+            recordQrCodeReplace.setHandleFlag(ReplaceHandleFlagEnums.FAIL.getCode());
+            failReason="源二维码不存在";
+            recordQrCodeReplace.setFailReason(failReason);
+                return failReason;
+
+        }
+        final String replaceBoxCode = replaceQrCodeEntity.getBoxCode();
+       final String originalBoxCode = originalQrCodeEntity.getBoxCode();
+       if(StrUtil.isNotBlank(replaceBoxCode)&&StrUtil.isNotBlank(originalBoxCode)){
+           recordQrCodeReplace.setHandleFlag(ReplaceHandleFlagEnums.FAIL.getCode());
+           failReason="源二维码和替换二维码都已装箱上传";
+           recordQrCodeReplace.setFailReason(failReason);
+           save(recordQrCodeReplace);
+           return failReason;
+       }
+        if(StrUtil.isNotBlank(replaceBoxCode)&&StrUtil.isBlank(originalBoxCode)){
+            recordQrCodeReplace.setHandleFlag(ReplaceHandleFlagEnums.FAIL.getCode());
+            failReason="源二维码未装箱上传,替换二维码已装箱上传";
+            recordQrCodeReplace.setFailReason(failReason);
+            save(recordQrCodeReplace);
+            return failReason;
         }
         this.save(recordQrCodeReplace);
+        return failReason;
     }
 
     /**
@@ -131,7 +161,7 @@ public class RecordQrCodeReplaceServiceImpl extends BaseServiceImpl<RecordQrCode
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void HandleNotHandleData() {
+    public void handleNotHandleData() {
         final LocalDateTime now = LocalDateTimeUtil.now();
         final LambdaQueryWrapper<RecordQrCodeReplace> lambdaQuery = Wrappers.lambdaQuery();
         lambdaQuery.eq(RecordQrCodeReplace::getHandleFlag, ReplaceHandleFlagEnums.WAITING.getCode());

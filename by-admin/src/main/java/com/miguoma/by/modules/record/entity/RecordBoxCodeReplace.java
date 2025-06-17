@@ -11,17 +11,17 @@ import java.time.LocalDateTime;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class RecordQrCodeReplace extends BaseEntity {
+public class RecordBoxCodeReplace extends BaseEntity {
 
     /**
      * 原始二维码
      */
-    private String originalQrCode;
+    private String originalBoxCode;
 
     /**
      * 替换二维码
      */
-    private String replaceQrCode;
+    private String replaceBoxCode;
 
     /**
      * 提交时间

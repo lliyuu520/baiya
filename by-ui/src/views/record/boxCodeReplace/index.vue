@@ -1,10 +1,10 @@
 <template>
 	<el-card>
 		<el-form :inline="true" :model="state.queryForm" @keyup.enter="getDataList()">
-			<el-form-item label="原始二维码">
-				<el-input v-model="state.queryForm.originalQrCode" clearable></el-input>
+			<el-form-item label="原始箱码">
+				<el-input v-model="state.queryForm.originalBoxCode" clearable></el-input>
 			</el-form-item>
-			<el-form-item label="替换二维码">
+			<el-form-item label="替换箱码">
 				<el-input v-model="state.queryForm.replaceQrCode" clearable></el-input>
 			</el-form-item>
 			<el-form-item label="上传时间">
@@ -21,8 +21,8 @@
 			</el-form-item>
 		</el-form>
 		<el-table v-loading="state.dataListLoading" :data="state.dataList" border style="width: 100%" @selection-change="selectionChangeHandle">
-			<el-table-column align="center" header-align="center" label="原始二维码" prop="originalQrCode"></el-table-column>
-			<el-table-column align="center" header-align="center" label="替换二维码" prop="replaceQrCode"></el-table-column>
+			<el-table-column align="center" header-align="center" label="原始箱码" prop="originalBoxCode"></el-table-column>
+			<el-table-column align="center" header-align="center" label="替换箱码" prop="replaceBoxCode"></el-table-column>
 			<el-table-column align="center" header-align="center" label="上传用户" prop="submitUsername" ></el-table-column>
 			<el-table-column align="center" header-align="center" label="上传时间" prop="submitDatetime">
 				<template #default="scope">
@@ -62,10 +62,10 @@ import { formatDateTime } from "@/utils/tool";
 import { reactive } from "vue";
 
 const state: IHooksOptions = reactive({
-	dataListUrl: '/record/qrCodeReplace/page',
+	dataListUrl: '/record/boxCodeReplace/page',
 	queryForm: {
-		originalQrCode: '',
-		replaceQrCode: '',
+		originalBoxCode: '',
+		replaceBoxCode: '',
 		handleFlag: '',
 		submitDatetimeRange: []
 	}

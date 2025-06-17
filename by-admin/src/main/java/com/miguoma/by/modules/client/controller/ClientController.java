@@ -9,9 +9,9 @@ import com.miguoma.by.common.enums.SysLogModuleEnums;
 import com.miguoma.by.common.enums.SysLogTypeEnums;
 import com.miguoma.by.common.utils.ClientContextHolder;
 import com.miguoma.by.common.utils.Result;
+import com.miguoma.by.modules.client.dto.MachineLoginDTO;
 import com.miguoma.by.modules.client.dto.PullCodeDTO;
 import com.miguoma.by.modules.client.dto.RecordCodeUploadDTO;
-import com.miguoma.by.modules.client.dto.TeamLoginDTO;
 import com.miguoma.by.modules.client.vo.PullCodeVO;
 import com.miguoma.by.modules.production.query.ProductionOrderQuery;
 import com.miguoma.by.modules.production.service.ProductionDepartAndWorkshopService;
@@ -54,7 +54,7 @@ public class ClientController {
      */
     @PostMapping("/login")
     @SysLogCut(module = SysLogModuleEnums.CLIENT, type = SysLogTypeEnums.LOGIN)
-    public Result<String> login(@RequestBody TeamLoginDTO dto) {
+    public Result<String> login(@RequestBody MachineLoginDTO dto) {
         final String productionFactoryCode = dto.getProductionFactoryCode();
         final String productionWorkshopCode = dto.getProductionWorkshopCode();
         final Boolean checkFactoryCode = productionFactoryService.checkFactoryCode(productionFactoryCode);
@@ -65,8 +65,8 @@ public class ClientController {
 
         final Boolean checkWorkshopCode = productionDepartAndWorkshopService.checkWorkshopName(productionWorkshopCode);
         if (!checkWorkshopCode) {
-            log.error("车间编码不存在:{}", productionWorkshopCode);
-            return Result.error("车间编码不存在");
+            log.error("产线不存在:{}", productionWorkshopCode);
+            return Result.error("产线不存在");
         }
         final String jsonStr = JSONUtil.toJsonStr(dto);
         final String encode = Base62.encode(jsonStr);
@@ -82,10 +82,11 @@ public class ClientController {
     @GetMapping("/productionOrderList")
     @SysLogCut(module = SysLogModuleEnums.CLIENT, type = SysLogTypeEnums.ORDER_LIST)
     public Result<List<ProductionOrderVO>> getProductionOrderList(ProductionOrderQuery query) {
-        final String workshopName = ClientContextHolder.getWorkshopName();
-        query.setProductionWorkshopName(workshopName);
+        final MachineLoginDTO machineLoginDTO = ClientContextHolder.getMachineLoginDTO();
+        final String productionWorkshopCode = machineLoginDTO.getProductionWorkshopCode();
+        final List<String> departCodeList = productionDepartAndWorkshopService.getDepartCodeListByWorkshopName(productionWorkshopCode);
+        query.setProductionDepartCodeList(departCodeList);
         query.setReworkFlag(true);
-//        log.info("获取订单列表:{}", query);
         final LocalDate orderDateEnd = LocalDateTimeUtil.now().toLocalDate();
         final LocalDate orderDateBegin = orderDateEnd.plusDays(-15);
         query.setOrderDateBegin(orderDateBegin);

@@ -82,9 +82,19 @@ public enum SysLogModuleEnums {
     RECORD_QR_CODE("袋二维码"),
                     
     /**
-     * 二维码替换记录
+     * 二维码置换记录
      */
-    RECORD_QR_CODE_REPLACE("二维码替换记录"),
+    RECORD_QR_CODE_REPLACE("二维码置换记录"),
+    
+    /**
+     * 箱物流码置换记录
+     */
+    RECORD_BOX_CODE_REPLACE("箱物流码置换记录"),
+
+    /**
+     * APK
+     */
+    APK("APK"),
     
 
 

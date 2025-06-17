@@ -24,7 +24,7 @@ public class QrCodeReplaceJob {
     public void processWaitingRecords() {
         log.info("开始处理未处理状态的二维码替换记录");
 
-        recordQrCodeReplaceService.HandleNotHandleData();
+        recordQrCodeReplaceService.handleNotHandleData();
 
         log.info("结束处理未处理状态的二维码替换记录");
 

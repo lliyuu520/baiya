@@ -44,7 +44,6 @@ public interface ProductionOrderMapper extends IBaseMapper<ProductionOrder> {
 
     /**
      * 查询生产订单列表
-     * @param page
      * @param query
      * @return
      */

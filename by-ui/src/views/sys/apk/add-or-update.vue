@@ -1,11 +1,24 @@
 <template>
 	<el-dialog v-model="visible" :title="!dataForm.id ? '新增' : '修改'" :close-on-click-modal="false">
 		<el-form ref="dataFormRef" :model="dataForm" :rules="dataRules" label-width="100px" @keyup.enter="submitHandle()">
-			<el-form-item label="编码" prop="code">
-				<el-input v-model="dataForm.code" ></el-input>
+			<el-form-item label="版本号" prop="versionNo">
+				<el-input-number v-model="dataForm.versionNo" :controls="false"></el-input-number>
 			</el-form-item>
-			<el-form-item label="名称" prop="name">
-				<el-input v-model="dataForm.name"></el-input>
+			<el-form-item label="版本名称" prop="versionName">
+				<el-input v-model="dataForm.versionName"></el-input>
+			</el-form-item>
+			<el-form-item label="版本描述" prop="versionDesc">
+				<el-input v-model="dataForm.versionDesc" type="textarea" :rows="3"></el-input>
+			</el-form-item>
+			<el-form-item label="APK文件" prop="apkUrl">
+				<el-upload
+					:action="uploadUrl"
+					:on-success="handleUploadSuccess"
+					:on-error="handleUploadError"
+					:show-file-list="false"
+					>
+					<el-button type="primary">点击上传</el-button>
+				</el-upload>
 			</el-form-item>
 		</el-form>
 		<template #footer>
@@ -16,7 +29,7 @@
 </template>
 
 <script setup lang="ts">
-import {useFactoryApi, useFactorySubmitApi} from '@/api/production/factory/api'
+import {useApkApi, useApkSubmitApi} from '@/api/sys/apk/api'
 import {ElMessage} from 'element-plus/es'
 import {reactive, ref} from 'vue'
 
@@ -27,8 +40,11 @@ const dataFormRef = ref()
 
 const dataForm = reactive({
 	id: '',
-	code: '',
-	name: ''
+	versionNo: 0,
+	versionName: '',
+	versionDesc: '',
+	apkUrl:''
+
 })
 
 const init = (id?: number) => {
@@ -41,12 +57,12 @@ const init = (id?: number) => {
 	}
 
 	if (id) {
-		getFactory(id)
+		getApk(id)
 	}
 }
 
-const getFactory = (id: number) => {
-	useFactoryApi(id).then(res => {
+const getApk = (id: number) => {
+	useApkApi(id).then(res => {
 		Object.assign(dataForm, res.data)
 	})
 }
@@ -60,7 +76,7 @@ const submitHandle = () => {
 			return false
 		}
 
-		useFactorySubmitApi(dataForm).then(() => {
+		useApkSubmitApi(dataForm).then(() => {
 			ElMessage.success({
 				message: '操作成功',
 				duration: 500,
@@ -72,6 +88,17 @@ const submitHandle = () => {
 		})
 	})
 }
+
+const uploadUrl = ref("/sys/apk/apkUpload")
+
+
+const handleUploadSuccess = (response: any) => {
+	console.log(response)
+}
+const handleUploadError = (error: any) => {
+	console.log(error)
+}
+
 
 defineExpose({
 	init

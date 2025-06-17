@@ -5,7 +5,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 import com.miguoma.by.common.utils.ClientContextHolder;
 import com.miguoma.by.common.utils.Result;
-import com.miguoma.by.modules.client.dto.TeamLoginDTO;
+import com.miguoma.by.modules.client.dto.MachineLoginDTO;
 
 import cn.hutool.core.codec.Base62;
 import cn.hutool.core.util.StrUtil;
@@ -64,11 +64,11 @@ public class ClientTokenInterceptor implements HandlerInterceptor {
             return false;
         }
 
-        TeamLoginDTO teamLoginDTO;
+        MachineLoginDTO machineLoginDTO;
         try {
             // 解码token并转换为TeamLoginDTO对象
             final String decodeStr = Base62.decodeStr(token);
-            teamLoginDTO = JSONUtil.toBean(decodeStr, TeamLoginDTO.class);
+            machineLoginDTO = JSONUtil.toBean(decodeStr, MachineLoginDTO.class);
         } catch (Exception e) {
             // token格式不正确，返回错误信息
             response.setCharacterEncoding("UTF-8");
@@ -78,9 +78,7 @@ public class ClientTokenInterceptor implements HandlerInterceptor {
         }
 
         // 存储工厂代码和车间代码到 ThreadLocal
-        ClientContextHolder.setFactoryCode(teamLoginDTO.getProductionFactoryCode());
-        ClientContextHolder.setWorkshopName(teamLoginDTO.getProductionWorkshopCode());
-
+        ClientContextHolder.setMachineLoginDTO(machineLoginDTO);
         // 验证通过，放行请求
         return true;
     }

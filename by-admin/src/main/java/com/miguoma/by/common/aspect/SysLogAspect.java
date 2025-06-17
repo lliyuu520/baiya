@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSON;
 import com.miguoma.by.common.annotation.SysLogCut;
 import com.miguoma.by.common.utils.ClientContextHolder;
 import com.miguoma.by.common.utils.SysUserUtil;
+import com.miguoma.by.modules.client.dto.MachineLoginDTO;
 import com.miguoma.by.modules.system.entity.SysLog;
 import com.miguoma.by.modules.system.service.SysLogService;
 import lombok.RequiredArgsConstructor;
@@ -130,10 +131,13 @@ public class SysLogAspect {
                 if (StpUtil.isLogin()) {
                     username = SysUserUtil.getUserInfo().getUsername();
                 } else {
-                    String factoryCode = ClientContextHolder.getFactoryCode();
-                    String workshopCode = ClientContextHolder.getWorkshopName();
-                    if (StrUtil.isNotBlank(factoryCode) || StrUtil.isNotBlank(workshopCode)) {
-                        username = factoryCode + "_" + workshopCode;
+                    MachineLoginDTO machineLogin = ClientContextHolder.getMachineLoginDTO();
+                    if (machineLogin != null) {
+                        String factoryCode = machineLogin.getProductionFactoryCode();
+                        String workshopCode = machineLogin.getProductionWorkshopCode();
+                        String machineNo = machineLogin.getMachineNo();
+                        username = StrUtil.join("_", factoryCode, workshopCode, machineNo);
+
                     }
                 }
             } catch (Exception e) {

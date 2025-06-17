@@ -87,7 +87,14 @@ public enum SysLogTypeEnums {
     /**
      * 登出
      */
-    LOGOUT("登出"),;
+    LOGOUT("登出"),
+    /**
+     * 上传APK
+     */
+    UPLOAD_APK("上传APK"),
+
+
+    ;
 
     private final String desc;
 

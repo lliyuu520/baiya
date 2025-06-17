@@ -48,9 +48,16 @@ public interface ProductionDepartAndWorkshopService extends BaseService<Producti
     void configCodeRule(ProductionDepartAndWorkshopDTO productionDepartAndWorkshopDTO);
 
     /**
-     * 校验车间编码
+     * 校验产线编码
      * @param workshopName
      * @return
      */
     Boolean checkWorkshopName(String workshopName);
+
+    /**
+     *  根据产线名称获取车间编码列表
+     * @param workshopName
+     * @return
+     */
+    List<String> getDepartCodeListByWorkshopName(String workshopName);
 }

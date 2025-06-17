@@ -134,7 +134,7 @@ public class ProductionDepartAndWorkshopServiceImpl
     }
 
     /**
-     * 校验车间编码
+     * 校验产线编码
      *
      * @param workshopName
      * @return
@@ -144,5 +144,18 @@ public class ProductionDepartAndWorkshopServiceImpl
         LambdaQueryWrapper<ProductionDepartAndWorkshop> wrapper = Wrappers.lambdaQuery();
         wrapper.likeRight(ProductionDepartAndWorkshop::getName, workshopName);
         return count(wrapper) > 0;
+    }
+
+    /**
+     * 根据产线名称获取车间编码列表
+     *
+     * @param workshopName
+     * @return
+     */
+    @Override
+    public List<String> getDepartCodeListByWorkshopName(String workshopName) {
+        LambdaQueryWrapper<ProductionDepartAndWorkshop> wrapper = Wrappers.lambdaQuery();
+        wrapper.likeRight(ProductionDepartAndWorkshop::getName, workshopName);
+        return list(wrapper).stream().map(ProductionDepartAndWorkshop::getParentCode).toList();
     }
 }

@@ -1,10 +1,10 @@
 import {BaseApi} from '@/utils/api'
 
-const baseUrl = '/production/factory'
-const factoryApi = new BaseApi({ baseUrl, moduleName: 'factory' })
+const baseUrl = '/sys/apk'
+const apkApi = new BaseApi({ baseUrl, moduleName: 'apk' })
 
-export const useFactoryApi = (id: number) => factoryApi.getInfo(id)
-export const useFactorySubmitApi = (dataForm: any) => factoryApi.submit(dataForm)
-export const deleteFactoryApi = (id: number) => factoryApi.delete(id)
-export const useFactoryListAllApi = () => factoryApi.getList()
-export const useFactoryPageApi = (params: any) => factoryApi.getPage(params)
+export const useApkApi = (id: number) => apkApi.getInfo(id)
+export const useApkSubmitApi = (dataForm: any) => apkApi.submit(dataForm)
+export const deleteApkApi = (id: number) => apkApi.delete(id)
+export const useApkListAllApi = () => apkApi.getList()
+export const useApkPageApi = (params: any) => apkApi.getPage(params)

@@ -1,11 +1,11 @@
 <template>
 	<el-card>
 		<el-form :inline="true" :model="state.queryForm" @keyup.enter="getDataList()">
-			<el-form-item  label="编码">
-				<el-input v-model="state.queryForm.code" clearable></el-input>
+			<el-form-item  label="版本号">
+				<el-input v-model="state.queryForm.versionNo" clearable></el-input>
 			</el-form-item>
-			<el-form-item  label="名称">
-				<el-input v-model="state.queryForm.name" clearable></el-input>
+			<el-form-item  label="版本名称">
+				<el-input v-model="state.queryForm.versionName" clearable></el-input>
 			</el-form-item>
 			<el-form-item>
 				<el-button @click="getDataList()">查询</el-button>
@@ -47,11 +47,11 @@ import {reactive, ref} from "vue";
 import AddOrUpdate from "./add-or-update.vue";
 
 const state: IHooksOptions = reactive({
-	dataListUrl: '/production/factory/page',
-	deleteUrl: '/production/factory/delete',
+	dataListUrl: '/sys/apk/page',
+	deleteUrl: '/sys/apk/delete',
 	queryForm: {
-		code: '',
-		name: ''
+		versionNo: '',
+		versionName: ''
 	}
 })
 

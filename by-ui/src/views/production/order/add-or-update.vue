@@ -10,13 +10,13 @@
 			<el-form-item label="生产日期" prop="productionDate">
 				<el-date-picker v-model="dataForm.productionDate" class="form-input" placeholder="请选择生产日期" type="date" value-format="YYYY-MM-DD"></el-date-picker>
 			</el-form-item>
-			<el-form-item label="生产部门" prop="productionDepartCode">
-				<el-select v-model="dataForm.productionDepartCode" class="form-input" placeholder="请选择生产部门" filterable>
+			<el-form-item label="生产车间" prop="productionDepartCode">
+				<el-select v-model="dataForm.productionDepartCode" class="form-input" placeholder="请选择生产车间" filterable>
 					<el-option v-for="item in departList" :key="item.code" :label="item.name" :value="item.code"></el-option>
 				</el-select>
 			</el-form-item>
-			<el-form-item label="生产车间" prop="productionWorkshopCode">
-				<el-select v-model="dataForm.productionWorkshopCode" class="form-input" placeholder="请选择生产车间" filterable>
+			<el-form-item label="生产产线" prop="productionWorkshopCode">
+				<el-select v-model="dataForm.productionWorkshopCode" class="form-input" placeholder="请选择生产产线" filterable>
 					<el-option v-for="item in workshopList" :key="item.code" :label="item.name" :value="item.code"></el-option>
 				</el-select>
 			</el-form-item>

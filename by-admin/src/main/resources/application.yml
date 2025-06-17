@@ -20,6 +20,15 @@ spring:
             timeout: 6000ms
             client-type: LETTUCE
             password: Redis@200722
+    servlet:
+        multipart:
+            max-file-size: 200MB
+            max-request-size: 200MB
+            location: /tmp
+apk:
+    path: ${APK_PATH:/home/blmtest/apk/}
+
+            
 
 # mybatis-plus配置
 mybatis-plus:
