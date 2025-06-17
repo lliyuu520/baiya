@@ -11,7 +11,7 @@
 				<el-button @click="getDataList()">查询</el-button>
 			</el-form-item>
 			<el-form-item>
-				<el-button v-auth="'production:factory:save'" type="primary" @click="addOrUpdateHandle()">新增</el-button>
+				<el-button v-auth="'equipment:apk:save'" type="primary" @click="addOrUpdateHandle()">新增</el-button>
 			</el-form-item>
 		</el-form>
 		<el-table v-loading="state.dataListLoading" :data="state.dataList" border style="width: 100%" @selection-change="selectionChangeHandle">
@@ -26,7 +26,7 @@
 			</el-table-column>
 			<el-table-column align="center" fixed="right" header-align="center" label="操作" width="150">
 				<template #default="scope">
-					<el-button v-auth="'production:factory:delete'" link type="primary" @click="deleteHandle(scope.row.id)">删除</el-button>
+					<el-button v-auth="'equipment:apk:delete'" link type="primary" @click="deleteHandle(scope.row.id)">删除</el-button>
 				</template>
 			</el-table-column>
 		</el-table>
