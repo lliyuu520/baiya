@@ -1,4 +1,4 @@
-package com.miguoma.by.modules.system.query;
+package com.miguoma.by.modules.equipment.query;
 
 import com.miguoma.by.common.base.query.BaseQuery;
 

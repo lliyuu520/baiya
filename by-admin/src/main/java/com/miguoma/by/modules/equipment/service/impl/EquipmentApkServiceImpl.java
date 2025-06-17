@@ -1,4 +1,4 @@
-package com.miguoma.by.modules.system.service.impl;
+package com.miguoma.by.modules.equipment.service.impl;
 
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
@@ -8,13 +8,13 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.miguoma.by.common.base.page.PageVO;
 import com.miguoma.by.common.base.service.impl.BaseServiceImpl;
 import com.miguoma.by.common.exception.BaseException;
-import com.miguoma.by.modules.system.convert.SysApkConvert;
-import com.miguoma.by.modules.system.dto.SysApkDTO;
-import com.miguoma.by.modules.system.entity.SysApk;
-import com.miguoma.by.modules.system.mapper.SysApkMapper;
-import com.miguoma.by.modules.system.query.SysApkQuery;
-import com.miguoma.by.modules.system.service.SysApkService;
-import com.miguoma.by.modules.system.vo.SysApkVO;
+import com.miguoma.by.modules.equipment.convert.SysApkConvert;
+import com.miguoma.by.modules.equipment.dto.SysApkDTO;
+import com.miguoma.by.modules.equipment.entity.SysApk;
+import com.miguoma.by.modules.equipment.mapper.SysApkMapper;
+import com.miguoma.by.modules.equipment.query.SysApkQuery;
+import com.miguoma.by.modules.equipment.service.SysApkService;
+import com.miguoma.by.modules.equipment.vo.SysApkVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

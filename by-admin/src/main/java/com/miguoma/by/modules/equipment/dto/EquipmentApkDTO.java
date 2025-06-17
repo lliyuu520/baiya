@@ -1,6 +1,6 @@
-package com.miguoma.by.modules.system.dto;
+package com.miguoma.by.modules.equipment.dto;
 
-import com.miguoma.by.modules.system.entity.SysApk;
+import com.miguoma.by.modules.equipment.entity.SysApk;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;

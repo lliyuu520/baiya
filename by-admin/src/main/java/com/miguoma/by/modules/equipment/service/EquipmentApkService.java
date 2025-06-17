@@ -1,13 +1,13 @@
-package com.miguoma.by.modules.system.service;
+package com.miguoma.by.modules.equipment.service;
 
 import org.springframework.web.multipart.MultipartFile;
 
 import com.miguoma.by.common.base.page.PageVO;
 import com.miguoma.by.common.base.service.BaseService;
-import com.miguoma.by.modules.system.dto.SysApkDTO;
-import com.miguoma.by.modules.system.entity.SysApk;
-import com.miguoma.by.modules.system.query.SysApkQuery;
-import com.miguoma.by.modules.system.vo.SysApkVO;
+import com.miguoma.by.modules.equipment.dto.SysApkDTO;
+import com.miguoma.by.modules.equipment.entity.SysApk;
+import com.miguoma.by.modules.equipment.query.SysApkQuery;
+import com.miguoma.by.modules.equipment.vo.SysApkVO;
 
 /**
  * APK管理服务接口

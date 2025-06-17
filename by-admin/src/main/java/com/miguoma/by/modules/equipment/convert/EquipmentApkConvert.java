@@ -1,13 +1,13 @@
-package com.miguoma.by.modules.system.convert;
+package com.miguoma.by.modules.equipment.convert;
 
 import java.util.List;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
-import com.miguoma.by.modules.system.dto.SysApkDTO;
-import com.miguoma.by.modules.system.entity.SysApk;
-import com.miguoma.by.modules.system.vo.SysApkVO;
+import com.miguoma.by.modules.equipment.dto.SysApkDTO;
+import com.miguoma.by.modules.equipment.entity.SysApk;
+import com.miguoma.by.modules.equipment.vo.SysApkVO;
 
 /**
  * APK对象转换器

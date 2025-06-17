@@ -1,4 +1,4 @@
-package com.miguoma.by.modules.system.controller;
+package com.miguoma.by.modules.equipment.controller;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,10 +14,10 @@ import com.miguoma.by.common.base.page.PageVO;
 import com.miguoma.by.common.enums.SysLogModuleEnums;
 import com.miguoma.by.common.enums.SysLogTypeEnums;
 import com.miguoma.by.common.utils.Result;
-import com.miguoma.by.modules.system.dto.SysApkDTO;
-import com.miguoma.by.modules.system.query.SysApkQuery;
-import com.miguoma.by.modules.system.service.SysApkService;
-import com.miguoma.by.modules.system.vo.SysApkVO;
+import com.miguoma.by.modules.equipment.dto.SysApkDTO;
+import com.miguoma.by.modules.equipment.query.SysApkQuery;
+import com.miguoma.by.modules.equipment.service.SysApkService;
+import com.miguoma.by.modules.equipment.vo.SysApkVO;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
 import lombok.RequiredArgsConstructor;

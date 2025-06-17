@@ -1,4 +1,4 @@
-package com.miguoma.by.modules.system.entity;
+package com.miguoma.by.modules.equipment.entity;
 
 import com.miguoma.by.common.base.entity.BaseEntity;
 

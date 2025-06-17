@@ -1,10 +1,10 @@
-package com.miguoma.by.modules.system.mapper;
+package com.miguoma.by.modules.equipment.mapper;
 
 import org.springframework.stereotype.Repository;
 
 import com.miguoma.by.common.base.mapper.IBaseMapper;
-import com.miguoma.by.modules.system.entity.SysApk;
-import com.miguoma.by.modules.system.vo.SysApkVO;
+import com.miguoma.by.modules.equipment.entity.SysApk;
+import com.miguoma.by.modules.equipment.vo.SysApkVO;
 
 /**
  * APK管理持久层接口
