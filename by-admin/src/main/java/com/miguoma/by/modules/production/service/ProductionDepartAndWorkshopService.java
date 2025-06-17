@@ -60,4 +60,11 @@ public interface ProductionDepartAndWorkshopService extends BaseService<Producti
      * @return
      */
     List<String> getDepartCodeListByWorkshopName(String workshopName);
+
+    /**
+     * 根据编码查询部门&车间信息
+     * @param code
+     * @return
+     */
+    ProductionDepartAndWorkshop getOneByCode(String code);
 }

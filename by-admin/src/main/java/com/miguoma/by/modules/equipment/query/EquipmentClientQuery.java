@@ -1,7 +1,6 @@
 package com.miguoma.by.modules.equipment.query;
 
 import com.miguoma.by.common.base.query.BaseQuery;
-
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -10,17 +9,28 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class EquipmentApkQuery extends BaseQuery {
+public class EquipmentClientQuery extends BaseQuery {
 
     /**
-     * 版本号
+     * mac地址
      */
-    private Long versionNo;
-
+    private String macAddress;
     /**
-     * 版本名称
+     * ip
      */
-    private String versionName;
+    private String ip;
+    /**
+     * 机台
+     */
+    private String machineNo;
+
+
+    /** 产线编码 */
+    private String workshopNo;
+
+
+    /** 工厂编码 */
+    private String factoryNo;
 
 
 }

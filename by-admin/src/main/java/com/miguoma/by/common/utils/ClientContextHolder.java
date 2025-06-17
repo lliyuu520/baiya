@@ -1,6 +1,7 @@
 package com.miguoma.by.common.utils;
 
 import com.miguoma.by.modules.client.dto.MachineLoginDTO;
+import com.miguoma.by.modules.equipment.entity.EquipmentClient;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -24,21 +25,21 @@ public class ClientContextHolder {
     /**
      * 涩北登录信息
      */
-    private static final ThreadLocal<MachineLoginDTO> MACHINE_LOGIN_DTO_THREAD_LOCAL = new ThreadLocal<>();
+    private static final ThreadLocal<EquipmentClient> MACHINE_LOGIN_DTO_THREAD_LOCAL = new ThreadLocal<>();
 
     /**
      *  设置机器登录信息
-     * @param machineLoginDTO
+     * @param equipmentClient
      */
-    public static void setMachineLoginDTO(MachineLoginDTO machineLoginDTO) {
-        MACHINE_LOGIN_DTO_THREAD_LOCAL.set(machineLoginDTO);
+    public static void setEquipmentClient(EquipmentClient equipmentClient) {
+        MACHINE_LOGIN_DTO_THREAD_LOCAL.set(equipmentClient);
     }
 
     /**
      *  获取机器登录信息
      * @return
      */
-    public static MachineLoginDTO getMachineLoginDTO() {
+    public static EquipmentClient getEquipmentClient() {
         return MACHINE_LOGIN_DTO_THREAD_LOCAL.get();
     }
 

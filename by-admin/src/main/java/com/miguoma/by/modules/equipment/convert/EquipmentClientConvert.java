@@ -1,21 +1,20 @@
 package com.miguoma.by.modules.equipment.convert;
 
-import java.util.List;
-
-import com.miguoma.by.modules.equipment.dto.EquipmentApkDTO;
-import com.miguoma.by.modules.equipment.vo.EquipmentApkVO;
+import com.miguoma.by.modules.equipment.dto.EquipmentClientDTO;
+import com.miguoma.by.modules.equipment.entity.EquipmentClient;
+import com.miguoma.by.modules.equipment.vo.EquipmentClientVO;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
-import com.miguoma.by.modules.equipment.entity.EquipmentApk;
+import java.util.List;
 
 /**
- * APK对象转换器
+ * Client对象转换器
  */
 @Mapper
-public interface EquipmentApkConvert {
+public interface EquipmentClientConvert {
 
-    EquipmentApkConvert INSTANCE = Mappers.getMapper(EquipmentApkConvert.class);
+    EquipmentClientConvert INSTANCE = Mappers.getMapper(EquipmentClientConvert.class);
 
     /**
      * DTO转实体
@@ -23,7 +22,7 @@ public interface EquipmentApkConvert {
      * @param dto DTO对象
      * @return 实体对象
      */
-    EquipmentApk convertFromDTO(EquipmentApkDTO dto);
+    EquipmentClient convertFromDTO(EquipmentClientDTO dto);
 
     /**
      * 实体转VO
@@ -31,7 +30,7 @@ public interface EquipmentApkConvert {
      * @param entity 实体对象
      * @return VO对象
      */
-    EquipmentApkVO convertToVO(EquipmentApk entity);
+    EquipmentClientVO convertToVO(EquipmentClient entity);
 
     /**
      * 实体列表转VO列表
@@ -39,5 +38,5 @@ public interface EquipmentApkConvert {
      * @param list 实体列表
      * @return VO列表
      */
-    List<EquipmentApkVO> convertList(List<EquipmentApk> list);
+    List<EquipmentClientVO> convertList(List<EquipmentClient> list);
 }

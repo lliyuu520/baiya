@@ -1,6 +1,5 @@
 package com.miguoma.by.modules.equipment.service.impl;
 
-import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -8,21 +7,18 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.miguoma.by.common.base.page.PageVO;
 import com.miguoma.by.common.base.service.impl.BaseServiceImpl;
 import com.miguoma.by.common.exception.BaseException;
-import com.miguoma.by.modules.equipment.convert.EquipmentApkConvert;
-import com.miguoma.by.modules.equipment.dto.EquipmentApkDTO;
-import com.miguoma.by.modules.equipment.entity.EquipmentApk;
-import com.miguoma.by.modules.equipment.mapper.EquipmentApkMapper;
-import com.miguoma.by.modules.equipment.query.EquipmentApkQuery;
-import com.miguoma.by.modules.equipment.service.EquipmentApkService;
-import com.miguoma.by.modules.equipment.vo.EquipmentApkVO;
+import com.miguoma.by.modules.client.dto.MachineVerifyPasswordDTO;
+import com.miguoma.by.modules.equipment.convert.EquipmentClientConvert;
+import com.miguoma.by.modules.equipment.dto.EquipmentClientDTO;
+import com.miguoma.by.modules.equipment.entity.EquipmentClient;
+import com.miguoma.by.modules.equipment.mapper.EquipmentClientMapper;
+import com.miguoma.by.modules.equipment.query.EquipmentClientQuery;
+import com.miguoma.by.modules.equipment.service.EquipmentClientService;
+import com.miguoma.by.modules.equipment.vo.EquipmentClientVO;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * APK管理服务实现类
@@ -30,12 +26,11 @@ import java.util.List;
  *
  * @author liliangyu
  */
+@Slf4j
 @Service
 @RequiredArgsConstructor
-public class EquipmentApkServiceImpl extends BaseServiceImpl<EquipmentApkMapper, EquipmentApk> implements EquipmentApkService {
+public class EquipmentClientServiceImpl extends BaseServiceImpl<EquipmentClientMapper, EquipmentClient> implements EquipmentClientService {
 
-    @Value("${apk.path}")
-    private String apkPath;
 
     /**
      * 分页查询APK版本列表
@@ -45,9 +40,9 @@ public class EquipmentApkServiceImpl extends BaseServiceImpl<EquipmentApkMapper,
      * @return 分页结果，包含APK版本信息列表
      */
     @Override
-    public PageVO<EquipmentApkVO> pageVO(EquipmentApkQuery query) {
-        IPage<EquipmentApk> page = page(getPage(query), builderWrapper(query));
-        return PageVO.of(EquipmentApkConvert.INSTANCE.convertList(page.getRecords()), page.getTotal());
+    public PageVO<EquipmentClientVO> pageVO(EquipmentClientQuery query) {
+        IPage<EquipmentClient> page = page(getPage(query), builderWrapper(query));
+        return PageVO.of(EquipmentClientConvert.INSTANCE.convertList(page.getRecords()), page.getTotal());
     }
 
     /**
@@ -57,95 +52,86 @@ public class EquipmentApkServiceImpl extends BaseServiceImpl<EquipmentApkMapper,
      * @param dto APK版本信息，包含版本号、下载地址、版本描述等
      */
     @Override
-    public void saveOne(EquipmentApkDTO dto) {
-        EquipmentApk equipmentApk = EquipmentApkConvert.INSTANCE.convertFromDTO(dto);
-        save(equipmentApk);
+    @Transactional(rollbackFor = Exception.class)
+    public void saveOne(EquipmentClientDTO dto) {
+
+        final String macAddress = dto.getMacAddress();
+        final String departCode = dto.getDepartCode();
+        final String ip = dto.getIp();
+        final String machineNo = dto.getMachineNo();
+        final String factoryNo = dto.getFactoryNo();
+        final String workshopNo = dto.getWorkshopNo();
+
+        final EquipmentClient equipmentClient = baseMapper.selectOneByMacAddress(macAddress);
+        if (equipmentClient != null) {
+            equipmentClient.setMachineNo(machineNo);
+            equipmentClient.setIp(ip);
+            equipmentClient.setFactoryNo(factoryNo);
+            equipmentClient.setWorkshopNo(workshopNo);
+            equipmentClient.setDepartCode(departCode);
+            updateById(equipmentClient);
+            return;
+
+        }
+        EquipmentClient entity = new EquipmentClient();
+        entity.setMachineNo(machineNo);
+        entity.setIp(ip);
+        entity.setFactoryNo(factoryNo);
+        entity.setWorkshopNo(workshopNo);
+        entity.setDepartCode(departCode);
+        entity.setPassword("123456");
+        entity.setMacAddress(macAddress);
+        save(entity);
+
+
     }
 
     /**
-     * 编辑APK版本
-     * 用于修改已发布的APK版本信息
+     * 修改密码
      *
-     * @param dto APK版本信息，包含版本号、下载地址、版本描述等
+     * @param equipmentClientDTO
      */
     @Override
-    public void updateOne(EquipmentApkDTO dto) {
-        EquipmentApk equipmentApk = EquipmentApkConvert.INSTANCE.convertFromDTO(dto);
-        updateById(equipmentApk);
+    @Transactional(rollbackFor = Exception.class)
+    public void updatePassword(EquipmentClientDTO equipmentClientDTO) {
+        final Long id = equipmentClientDTO.getId();
+        final String password = equipmentClientDTO.getPassword();
+        final EquipmentClient byId = getById(id);
+        byId.setPassword(password);
+        updateById(byId);
+
     }
 
     /**
-     * 获取APK版本详情
-     * 用于查看指定APK版本的详细信息
+     * 验证密码
      *
-     * @param id APK版本ID
-     * @return APK版本详细信息
+     * @param machineVerifyPasswordDTO
      */
     @Override
-    public EquipmentApkVO getOneById(Long id) {
-        EquipmentApk equipmentApk = getById(id);
-        return EquipmentApkConvert.INSTANCE.convertToVO(equipmentApk);
+    public Boolean validatePassword(MachineVerifyPasswordDTO machineVerifyPasswordDTO) {
+        final String password0 = machineVerifyPasswordDTO.getPassword();
+        final String macAddress = machineVerifyPasswordDTO.getMacAddress();
+        final EquipmentClient equipmentClient = baseMapper.selectOneByMacAddress(macAddress);
+        if (equipmentClient == null) {
+            throw new BaseException("该MAC地址不存在:{}", macAddress);
+        }
+        final String password = equipmentClient.getPassword();
+        if (!StrUtil.equals(password0, password)) {
+            log.error("密码错误:{}", password0);
+            return false;
+        }
+        return true;
     }
 
     /**
-     * 删除APK版本
-     * 用于删除指定的APK版本记录
+     * 根据mac地址查询
      *
-     * @param id APK版本ID
-     */
-    @Override
-    public void deleteById(Long id) {
-        removeById(id);
-    }
-
-    /**
-     * 获取最新APK版本
-     * 用于获取当前最新的APK版本信息
-     *
-     * @return 最新APK版本信息
-     */
-    @Override
-    public EquipmentApkVO getLatest() {
-        return baseMapper.getLatest();
-    }
-
-    /**
-     * 查询最新的APK版本号
-     *
+     * @param macAddress
      * @return
      */
     @Override
-    public Long getLatestVersionNo() {
-        return baseMapper.getLatestVersionNo();
-    }
-
-    /**
-     * 上传APK文件
-     * 用于上传新的APK文件
-     *
-     * @param file APK文件
-     * @return 上传结果信息
-     */
-    @Override
-    public String uploadApk(MultipartFile file) {
-        // /home/blmtest/apk 文件存放在这里,已经使用nginx 做文件服务映射了
-        String originalFilename = file.getOriginalFilename();
-        final List<String> split = StrUtil.split(originalFilename, StrUtil.DOT);
-        if (split.size() != 2) {
-            throw new BaseException("文件格式错误");
-        }
-        String fileName = split.get(0);
-        String fileTypeName = split.get(1);
-
-        // 需要重命名才行,不然文件会覆盖
-        String newFilename = fileName + "_" + IdUtil.fastSimpleUUID() + "." + fileTypeName;
-        String filePath = apkPath  + newFilename;
-        try {
-            file.transferTo(new File(filePath));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return filePath;
+    public EquipmentClient getByMacAddress(String macAddress) {
+        return baseMapper.selectOneByMacAddress(macAddress);
     }
 
     /**
@@ -155,17 +141,30 @@ public class EquipmentApkServiceImpl extends BaseServiceImpl<EquipmentApkMapper,
      * @param query 查询参数，包含版本号、版本名称等
      * @return 查询条件
      */
-    private LambdaQueryWrapper<EquipmentApk> builderWrapper(EquipmentApkQuery query) {
-        LambdaQueryWrapper<EquipmentApk> wrapper = Wrappers.lambdaQuery();
-        Long versionNo = query.getVersionNo();
-        if (versionNo != null) {
-            wrapper.eq(EquipmentApk::getVersionNo, versionNo);
+    private LambdaQueryWrapper<EquipmentClient> builderWrapper(EquipmentClientQuery query) {
+        LambdaQueryWrapper<EquipmentClient> wrapper = Wrappers.lambdaQuery();
+        String factoryNo = query.getFactoryNo();
+        if (StrUtil.isNotBlank(factoryNo)) {
+            wrapper.eq(EquipmentClient::getFactoryNo, factoryNo);
         }
-        String versionName = query.getVersionName();
-        if (versionName != null) {
-            wrapper.like(EquipmentApk::getVersionName, versionName);
+        String workshopNo = query.getWorkshopNo();
+        if (StrUtil.isNotBlank(workshopNo)) {
+            wrapper.eq(EquipmentClient::getWorkshopNo, workshopNo);
         }
-        wrapper.orderByDesc(EquipmentApk::getId);
+        String machineNo = query.getMachineNo();
+        if (StrUtil.isNotBlank(machineNo)) {
+            wrapper.eq(EquipmentClient::getMachineNo, machineNo);
+        }
+        String ip = query.getIp();
+        if (StrUtil.isNotBlank(ip)) {
+            wrapper.eq(EquipmentClient::getIp, ip);
+        }
+        String macAddress = query.getMacAddress();
+        if (StrUtil.isNotBlank(macAddress)) {
+            wrapper.eq(EquipmentClient::getMacAddress, macAddress);
+        }
+        wrapper.orderByDesc(EquipmentClient::getId);
+
         return wrapper;
     }
 }

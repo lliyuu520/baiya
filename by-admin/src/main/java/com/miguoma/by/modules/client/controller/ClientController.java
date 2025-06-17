@@ -1,9 +1,8 @@
 package com.miguoma.by.modules.client.controller;
 
 import cn.dev33.satoken.annotation.SaIgnore;
-import cn.hutool.core.codec.Base62;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.LocalDateTimeUtil;
-import cn.hutool.json.JSONUtil;
 import com.miguoma.by.common.annotation.SysLogCut;
 import com.miguoma.by.common.enums.SysLogModuleEnums;
 import com.miguoma.by.common.enums.SysLogTypeEnums;
@@ -14,6 +13,10 @@ import com.miguoma.by.modules.client.dto.MachineVerifyPasswordDTO;
 import com.miguoma.by.modules.client.dto.PullCodeDTO;
 import com.miguoma.by.modules.client.dto.RecordCodeUploadDTO;
 import com.miguoma.by.modules.client.vo.PullCodeVO;
+import com.miguoma.by.modules.equipment.dto.EquipmentClientDTO;
+import com.miguoma.by.modules.equipment.entity.EquipmentClient;
+import com.miguoma.by.modules.equipment.service.EquipmentClientService;
+import com.miguoma.by.modules.production.entity.ProductionDepartAndWorkshop;
 import com.miguoma.by.modules.production.query.ProductionOrderQuery;
 import com.miguoma.by.modules.production.service.ProductionDepartAndWorkshopService;
 import com.miguoma.by.modules.production.service.ProductionFactoryService;
@@ -28,6 +31,7 @@ import java.util.List;
 
 /**
  * 采集软件控制器
+ *
  * @author liliangyu
  */
 @Slf4j
@@ -44,6 +48,8 @@ public class ClientController {
 
 
     private final ProductionDepartAndWorkshopService productionDepartAndWorkshopService;
+
+    private final EquipmentClientService equipmentClientService;
 
 
     /**
@@ -69,29 +75,55 @@ public class ClientController {
             log.error("产线不存在:{}", productionWorkshopCode);
             return Result.error("产线不存在");
         }
-        final String jsonStr = JSONUtil.toJsonStr(dto);
-        final String encode = Base62.encode(jsonStr);
-        return Result.ok(encode);
+
+        final List<String> departCodeList = productionDepartAndWorkshopService.getDepartCodeListByWorkshopName(productionWorkshopCode);
+        if (CollUtil.isEmpty(departCodeList)) {
+            log.error("车间不存在:{}", productionWorkshopCode);
+            return Result.error("车间不存在");
+        }
+        if (CollUtil.size(departCodeList) != 1) {
+            log.error("车间配置异常:{}", productionWorkshopCode);
+            return Result.error("车间配置异常");
+        }
+        final String departCode = departCodeList.get(0);
+        final ProductionDepartAndWorkshop productionDepartAndWorkshop = productionDepartAndWorkshopService.getOneByCode(departCode);
+        if (productionDepartAndWorkshop == null) {
+            log.error("车间不存在:{}", departCode);
+            return Result.error("车间不存在");
+        }
+
+        final String macAddress = dto.getMacAddress();
+        final String ip = dto.getIp();
+        final String machineNo = dto.getMachineNo();
+        final EquipmentClientDTO equipmentClientDTO = new EquipmentClientDTO();
+        equipmentClientDTO.setFactoryNo(productionFactoryCode);
+        equipmentClientDTO.setDepartCode(departCode);
+        equipmentClientDTO.setWorkshopNo(productionWorkshopCode);
+        equipmentClientDTO.setMacAddress(macAddress);
+        equipmentClientDTO.setMachineNo(machineNo);
+        equipmentClientDTO.setIp(ip);
+        equipmentClientService.saveOne(equipmentClientDTO);
+
+        return Result.ok(macAddress);
     }
 
     /**
      * 采集软件验证密码
-     * @param dto
+     *
+     * @param password
      * @return
      */
     @PostMapping("/verifyPassword")
     @SysLogCut(module = SysLogModuleEnums.CLIENT, type = SysLogTypeEnums.VERIFY_PASSWORD)
-    public Result<String> verifyPassword(@RequestBody MachineVerifyPasswordDTO dto) {
-        final String password = dto.getPassword();
-        final String macAddress = dto.getMacAddress();
-        final Boolean verifyPassword = productionDepartAndWorkshopService.verifyPassword(macAddress, password);
-        if (!verifyPassword) {
-            return Result.error("密码错误");
-        }
-        return Result.ok();
+    public Result<Boolean> verifyPassword(String password) {
+        final EquipmentClient equipmentClient = ClientContextHolder.getEquipmentClient();
+        MachineVerifyPasswordDTO machineVerifyPasswordDTO = new MachineVerifyPasswordDTO();
+        machineVerifyPasswordDTO.setMacAddress(equipmentClient.getMacAddress());
+        machineVerifyPasswordDTO.setPassword(password);
+        final Boolean validatePassword = equipmentClientService.validatePassword(machineVerifyPasswordDTO);
+
+        return Result.ok(validatePassword);
     }
-
-
 
 
     /**
@@ -102,10 +134,9 @@ public class ClientController {
     @GetMapping("/productionOrderList")
     @SysLogCut(module = SysLogModuleEnums.CLIENT, type = SysLogTypeEnums.ORDER_LIST)
     public Result<List<ProductionOrderVO>> getProductionOrderList(ProductionOrderQuery query) {
-        final MachineLoginDTO machineLoginDTO = ClientContextHolder.getMachineLoginDTO();
-        final String productionWorkshopCode = machineLoginDTO.getProductionWorkshopCode();
-        final List<String> departCodeList = productionDepartAndWorkshopService.getDepartCodeListByWorkshopName(productionWorkshopCode);
-        query.setProductionDepartCodeList(departCodeList);
+        final EquipmentClient equipmentClient = ClientContextHolder.getEquipmentClient();
+        final String departCode = equipmentClient.getDepartCode();
+        query.setProductionDepartCode(departCode);
         query.setReworkFlag(true);
         final LocalDate orderDateEnd = LocalDateTimeUtil.now().toLocalDate();
         final LocalDate orderDateBegin = orderDateEnd.plusDays(-15);

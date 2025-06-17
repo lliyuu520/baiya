@@ -55,10 +55,7 @@
                  inner JOIN PRODUCTION_TEAM F ON A.PRODUCTION_TEAM_CODE = F.CODE
                  inner JOIN PRODUCTION_SHIFT G ON A.PRODUCTION_SHIFT_CODE = G.CODE
                  inner JOIN PRODUCTION_PRODUCT_CATEGORY H ON B.CATEGORY_CODE = H.CODE
-        where d.code IN
-              <foreach item="item" index="index" collection="query.productionDepartCodeList" open="(" separator="," close=")">
-              #{item}
-          </foreach>
+        where d.code = #{query.productionDepartCode}
           AND ((A.ORDER_DATE &gt;= #{query.orderDateBegin} AND A.ORDER_DATE &lt;= #{query.orderDateEnd}) OR
                A.REWORK_FLAG = 1)
         order by a.ORDER_DATE desc

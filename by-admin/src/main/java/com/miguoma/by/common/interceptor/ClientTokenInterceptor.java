@@ -1,5 +1,8 @@
 package com.miguoma.by.common.interceptor;
 
+import com.miguoma.by.modules.equipment.entity.EquipmentClient;
+import com.miguoma.by.modules.equipment.service.EquipmentClientService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -37,7 +40,10 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class ClientTokenInterceptor implements HandlerInterceptor {
+
+    private final EquipmentClientService equipmentClientService;
 
     /**
      * 请求处理前的拦截方法
@@ -53,32 +59,27 @@ public class ClientTokenInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws Exception {
         // 获取请求头中的token
-        String token = request.getHeader("Token");
+        String macAddress = request.getHeader("Token");
 
         // 验证token是否存在
-        if (StrUtil.isBlank(token)) {
+        if (StrUtil.isBlank(macAddress)) {
             log.warn("请求缺少token: {}", request.getRequestURI());
             response.setCharacterEncoding("UTF-8");
             response.setContentType("application/json");
             response.getWriter().write(JSONUtil.toJsonStr(Result.error("请求缺乏Token")));
             return false;
         }
-
-        MachineLoginDTO machineLoginDTO;
-        try {
-            // 解码token并转换为TeamLoginDTO对象
-            final String decodeStr = Base62.decodeStr(token);
-            machineLoginDTO = JSONUtil.toBean(decodeStr, MachineLoginDTO.class);
-        } catch (Exception e) {
-            // token格式不正确，返回错误信息
+        final EquipmentClient equipmentClient = equipmentClientService.getByMacAddress(macAddress);
+        if (equipmentClient == null) {
+            log.warn("设备不存在: {}", macAddress);
             response.setCharacterEncoding("UTF-8");
             response.setContentType("application/json");
-            response.getWriter().write(JSONUtil.toJsonStr(Result.error("Token格式不正确")));
+            response.getWriter().write(JSONUtil.toJsonStr(Result.error("设备不存在")));
             return false;
         }
 
         // 存储工厂代码和车间代码到 ThreadLocal
-        ClientContextHolder.setMachineLoginDTO(machineLoginDTO);
+        ClientContextHolder.setEquipmentClient(equipmentClient);
         // 验证通过，放行请求
         return true;
     }

@@ -19,6 +19,10 @@ public enum SysLogTypeEnums {
      * 修改操作日志类型，用于记录修改数据的操作。
      */
     UPDATE("修改"),
+    /**
+     * 修改密码
+     */
+    UPDATE_PASSWORD("修改密码"),
 
     /**
      * 删除操作日志类型，用于记录删除数据的操作。

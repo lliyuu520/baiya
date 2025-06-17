@@ -1,7 +1,6 @@
 package com.miguoma.by.modules.equipment.entity;
 
 import com.miguoma.by.common.base.entity.BaseEntity;
-
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -13,30 +12,35 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class EquipmentApk extends BaseEntity {
+public class EquipmentClient extends BaseEntity {
+    /**
+     * 密码
+     */
+    private String password;
 
     /**
-     * APK文件下载地址
-     * 存储APK文件的完整URL路径
+     * mac地址
      */
-    private String apkUrl;
-
+    private String macAddress;
     /**
-     * 版本号
-     * 用于标识APK的版本，采用数字形式，如：1001
+     * ip
      */
-    private Long versionNo;
-
+    private String ip;
     /**
-     * 版本名称
-     * 用于显示给用户看的版本名称，如：v1.0.1
+     * 机台
      */
-    private String versionName;
+    private String machineNo;
 
+
+    /** 产线编码 */
+    private String workshopNo;
     /**
-     * 版本描述
-     * 描述当前版本的主要更新内容和特性
+     * 车间编码
      */
-    private String versionDesc;
+    private String departCode;
+
+
+    /** 工厂编码 */
+    private String factoryNo;
 
 }

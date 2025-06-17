@@ -9,6 +9,6 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class EquipmentClientTO extends EquipmentClient {
+public class EquipmentClientDTO extends EquipmentClient {
 
 }

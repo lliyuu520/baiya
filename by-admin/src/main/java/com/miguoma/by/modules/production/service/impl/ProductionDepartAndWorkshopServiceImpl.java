@@ -72,7 +72,6 @@ public class ProductionDepartAndWorkshopServiceImpl
     }
 
 
-
     /**
      * 同步生产部门和车间信息
      *
@@ -107,6 +106,7 @@ public class ProductionDepartAndWorkshopServiceImpl
 
     /**
      * 配置编码规则
+     *
      * @param productionDepartAndWorkshopDTO
      */
     @Override
@@ -121,6 +121,7 @@ public class ProductionDepartAndWorkshopServiceImpl
 
     /**
      * 配置别名
+     *
      * @param productionDepartAndWorkshopDTO
      */
     @Override
@@ -157,5 +158,16 @@ public class ProductionDepartAndWorkshopServiceImpl
         LambdaQueryWrapper<ProductionDepartAndWorkshop> wrapper = Wrappers.lambdaQuery();
         wrapper.likeRight(ProductionDepartAndWorkshop::getName, workshopName);
         return list(wrapper).stream().map(ProductionDepartAndWorkshop::getParentCode).toList();
+    }
+
+    /**
+     * 根据编码查询部门&车间信息
+     *
+     * @param code
+     * @return
+     */
+    @Override
+    public ProductionDepartAndWorkshop getOneByCode(String code) {
+       return baseMapper.getOneByCode(code);
     }
 }

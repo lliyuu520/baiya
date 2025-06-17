@@ -7,6 +7,7 @@ import com.miguoma.by.common.annotation.SysLogCut;
 import com.miguoma.by.common.utils.ClientContextHolder;
 import com.miguoma.by.common.utils.SysUserUtil;
 import com.miguoma.by.modules.client.dto.MachineLoginDTO;
+import com.miguoma.by.modules.equipment.entity.EquipmentClient;
 import com.miguoma.by.modules.system.entity.SysLog;
 import com.miguoma.by.modules.system.service.SysLogService;
 import lombok.RequiredArgsConstructor;
@@ -131,11 +132,11 @@ public class SysLogAspect {
                 if (StpUtil.isLogin()) {
                     username = SysUserUtil.getUserInfo().getUsername();
                 } else {
-                    MachineLoginDTO machineLogin = ClientContextHolder.getMachineLoginDTO();
-                    if (machineLogin != null) {
-                        String factoryCode = machineLogin.getProductionFactoryCode();
-                        String workshopCode = machineLogin.getProductionWorkshopCode();
-                        String machineNo = machineLogin.getMachineNo();
+                    EquipmentClient equipmentClient = ClientContextHolder.getEquipmentClient();
+                    if (equipmentClient != null) {
+                        String factoryCode = equipmentClient.getFactoryNo();
+                        String workshopCode = equipmentClient.getWorkshopNo();
+                        String machineNo = equipmentClient.getMachineNo();
                         username = StrUtil.join("_", factoryCode, workshopCode, machineNo);
 
                     }
