@@ -63,7 +63,7 @@
 				</template>
 			</el-table-column>
 			<el-table-column align="center" header-align="center" label="垛码" prop="cribCode"></el-table-column>
-			<el-table-column align="center" header-align="center" label="入库时间" prop="cribDateTime">
+			<el-table-column align="center" header-align="center" label="组垛时间" prop="cribDateTime">
 				<template #default="scope">
 					{{ formatDateTime(scope.row.cribDateTime) }}
 				</template>

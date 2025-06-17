@@ -37,11 +37,17 @@
 	},
 	"launch": {
 		"configurations": [
+
+
 			{
 				"type": "java",
 				"name": "启动后端",
 				"request": "launch",
 				"mainClass": "com.miguoma.by.ByAdminApplication",
+				"env": {
+					"APK_PATH": "D:\\project\\baiya\\apk\\"
+				},
+				"args": "--spring.profiles.active=local",
 				"projectName": "by-admin",
 				"cwd": "${workspaceFolder:by-admin}"
 			},
@@ -49,7 +55,7 @@
 				"type": "node-terminal",
 				"name": "启动前端",
 				"request": "launch",
-				"command": "yarn run dev",
+				"command": "yarn run 启动前端",
 				"cwd": "${workspaceFolder:by-ui}"
 			}
 		]

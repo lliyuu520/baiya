@@ -1,6 +1,6 @@
 package com.miguoma.by.modules.equipment.vo;
 
-import com.miguoma.by.modules.equipment.entity.SysApk;
+import com.miguoma.by.modules.equipment.entity.EquipmentApk;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -10,6 +10,6 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class SysApkVO extends SysApk {
+public class EquipmentApkVO extends EquipmentApk {
 
 }

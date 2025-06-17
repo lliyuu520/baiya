@@ -13,8 +13,8 @@ import org.springframework.stereotype.Component;
 
 import com.alibaba.fastjson.JSON;
 import com.miguoma.by.common.annotation.ErpLogCut;
-import com.miguoma.by.modules.system.entity.ErpLog;
-import com.miguoma.by.modules.system.service.ErpLogService;
+import com.miguoma.by.modules.erp.entity.ErpLog;
+import com.miguoma.by.modules.erp.service.ErpLogService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

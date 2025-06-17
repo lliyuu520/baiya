@@ -1,5 +1,6 @@
 package com.miguoma.by.modules.equipment.controller;
 
+import com.miguoma.by.modules.equipment.vo.EquipmentApkVO;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,10 +15,9 @@ import com.miguoma.by.common.base.page.PageVO;
 import com.miguoma.by.common.enums.SysLogModuleEnums;
 import com.miguoma.by.common.enums.SysLogTypeEnums;
 import com.miguoma.by.common.utils.Result;
-import com.miguoma.by.modules.equipment.dto.SysApkDTO;
-import com.miguoma.by.modules.equipment.query.SysApkQuery;
-import com.miguoma.by.modules.equipment.service.SysApkService;
-import com.miguoma.by.modules.equipment.vo.SysApkVO;
+import com.miguoma.by.modules.equipment.dto.EquipmentApkDTO;
+import com.miguoma.by.modules.equipment.query.EquipmentApkQuery;
+import com.miguoma.by.modules.equipment.service.EquipmentApkService;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
 import lombok.RequiredArgsConstructor;
@@ -30,23 +30,23 @@ import lombok.RequiredArgsConstructor;
  */
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/system/apk")
-public class SysApkController {
+@RequestMapping("/equipment/apk")
+public class EquipmentApkController {
 
-    private final SysApkService sysApkService;
+    private final EquipmentApkService equipmentApkService;
 
     /**
      * 分页查询APK版本列表
      * 支持按版本号、版本名称等条件进行查询
      *
-     * @param sysApkQuery 查询条件，包含版本号、版本名称等
+     * @param equipmentApkQuery 查询条件，包含版本号、版本名称等
      * @return 分页结果，包含APK版本信息列表
      */
     @GetMapping("/page")
     @SysLogCut(type = SysLogTypeEnums.PAGE, module = SysLogModuleEnums.APK)
     @SaCheckPermission(value = "system:apk:page")
-    public Result<PageVO<SysApkVO>> page(SysApkQuery sysApkQuery) {
-        PageVO<SysApkVO> pageResult = sysApkService.pageVO(sysApkQuery);
+    public Result<PageVO<EquipmentApkVO>> page(EquipmentApkQuery equipmentApkQuery) {
+        PageVO<EquipmentApkVO> pageResult = equipmentApkService.pageVO(equipmentApkQuery);
         return Result.ok(pageResult);
     }
 
@@ -60,8 +60,8 @@ public class SysApkController {
     @PostMapping
     @SysLogCut(type = SysLogTypeEnums.INSERT, module = SysLogModuleEnums.APK)
     @SaCheckPermission(value = "system:apk:save")
-    public Result<String> save(@RequestBody SysApkDTO apkDTO) {
-        sysApkService.saveOne(apkDTO);
+    public Result<String> save(@RequestBody EquipmentApkDTO apkDTO) {
+        equipmentApkService.saveOne(apkDTO);
         return Result.ok();
     }
 
@@ -75,8 +75,8 @@ public class SysApkController {
     @PutMapping
     @SysLogCut(type = SysLogTypeEnums.UPDATE, module = SysLogModuleEnums.APK)
     @SaCheckPermission(value = "system:apk:update")
-    public Result<String> update(@RequestBody SysApkDTO apkDTO) {
-        sysApkService.updateOne(apkDTO);
+    public Result<String> update(@RequestBody EquipmentApkDTO apkDTO) {
+        equipmentApkService.updateOne(apkDTO);
         return Result.ok();
     }
 
@@ -91,7 +91,7 @@ public class SysApkController {
     @SysLogCut(type = SysLogTypeEnums.DELETE, module = SysLogModuleEnums.APK)
     @SaCheckPermission(value = "system:apk:delete")
     public Result<String> delete(Long id) {
-        sysApkService.deleteById(id);
+        equipmentApkService.deleteById(id);
         return Result.ok();
     }
 
@@ -105,8 +105,8 @@ public class SysApkController {
     @GetMapping("/info")
     @SysLogCut(type = SysLogTypeEnums.VIEW, module = SysLogModuleEnums.APK)
     @SaCheckPermission(value = "system:apk:info")
-    public Result<SysApkVO> info(Long id) {
-        SysApkVO apkVO = sysApkService.getOneById(id);
+    public Result<EquipmentApkVO> info(Long id) {
+        EquipmentApkVO apkVO = equipmentApkService.getOneById(id);
         return Result.ok(apkVO);
     }
 
@@ -115,7 +115,7 @@ public class SysApkController {
      */
     @PostMapping("/uploadApk")
     public Result<String> uploadApk(MultipartFile file) {
-        sysApkService.uploadApk(file);
+        equipmentApkService.uploadApk(file);
         return Result.ok();
     }
     

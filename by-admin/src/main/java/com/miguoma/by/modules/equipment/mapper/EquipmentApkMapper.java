@@ -3,8 +3,8 @@ package com.miguoma.by.modules.equipment.mapper;
 import org.springframework.stereotype.Repository;
 
 import com.miguoma.by.common.base.mapper.IBaseMapper;
-import com.miguoma.by.modules.equipment.entity.SysApk;
-import com.miguoma.by.modules.equipment.vo.SysApkVO;
+import com.miguoma.by.modules.equipment.entity.EquipmentApk;
+import com.miguoma.by.modules.equipment.vo.EquipmentApkVO;
 
 /**
  * APK管理持久层接口
@@ -13,7 +13,7 @@ import com.miguoma.by.modules.equipment.vo.SysApkVO;
  * @author liliangyu
  */
 @Repository
-public interface SysApkMapper extends IBaseMapper<SysApk> {
+public interface EquipmentApkMapper extends IBaseMapper<EquipmentApk> {
     /**
      * 查询最新版本号
      * 
@@ -27,5 +27,5 @@ public interface SysApkMapper extends IBaseMapper<SysApk> {
      *
      * @return 最新APK版本信息
      */
-    SysApkVO getLatest();
+    EquipmentApkVO getLatest();
 }

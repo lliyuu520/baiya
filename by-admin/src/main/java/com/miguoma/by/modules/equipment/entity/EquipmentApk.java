@@ -13,7 +13,7 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class SysApk extends BaseEntity {
+public class EquipmentApk extends BaseEntity {
 
     /**
      * APK文件下载地址

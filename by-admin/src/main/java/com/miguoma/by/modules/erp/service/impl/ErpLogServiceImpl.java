@@ -1,14 +1,14 @@
-package com.miguoma.by.modules.system.service.impl;
+package com.miguoma.by.modules.erp.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.miguoma.by.common.base.page.PageVO;
 import com.miguoma.by.common.base.service.impl.BaseServiceImpl;
-import com.miguoma.by.modules.system.entity.ErpLog;
-import com.miguoma.by.modules.system.mapper.ErpLogMapper;
-import com.miguoma.by.modules.system.query.ErpLogQuery;
-import com.miguoma.by.modules.system.service.ErpLogService;
+import com.miguoma.by.modules.erp.entity.ErpLog;
+import com.miguoma.by.modules.erp.mapper.ErpLogMapper;
+import com.miguoma.by.modules.erp.query.ErpLogQuery;
+import com.miguoma.by.modules.erp.service.ErpLogService;
 
 import cn.hutool.core.util.StrUtil;
 

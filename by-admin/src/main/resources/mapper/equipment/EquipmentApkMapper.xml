@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.miguoma.by.modules.equipment.mapper.SysApkMapper">
+<mapper namespace="com.miguoma.by.modules.equipment.mapper.EquipmentApkMapper">
     <select id="getLatestVersionNo" resultType="java.lang.Long"> SELECT MAX(version_no) FROM equipment_APK </select>
 
     <!-- 获取最新APK版本 -->
     <!-- 查询当前最新的APK版本信息，按版本号降序排序取第一条记录 -->
-    <select id="getLatest" resultType="com.miguoma.by.modules.equipment.vo.SysApkVO"> SELECT *FROM
+    <select id="getLatest" resultType="com.miguoma.by.modules.equipment.vo.EquipmentApkVO"> SELECT *FROM
         equipment_APK WHERE ROWNUM = 1 ORDER BY version_no DESC </select>
 </mapper>

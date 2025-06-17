@@ -23,6 +23,11 @@ public class MachineLoginDTO implements Serializable {
      */
     private String machineNo;
 
+    /**
+     * mac地址
+     */
+    private String macAddress;
+
 
 
 

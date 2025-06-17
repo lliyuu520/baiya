@@ -1,4 +1,4 @@
-package com.miguoma.by.modules.system.query;
+package com.miguoma.by.modules.erp.query;
 
 import cn.hutool.core.util.ArrayUtil;
 import com.miguoma.by.common.base.query.BaseQuery;

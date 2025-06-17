@@ -11,6 +11,7 @@ import com.miguoma.by.common.utils.Result;
 import com.miguoma.by.modules.client.dto.PdaLoginDTO;
 import com.miguoma.by.modules.client.dto.RecordBoxCodeReplaceDTO;
 import com.miguoma.by.modules.client.dto.RecordQrCodeReplaceDTO;
+import com.miguoma.by.modules.equipment.vo.EquipmentApkVO;
 import com.miguoma.by.modules.record.entity.RecordBoxCodeReplace;
 import com.miguoma.by.modules.record.entity.RecordQrCodeReplace;
 import com.miguoma.by.modules.record.query.RecordBoxCodeReplaceQuery;
@@ -20,9 +21,8 @@ import com.miguoma.by.modules.record.service.RecordQrCodeReplaceService;
 import com.miguoma.by.modules.record.service.RecordQrCodeService;
 import com.miguoma.by.modules.record.vo.RecordQrCodeVO;
 import com.miguoma.by.modules.system.dto.SysAccountLoginDTO;
-import com.miguoma.by.modules.system.service.SysApkService;
+import com.miguoma.by.modules.equipment.service.EquipmentApkService;
 import com.miguoma.by.modules.system.service.SysAuthService;
-import com.miguoma.by.modules.system.vo.SysApkVO;
 import com.miguoma.by.modules.system.vo.SysTokenVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -48,7 +48,7 @@ public class PdaController {
     private final RecordQrCodeService recordQrCodeService;
 
     private final RecordBoxCodeReplaceService recordBoxCodeReplaceService;
-    private final SysApkService sysApkService;
+    private final EquipmentApkService equipmentApkService;
 
     /**
      * 查询当前最新版本号
@@ -56,7 +56,7 @@ public class PdaController {
     @SaIgnore
     @GetMapping("/apk/latestVersionNo")
     public Result<Long> latestVersion() {
-        final Long latestVersionNo = sysApkService.getLatestVersionNo();
+        final Long latestVersionNo = equipmentApkService.getLatestVersionNo();
         return Result.ok(latestVersionNo);
     }
 
@@ -66,8 +66,8 @@ public class PdaController {
      */
     @SaIgnore
     @GetMapping("/apk/latest")
-    public Result<SysApkVO> latest() {
-        final SysApkVO sysApkVO = sysApkService.getLatest();
+    public Result<EquipmentApkVO> latest() {
+        final EquipmentApkVO sysApkVO = equipmentApkService.getLatest();
         return Result.ok(sysApkVO);
     }
 

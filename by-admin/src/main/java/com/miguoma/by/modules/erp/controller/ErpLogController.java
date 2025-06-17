@@ -1,11 +1,11 @@
-package com.miguoma.by.modules.system.controller;
+package com.miguoma.by.modules.erp.controller;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
 import com.miguoma.by.common.base.page.PageVO;
 import com.miguoma.by.common.utils.Result;
-import com.miguoma.by.modules.system.entity.ErpLog;
-import com.miguoma.by.modules.system.query.ErpLogQuery;
-import com.miguoma.by.modules.system.service.ErpLogService;
+import com.miguoma.by.modules.erp.entity.ErpLog;
+import com.miguoma.by.modules.erp.query.ErpLogQuery;
+import com.miguoma.by.modules.erp.service.ErpLogService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

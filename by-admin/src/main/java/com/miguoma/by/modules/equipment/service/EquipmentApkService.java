@@ -1,13 +1,13 @@
 package com.miguoma.by.modules.equipment.service;
 
+import com.miguoma.by.modules.equipment.dto.EquipmentApkDTO;
+import com.miguoma.by.modules.equipment.entity.EquipmentApk;
+import com.miguoma.by.modules.equipment.vo.EquipmentApkVO;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.miguoma.by.common.base.page.PageVO;
 import com.miguoma.by.common.base.service.BaseService;
-import com.miguoma.by.modules.equipment.dto.SysApkDTO;
-import com.miguoma.by.modules.equipment.entity.SysApk;
-import com.miguoma.by.modules.equipment.query.SysApkQuery;
-import com.miguoma.by.modules.equipment.vo.SysApkVO;
+import com.miguoma.by.modules.equipment.query.EquipmentApkQuery;
 
 /**
  * APK管理服务接口
@@ -15,7 +15,7 @@ import com.miguoma.by.modules.equipment.vo.SysApkVO;
  *
  * @author liliangyu
  */
-public interface SysApkService extends BaseService<SysApk> {
+public interface EquipmentApkService extends BaseService<EquipmentApk> {
 
     /**
      * 分页查询APK版本列表
@@ -24,7 +24,7 @@ public interface SysApkService extends BaseService<SysApk> {
      * @param query 查询条件，包含版本号、版本名称等
      * @return 分页结果，包含APK版本信息列表
      */
-    PageVO<SysApkVO> pageVO(SysApkQuery query);
+    PageVO<EquipmentApkVO> pageVO(EquipmentApkQuery query);
 
     /**
      * 新增APK版本
@@ -32,7 +32,7 @@ public interface SysApkService extends BaseService<SysApk> {
      *
      * @param dto APK版本信息，包含版本号、下载地址、版本描述等
      */
-    void saveOne(SysApkDTO dto);
+    void saveOne(EquipmentApkDTO dto);
 
     /**
      * 编辑APK版本
@@ -40,7 +40,7 @@ public interface SysApkService extends BaseService<SysApk> {
      *
      * @param dto APK版本信息，包含版本号、下载地址、版本描述等
      */
-    void updateOne(SysApkDTO dto);
+    void updateOne(EquipmentApkDTO dto);
 
     /**
      * 获取APK版本详情
@@ -49,7 +49,7 @@ public interface SysApkService extends BaseService<SysApk> {
      * @param id APK版本ID
      * @return APK版本详细信息
      */
-    SysApkVO getOneById(Long id);
+    EquipmentApkVO getOneById(Long id);
 
     /**
      * 删除APK版本
@@ -72,7 +72,7 @@ public interface SysApkService extends BaseService<SysApk> {
      *
      * @return 最新APK版本信息
      */
-    SysApkVO getLatest();
+    EquipmentApkVO getLatest();
 /**
      * 上传APK文件
      * 用于上传新的APK文件

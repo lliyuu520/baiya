@@ -8,13 +8,13 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.miguoma.by.common.base.page.PageVO;
 import com.miguoma.by.common.base.service.impl.BaseServiceImpl;
 import com.miguoma.by.common.exception.BaseException;
-import com.miguoma.by.modules.equipment.convert.SysApkConvert;
-import com.miguoma.by.modules.equipment.dto.SysApkDTO;
-import com.miguoma.by.modules.equipment.entity.SysApk;
-import com.miguoma.by.modules.equipment.mapper.SysApkMapper;
-import com.miguoma.by.modules.equipment.query.SysApkQuery;
-import com.miguoma.by.modules.equipment.service.SysApkService;
-import com.miguoma.by.modules.equipment.vo.SysApkVO;
+import com.miguoma.by.modules.equipment.convert.EquipmentApkConvert;
+import com.miguoma.by.modules.equipment.dto.EquipmentApkDTO;
+import com.miguoma.by.modules.equipment.entity.EquipmentApk;
+import com.miguoma.by.modules.equipment.mapper.EquipmentApkMapper;
+import com.miguoma.by.modules.equipment.query.EquipmentApkQuery;
+import com.miguoma.by.modules.equipment.service.EquipmentApkService;
+import com.miguoma.by.modules.equipment.vo.EquipmentApkVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -32,7 +32,7 @@ import java.util.List;
  */
 @Service
 @RequiredArgsConstructor
-public class SysApkServiceImpl extends BaseServiceImpl<SysApkMapper, SysApk> implements SysApkService {
+public class EquipmentApkServiceImpl extends BaseServiceImpl<EquipmentApkMapper, EquipmentApk> implements EquipmentApkService {
 
     @Value("${apk.path}")
     private String apkPath;
@@ -45,9 +45,9 @@ public class SysApkServiceImpl extends BaseServiceImpl<SysApkMapper, SysApk> imp
      * @return 分页结果，包含APK版本信息列表
      */
     @Override
-    public PageVO<SysApkVO> pageVO(SysApkQuery query) {
-        IPage<SysApk> page = page(getPage(query), builderWrapper(query));
-        return PageVO.of(SysApkConvert.INSTANCE.convertList(page.getRecords()), page.getTotal());
+    public PageVO<EquipmentApkVO> pageVO(EquipmentApkQuery query) {
+        IPage<EquipmentApk> page = page(getPage(query), builderWrapper(query));
+        return PageVO.of(EquipmentApkConvert.INSTANCE.convertList(page.getRecords()), page.getTotal());
     }
 
     /**
@@ -57,9 +57,9 @@ public class SysApkServiceImpl extends BaseServiceImpl<SysApkMapper, SysApk> imp
      * @param dto APK版本信息，包含版本号、下载地址、版本描述等
      */
     @Override
-    public void saveOne(SysApkDTO dto) {
-        SysApk sysApk = SysApkConvert.INSTANCE.convertFromDTO(dto);
-        save(sysApk);
+    public void saveOne(EquipmentApkDTO dto) {
+        EquipmentApk equipmentApk = EquipmentApkConvert.INSTANCE.convertFromDTO(dto);
+        save(equipmentApk);
     }
 
     /**
@@ -69,9 +69,9 @@ public class SysApkServiceImpl extends BaseServiceImpl<SysApkMapper, SysApk> imp
      * @param dto APK版本信息，包含版本号、下载地址、版本描述等
      */
     @Override
-    public void updateOne(SysApkDTO dto) {
-        SysApk sysApk = SysApkConvert.INSTANCE.convertFromDTO(dto);
-        updateById(sysApk);
+    public void updateOne(EquipmentApkDTO dto) {
+        EquipmentApk equipmentApk = EquipmentApkConvert.INSTANCE.convertFromDTO(dto);
+        updateById(equipmentApk);
     }
 
     /**
@@ -82,9 +82,9 @@ public class SysApkServiceImpl extends BaseServiceImpl<SysApkMapper, SysApk> imp
      * @return APK版本详细信息
      */
     @Override
-    public SysApkVO getOneById(Long id) {
-        SysApk sysApk = getById(id);
-        return SysApkConvert.INSTANCE.convertToVO(sysApk);
+    public EquipmentApkVO getOneById(Long id) {
+        EquipmentApk equipmentApk = getById(id);
+        return EquipmentApkConvert.INSTANCE.convertToVO(equipmentApk);
     }
 
     /**
@@ -105,7 +105,7 @@ public class SysApkServiceImpl extends BaseServiceImpl<SysApkMapper, SysApk> imp
      * @return 最新APK版本信息
      */
     @Override
-    public SysApkVO getLatest() {
+    public EquipmentApkVO getLatest() {
         return baseMapper.getLatest();
     }
 
@@ -155,17 +155,17 @@ public class SysApkServiceImpl extends BaseServiceImpl<SysApkMapper, SysApk> imp
      * @param query 查询参数，包含版本号、版本名称等
      * @return 查询条件
      */
-    private LambdaQueryWrapper<SysApk> builderWrapper(SysApkQuery query) {
-        LambdaQueryWrapper<SysApk> wrapper = Wrappers.lambdaQuery();
+    private LambdaQueryWrapper<EquipmentApk> builderWrapper(EquipmentApkQuery query) {
+        LambdaQueryWrapper<EquipmentApk> wrapper = Wrappers.lambdaQuery();
         Long versionNo = query.getVersionNo();
         if (versionNo != null) {
-            wrapper.eq(SysApk::getVersionNo, versionNo);
+            wrapper.eq(EquipmentApk::getVersionNo, versionNo);
         }
         String versionName = query.getVersionName();
         if (versionName != null) {
-            wrapper.like(SysApk::getVersionName, versionName);
+            wrapper.like(EquipmentApk::getVersionName, versionName);
         }
-        wrapper.orderByDesc(SysApk::getId);
+        wrapper.orderByDesc(EquipmentApk::getId);
         return wrapper;
     }
 }

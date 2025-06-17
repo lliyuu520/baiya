@@ -10,7 +10,7 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class SysApkQuery extends BaseQuery {
+public class EquipmentApkQuery extends BaseQuery {
 
     /**
      * 版本号

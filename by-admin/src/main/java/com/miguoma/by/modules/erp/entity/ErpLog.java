@@ -1,4 +1,4 @@
-package com.miguoma.by.modules.system.entity;
+package com.miguoma.by.modules.erp.entity;
 
 import com.miguoma.by.common.base.entity.BaseEntity;
 import lombok.Data;

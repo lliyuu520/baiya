@@ -10,6 +10,7 @@ import com.miguoma.by.common.enums.SysLogTypeEnums;
 import com.miguoma.by.common.utils.ClientContextHolder;
 import com.miguoma.by.common.utils.Result;
 import com.miguoma.by.modules.client.dto.MachineLoginDTO;
+import com.miguoma.by.modules.client.dto.MachineVerifyPasswordDTO;
 import com.miguoma.by.modules.client.dto.PullCodeDTO;
 import com.miguoma.by.modules.client.dto.RecordCodeUploadDTO;
 import com.miguoma.by.modules.client.vo.PullCodeVO;
@@ -72,6 +73,25 @@ public class ClientController {
         final String encode = Base62.encode(jsonStr);
         return Result.ok(encode);
     }
+
+    /**
+     * 采集软件验证密码
+     * @param dto
+     * @return
+     */
+    @PostMapping("/verifyPassword")
+    @SysLogCut(module = SysLogModuleEnums.CLIENT, type = SysLogTypeEnums.VERIFY_PASSWORD)
+    public Result<String> verifyPassword(@RequestBody MachineVerifyPasswordDTO dto) {
+        final String password = dto.getPassword();
+        final String macAddress = dto.getMacAddress();
+        final Boolean verifyPassword = productionDepartAndWorkshopService.verifyPassword(macAddress, password);
+        if (!verifyPassword) {
+            return Result.error("密码错误");
+        }
+        return Result.ok();
+    }
+
+
 
 
     /**

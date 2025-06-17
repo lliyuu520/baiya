@@ -93,8 +93,10 @@ public enum SysLogTypeEnums {
      */
     UPLOAD_APK("上传APK"),
 
-
-    ;
+    /**
+     * 验证密码
+     */
+    VERIFY_PASSWORD("验证密码");
 
     private final String desc;
 

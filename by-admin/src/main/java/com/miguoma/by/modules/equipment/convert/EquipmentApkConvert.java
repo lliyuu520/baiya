@@ -2,20 +2,20 @@ package com.miguoma.by.modules.equipment.convert;
 
 import java.util.List;
 
+import com.miguoma.by.modules.equipment.dto.EquipmentApkDTO;
+import com.miguoma.by.modules.equipment.vo.EquipmentApkVO;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
-import com.miguoma.by.modules.equipment.dto.SysApkDTO;
-import com.miguoma.by.modules.equipment.entity.SysApk;
-import com.miguoma.by.modules.equipment.vo.SysApkVO;
+import com.miguoma.by.modules.equipment.entity.EquipmentApk;
 
 /**
  * APK对象转换器
  */
 @Mapper
-public interface SysApkConvert {
+public interface EquipmentApkConvert {
 
-    SysApkConvert INSTANCE = Mappers.getMapper(SysApkConvert.class);
+    EquipmentApkConvert INSTANCE = Mappers.getMapper(EquipmentApkConvert.class);
 
     /**
      * DTO转实体
@@ -23,7 +23,7 @@ public interface SysApkConvert {
      * @param dto DTO对象
      * @return 实体对象
      */
-    SysApk convertFromDTO(SysApkDTO dto);
+    EquipmentApk convertFromDTO(EquipmentApkDTO dto);
 
     /**
      * 实体转VO
@@ -31,7 +31,7 @@ public interface SysApkConvert {
      * @param entity 实体对象
      * @return VO对象
      */
-    SysApkVO convertToVO(SysApk entity);
+    EquipmentApkVO convertToVO(EquipmentApk entity);
 
     /**
      * 实体列表转VO列表
@@ -39,5 +39,5 @@ public interface SysApkConvert {
      * @param list 实体列表
      * @return VO列表
      */
-    List<SysApkVO> convertList(List<SysApk> list);
+    List<EquipmentApkVO> convertList(List<EquipmentApk> list);
 }

@@ -1,9 +1,9 @@
-package com.miguoma.by.modules.system.service;
+package com.miguoma.by.modules.erp.service;
 
 import com.miguoma.by.common.base.page.PageVO;
 import com.miguoma.by.common.base.service.BaseService;
-import com.miguoma.by.modules.system.entity.ErpLog;
-import com.miguoma.by.modules.system.query.ErpLogQuery;
+import com.miguoma.by.modules.erp.entity.ErpLog;
+import com.miguoma.by.modules.erp.query.ErpLogQuery;
 
 /**
  * 系统日志服务接口

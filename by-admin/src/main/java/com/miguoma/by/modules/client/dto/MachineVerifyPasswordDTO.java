@@ -11,22 +11,17 @@ import java.io.Serializable;
 @Data
 public class MachineVerifyPasswordDTO implements Serializable {
 
-    /** 产线编码 */
-    private String productionWorkshopCode;
 
-
-    /** 工厂编码 */
-    private String productionFactoryCode;
-
-    /**
-     * 机台号
-     */
-    private String machineNo;
 
     /**
      * mac地址
      */
     private String macAddress;
+
+    /**
+     * 密码
+     */
+    private String password;
 
 
 
