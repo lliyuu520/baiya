@@ -47,7 +47,7 @@ public class EquipmentClientController {
      * @param equipmentClientDTO
      * @return
      */
-    @PostMapping
+    @PostMapping("/updatePassword")
     @SysLogCut(type = SysLogTypeEnums.UPDATE_PASSWORD, module = SysLogModuleEnums.CLIENT)
     @SaCheckPermission(value = "equipment:client:updatePassword")
     public Result<Boolean> updatePassword(@RequestBody EquipmentClientDTO equipmentClientDTO) {

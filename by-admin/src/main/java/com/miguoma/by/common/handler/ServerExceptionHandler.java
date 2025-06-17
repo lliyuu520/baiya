@@ -3,6 +3,8 @@ package com.miguoma.by.common.handler;
 import com.miguoma.by.common.exception.BaseException;
 import com.miguoma.by.common.utils.Result;
 import com.miguoma.by.modules.erp.constant.SignatureConstants;
+
+import cn.dev33.satoken.exception.NotPermissionException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindException;
@@ -13,7 +15,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.security.SignatureException;
 import java.util.NoSuchElementException;
-
 
 /**
  * 异常处理器
@@ -33,6 +34,7 @@ public class ServerExceptionHandler {
         log.error("签名验证异常: {}", e.getMessage());
         return Result.error(SignatureConstants.SIGNATURE_ERROR_CODE, e.getMessage());
     }
+
     /**
      * 处理自定义异常
      */
@@ -52,6 +54,17 @@ public class ServerExceptionHandler {
         return Result.error(fieldError.getDefaultMessage());
     }
 
+    /**
+     * NotPermissionException
+     * 
+     * @param ex
+     * @return
+     */
+    @ExceptionHandler(NotPermissionException.class)
+    public Result<String> handleNotPermissionException(NotPermissionException ex) {
+        log.error(ex.getMessage(), ex);
+        return Result.error(ex.getMessage());
+    }
 
     /**
      * 参数异常
@@ -61,7 +74,7 @@ public class ServerExceptionHandler {
      */
     @ExceptionHandler(IllegalArgumentException.class)
     public Result<String> handleIllegalArgumentException(IllegalArgumentException ex) {
-       log.error(ex.getMessage(), ex);
+        log.error(ex.getMessage(), ex);
         return Result.error(ex.getMessage());
     }
 
@@ -73,10 +86,9 @@ public class ServerExceptionHandler {
      */
     @ExceptionHandler(NoSuchElementException.class)
     public Result<String> handleException(NoSuchElementException ex) {
-       log.error(ex.getMessage(), ex);
+        log.error(ex.getMessage(), ex);
         return Result.error("数据不存在");
     }
-
 
     /**
      * 其他异常
@@ -86,9 +98,9 @@ public class ServerExceptionHandler {
      */
     @ExceptionHandler(Exception.class)
     public Result<String> handleException(Exception ex) {
-       log.error(ex.getMessage(), ex);
+        log.error(ex.getMessage(), ex);
         return Result.error(500, "服务器异常，请稍后再试");
     }
 
-//
+    //
 }

@@ -44,7 +44,7 @@ public class EquipmentApkController {
      */
     @GetMapping("/page")
     @SysLogCut(type = SysLogTypeEnums.PAGE, module = SysLogModuleEnums.APK)
-    @SaCheckPermission(value = "system:apk:page")
+    @SaCheckPermission(value = "equipment:apk:page")
     public Result<PageVO<EquipmentApkVO>> page(EquipmentApkQuery equipmentApkQuery) {
         PageVO<EquipmentApkVO> pageResult = equipmentApkService.pageVO(equipmentApkQuery);
         return Result.ok(pageResult);
@@ -59,7 +59,7 @@ public class EquipmentApkController {
      */
     @PostMapping
     @SysLogCut(type = SysLogTypeEnums.INSERT, module = SysLogModuleEnums.APK)
-    @SaCheckPermission(value = "system:apk:save")
+    @SaCheckPermission(value = "equipment:apk:save")
     public Result<String> save(@RequestBody EquipmentApkDTO apkDTO) {
         equipmentApkService.saveOne(apkDTO);
         return Result.ok();
@@ -74,7 +74,7 @@ public class EquipmentApkController {
      */
     @PutMapping
     @SysLogCut(type = SysLogTypeEnums.UPDATE, module = SysLogModuleEnums.APK)
-    @SaCheckPermission(value = "system:apk:update")
+    @SaCheckPermission(value = "equipment:apk:update")
     public Result<String> update(@RequestBody EquipmentApkDTO apkDTO) {
         equipmentApkService.updateOne(apkDTO);
         return Result.ok();
@@ -89,7 +89,7 @@ public class EquipmentApkController {
      */
     @DeleteMapping("/delete")
     @SysLogCut(type = SysLogTypeEnums.DELETE, module = SysLogModuleEnums.APK)
-    @SaCheckPermission(value = "system:apk:delete")
+    @SaCheckPermission(value = "equipment:apk:delete")
     public Result<String> delete(Long id) {
         equipmentApkService.deleteById(id);
         return Result.ok();
@@ -104,7 +104,7 @@ public class EquipmentApkController {
      */
     @GetMapping("/info")
     @SysLogCut(type = SysLogTypeEnums.VIEW, module = SysLogModuleEnums.APK)
-    @SaCheckPermission(value = "system:apk:info")
+    @SaCheckPermission(value = "equipment:apk:info")
     public Result<EquipmentApkVO> info(Long id) {
         EquipmentApkVO apkVO = equipmentApkService.getOneById(id);
         return Result.ok(apkVO);
@@ -115,8 +115,8 @@ public class EquipmentApkController {
      */
     @PostMapping("/uploadApk")
     public Result<String> uploadApk(MultipartFile file) {
-        equipmentApkService.uploadApk(file);
-        return Result.ok();
+        String uploadApk = equipmentApkService.uploadApk(file);
+        return Result.ok(uploadApk);
     }
     
 

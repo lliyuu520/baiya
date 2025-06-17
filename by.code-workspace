@@ -45,7 +45,8 @@
 				"request": "launch",
 				"mainClass": "com.miguoma.by.ByAdminApplication",
 				"env": {
-					"APK_PATH": "D:\\project\\baiya\\apk\\"
+					"APK_PATH": "D:\\project\\baiya\\apk\\",
+					"APK_LOCATION": "http://192.168.2.58/apk/"
 				},
 				"args": "--spring.profiles.active=local",
 				"projectName": "by-admin",

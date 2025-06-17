@@ -1,5 +1,6 @@
 package com.miguoma.by.modules.equipment.service.impl;
 
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -18,10 +19,12 @@ import com.miguoma.by.modules.equipment.vo.EquipmentApkVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -36,6 +39,9 @@ public class EquipmentApkServiceImpl extends BaseServiceImpl<EquipmentApkMapper,
 
     @Value("${apk.path}")
     private String apkPath;
+
+    @Value("${apk.location}")
+    private String apkLocation;
 
     /**
      * 分页查询APK版本列表
@@ -57,8 +63,16 @@ public class EquipmentApkServiceImpl extends BaseServiceImpl<EquipmentApkMapper,
      * @param dto APK版本信息，包含版本号、下载地址、版本描述等
      */
     @Override
+    @Transactional(rollbackFor =Exception.class)
     public void saveOne(EquipmentApkDTO dto) {
         EquipmentApk equipmentApk = EquipmentApkConvert.INSTANCE.convertFromDTO(dto);
+        final String apkUrl = dto.getApkUrl();
+        final String replace = StrUtil.replace(apkUrl, apkLocation, "");
+        final File file = FileUtil.file(apkPath + replace);
+        final String versionName = dto.getVersionName();
+        final Long versionNo = dto.getVersionNo();
+        final File rename = FileUtil.rename(file, versionName + "-" + versionNo, true, true);
+        equipmentApk.setApkUrl(apkLocation + rename.getName());
         save(equipmentApk);
     }
 
@@ -140,12 +154,15 @@ public class EquipmentApkServiceImpl extends BaseServiceImpl<EquipmentApkMapper,
         // 需要重命名才行,不然文件会覆盖
         String newFilename = fileName + "_" + IdUtil.fastSimpleUUID() + "." + fileTypeName;
         String filePath = apkPath  + newFilename;
+        final InputStream inputStream;
         try {
-            file.transferTo(new File(filePath));
+            inputStream = file.getInputStream();
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
-        return filePath;
+        FileUtil.writeFromStream(inputStream, filePath);
+        return apkLocation+newFilename;
+
     }
 
     /**
@@ -162,7 +179,7 @@ public class EquipmentApkServiceImpl extends BaseServiceImpl<EquipmentApkMapper,
             wrapper.eq(EquipmentApk::getVersionNo, versionNo);
         }
         String versionName = query.getVersionName();
-        if (versionName != null) {
+        if (StrUtil.isNotBlank(versionName)) {
             wrapper.like(EquipmentApk::getVersionName, versionName);
         }
         wrapper.orderByDesc(EquipmentApk::getId);

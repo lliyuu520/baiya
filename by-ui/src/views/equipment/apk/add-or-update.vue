@@ -12,12 +12,13 @@
 			</el-form-item>
 			<el-form-item label="APK文件" prop="apkUrl">
 				<el-upload
-					:action="uploadUrl"
+            :http-request="uploadApk"
 					:on-success="handleUploadSuccess"
 					:on-error="handleUploadError"
-					:show-file-list="false"
+					:show-file-list="true"
 					>
 					<el-button type="primary">点击上传</el-button>
+					
 				</el-upload>
 			</el-form-item>
 		</el-form>
@@ -29,9 +30,10 @@
 </template>
 
 <script setup lang="ts">
-import {useApkApi, useApkSubmitApi} from '@/api/equipement/apk/api'
+import {useApkApi, useApkSubmitApi, useUploadApkApi} from '@/api/equipement/apk/api'
 import {ElMessage} from 'element-plus/es'
 import {reactive, ref} from 'vue'
+import service from "@/utils/request";
 
 const emit = defineEmits(['refreshDataList'])
 
@@ -89,9 +91,25 @@ const submitHandle = () => {
 	})
 }
 
-const uploadUrl = ref("/sys/apk/apkUpload")
-
-
+const uploadApk = (options: any) => {
+  return new Promise((resolve, reject) => {
+    const formData = new FormData()
+    formData.append('file', options.file)
+    service.post('/equipment/apk/uploadApk', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        })
+        .then(res => {
+          resolve(res)
+		  dataForm.apkUrl = res.data
+        })
+        .catch(err => {
+          ElMessage({ message: '上传失败', type: 'error' })
+          reject(err)
+        })
+  })
+}
 const handleUploadSuccess = (response: any) => {
 	console.log(response)
 }
