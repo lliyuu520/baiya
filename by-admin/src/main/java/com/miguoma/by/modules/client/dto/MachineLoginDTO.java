@@ -5,18 +5,26 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
- * 班组登录DTO
+ * 产线登录DTO
  * @author liliangyu
  */
 @Data
 public class TeamLoginDTO implements Serializable {
 
-    /** 车间编码 */
+    /** 产线编码 */
     private String productionWorkshopCode;
 
 
     /** 工厂编码 */
     private String productionFactoryCode;
+
+    /**
+     * 机台号
+     */
+    private String machineNo;
+
+
+
 
 
 
