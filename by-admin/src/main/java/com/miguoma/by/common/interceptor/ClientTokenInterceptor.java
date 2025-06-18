@@ -59,19 +59,29 @@ public class ClientTokenInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws Exception {
         // 获取请求头中的token
-        String macAddress = request.getHeader("Token");
+        String clientIdStr = request.getHeader("Token");
 
         // 验证token是否存在
-        if (StrUtil.isBlank(macAddress)) {
+        if (StrUtil.isBlank(clientIdStr)) {
             log.warn("请求缺少token: {}", request.getRequestURI());
             response.setCharacterEncoding("UTF-8");
             response.setContentType("application/json");
             response.getWriter().write(JSONUtil.toJsonStr(Result.error("请求缺乏Token")));
             return false;
         }
-        final EquipmentClient equipmentClient = equipmentClientService.getByMacAddress(macAddress);
+        long clientId;
+        try {
+              clientId = Long.parseLong(clientIdStr);
+        } catch (Exception e) {
+            response.setCharacterEncoding("UTF-8");
+            response.setContentType("application/json");
+            response.getWriter().write(JSONUtil.toJsonStr(Result.error("设备不存在")));
+            return false;
+        }
+
+        final EquipmentClient equipmentClient = equipmentClientService.getById(clientId);
         if (equipmentClient == null) {
-            log.warn("设备不存在: {}", macAddress);
+            log.warn("设备不存在: {}", clientId);
             response.setCharacterEncoding("UTF-8");
             response.setContentType("application/json");
             response.getWriter().write(JSONUtil.toJsonStr(Result.error("设备不存在")));

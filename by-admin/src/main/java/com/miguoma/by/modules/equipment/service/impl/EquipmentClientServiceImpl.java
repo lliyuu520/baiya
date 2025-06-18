@@ -38,7 +38,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class EquipmentClientServiceImpl extends BaseServiceImpl<EquipmentClientMapper, EquipmentClient>
         implements EquipmentClientService {
 
-    private final ProductionDepartAndWorkshopMapper productionDepartAndWorkshopMapper;
 
     /**
      * 分页查询APK版本列表
@@ -62,7 +61,7 @@ public class EquipmentClientServiceImpl extends BaseServiceImpl<EquipmentClientM
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void saveOne(EquipmentClientDTO dto) {
+    public Long saveOne(EquipmentClientDTO dto) {
 
         final String macAddress = dto.getMacAddress();
         final String departNo = dto.getDepartNo();
@@ -79,7 +78,7 @@ public class EquipmentClientServiceImpl extends BaseServiceImpl<EquipmentClientM
             equipmentClient.setWorkshopNo(workshopNo);
             equipmentClient.setDepartNo(departNo);
             updateById(equipmentClient);
-            return;
+            return equipmentClient.getId();
 
         }
         EquipmentClient entity = new EquipmentClient();
@@ -91,6 +90,7 @@ public class EquipmentClientServiceImpl extends BaseServiceImpl<EquipmentClientM
         entity.setPassword("123456");
         entity.setMacAddress(macAddress);
         save(entity);
+        return entity.getId();
 
     }
 
@@ -131,16 +131,6 @@ public class EquipmentClientServiceImpl extends BaseServiceImpl<EquipmentClientM
         return true;
     }
 
-    /**
-     * 根据mac地址查询
-     *
-     * @param macAddress
-     * @return
-     */
-    @Override
-    public EquipmentClient getByMacAddress(String macAddress) {
-        return baseMapper.selectOneByMacAddress(macAddress);
-    }
 
     /**
      * 构建查询条件

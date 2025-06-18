@@ -64,7 +64,7 @@ public class ClientController {
      */
     @PostMapping("/login")
     @SysLogCut(module = SysLogModuleEnums.CLIENT, type = SysLogTypeEnums.LOGIN)
-    public Result<String> login(@RequestBody MachineLoginDTO dto) {
+    public Result<Long> login(@RequestBody MachineLoginDTO dto) {
         final String productionFactoryCode = dto.getProductionFactoryCode();
         final String productionWorkshopCode = dto.getProductionWorkshopCode();
         final Boolean checkFactoryCode = productionFactoryService.checkFactoryCode(productionFactoryCode);
@@ -101,9 +101,9 @@ public class ClientController {
         equipmentClientDTO.setMacAddress(macAddress);
         equipmentClientDTO.setMachineNo(machineNo);
         equipmentClientDTO.setIp(ip);
-        equipmentClientService.saveOne(equipmentClientDTO);
+        final Long clientId = equipmentClientService.saveOne(equipmentClientDTO);
 
-        return Result.ok(macAddress);
+        return Result.ok(clientId);
     }
 
     /**

@@ -32,7 +32,7 @@ public interface EquipmentClientService extends BaseService<EquipmentClient> {
      *
      * @param dto Client版本信息，包含版本号、下载地址、版本描述等
      */
-    void saveOne(EquipmentClientDTO dto);
+    Long saveOne(EquipmentClientDTO dto);
 
     /**
      * 修改密码
@@ -45,13 +45,6 @@ public interface EquipmentClientService extends BaseService<EquipmentClient> {
      * @param machineVerifyPasswordDTO
      */
     Boolean validatePassword(MachineVerifyPasswordDTO machineVerifyPasswordDTO);
-
-    /**
-     * 根据mac地址查询
-     * @param macAddress
-     * @return
-     */
-    EquipmentClient getByMacAddress(String macAddress);
 
 
 
