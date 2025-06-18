@@ -1,25 +1,8 @@
 <template>
 	<el-dialog v-model="visible" :title="!dataForm.id ? '新增' : '修改'" :close-on-click-modal="false">
 		<el-form ref="dataFormRef" :model="dataForm" :rules="dataRules" label-width="100px" @keyup.enter="submitHandle()">
-			<el-form-item label="版本号" prop="versionNo">
-				<el-input-number v-model="dataForm.versionNo" :controls="false"></el-input-number>
-			</el-form-item>
-			<el-form-item label="版本名称" prop="versionName">
-				<el-input v-model="dataForm.versionName"></el-input>
-			</el-form-item>
-			<el-form-item label="版本描述" prop="versionDesc">
-				<el-input v-model="dataForm.versionDesc" type="textarea" :rows="3"></el-input>
-			</el-form-item>
-			<el-form-item label="APK文件" prop="apkUrl">
-				<el-upload
-            :http-request="uploadApk"
-					:on-success="handleUploadSuccess"
-					:on-error="handleUploadError"
-					:show-file-list="true"
-					>
-					<el-button type="primary">点击上传</el-button>
-					
-				</el-upload>
+			<el-form-item label="密码" prop="password">
+				<el-input v-model="dataForm.password"></el-input>
 			</el-form-item>
 		</el-form>
 		<template #footer>
@@ -30,10 +13,10 @@
 </template>
 
 <script setup lang="ts">
-import {useApkApi, useApkSubmitApi, useUploadApkApi} from '@/api/equipement/apk/api'
+import {useClientApi,useUpdatePasswordApi} from '@/api/equipement/client/api'
 import {ElMessage} from 'element-plus/es'
 import {reactive, ref} from 'vue'
-import service from "@/utils/request";
+
 
 const emit = defineEmits(['refreshDataList'])
 
@@ -42,14 +25,10 @@ const dataFormRef = ref()
 
 const dataForm = reactive({
 	id: '',
-	versionNo: 0,
-	versionName: '',
-	versionDesc: '',
-	apkUrl:''
-
+	password: '',
 })
 
-const init = (id?: number) => {
+const init = (id: number) => {
 	visible.value = true
 	dataForm.id = ''
 
@@ -59,12 +38,12 @@ const init = (id?: number) => {
 	}
 
 	if (id) {
-		getApk(id)
+		getClient(id)
 	}
 }
 
-const getApk = (id: number) => {
-	useApkApi(id).then(res => {
+const getClient = (id: number) => {
+	useClientApi(id).then(res => {
 		Object.assign(dataForm, res.data)
 	})
 }
@@ -78,7 +57,7 @@ const submitHandle = () => {
 			return false
 		}
 
-		useApkSubmitApi(dataForm).then(() => {
+		useUpdatePasswordApi(dataForm).then(() => {
 			ElMessage.success({
 				message: '操作成功',
 				duration: 500,
@@ -91,31 +70,6 @@ const submitHandle = () => {
 	})
 }
 
-const uploadApk = (options: any) => {
-  return new Promise((resolve, reject) => {
-    const formData = new FormData()
-    formData.append('file', options.file)
-    service.post('/equipment/apk/uploadApk', formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data'
-          }
-        })
-        .then(res => {
-          resolve(res)
-		  dataForm.apkUrl = res.data
-        })
-        .catch(err => {
-          ElMessage({ message: '上传失败', type: 'error' })
-          reject(err)
-        })
-  })
-}
-const handleUploadSuccess = (response: any) => {
-	console.log(response)
-}
-const handleUploadError = (error: any) => {
-	console.log(error)
-}
 
 
 defineExpose({

@@ -7,6 +7,7 @@ import com.miguoma.by.common.enums.SysLogModuleEnums;
 import com.miguoma.by.common.enums.SysLogTypeEnums;
 import com.miguoma.by.common.utils.Result;
 import com.miguoma.by.modules.equipment.dto.EquipmentClientDTO;
+import com.miguoma.by.modules.equipment.entity.EquipmentClient;
 import com.miguoma.by.modules.equipment.query.EquipmentClientQuery;
 import com.miguoma.by.modules.equipment.service.EquipmentClientService;
 import com.miguoma.by.modules.equipment.vo.EquipmentClientVO;
@@ -44,6 +45,7 @@ public class EquipmentClientController {
 
     /**
      * 修改密码
+     * 
      * @param equipmentClientDTO
      * @return
      */
@@ -55,10 +57,17 @@ public class EquipmentClientController {
         return Result.ok();
     }
 
-
-
-    
-
-
+    /**
+     * 获取Client信息
+     * 
+     * @param id
+     * @return
+     */
+    @GetMapping("/info")
+    @SaCheckPermission(value = "equipment:client:info")
+    public Result<EquipmentClient> info(Long id) {
+        EquipmentClient equipmentClient = equipmentClientService.getById(id);
+        return Result.ok(equipmentClient);
+    }
 
 }

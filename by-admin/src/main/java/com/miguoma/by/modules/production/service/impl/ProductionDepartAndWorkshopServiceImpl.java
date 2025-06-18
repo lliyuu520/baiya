@@ -154,10 +154,11 @@ public class ProductionDepartAndWorkshopServiceImpl
      * @return
      */
     @Override
-    public List<String> getDepartCodeListByWorkshopName(String workshopName) {
+    public List<String> getDepartNameListByWorkshopName(String workshopName) {
         LambdaQueryWrapper<ProductionDepartAndWorkshop> wrapper = Wrappers.lambdaQuery();
         wrapper.likeRight(ProductionDepartAndWorkshop::getName, workshopName);
-        return list(wrapper).stream().map(ProductionDepartAndWorkshop::getParentCode).toList();
+        final List<String> parentCodeList = list(wrapper).stream().map(ProductionDepartAndWorkshop::getParentCode).distinct().toList();
+        return parentCodeList.stream().map(m -> getOneByCode(m).getName()).toList();
     }
 
     /**

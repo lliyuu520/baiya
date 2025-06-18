@@ -17,8 +17,10 @@ import com.miguoma.by.modules.record.entity.RecordQrCodeReplace;
 import com.miguoma.by.modules.record.query.RecordBoxCodeReplaceQuery;
 import com.miguoma.by.modules.record.query.RecordQrCodeReplaceQuery;
 import com.miguoma.by.modules.record.service.RecordBoxCodeReplaceService;
+import com.miguoma.by.modules.record.service.RecordBoxCodeService;
 import com.miguoma.by.modules.record.service.RecordQrCodeReplaceService;
 import com.miguoma.by.modules.record.service.RecordQrCodeService;
+import com.miguoma.by.modules.record.vo.RecordBoxCodeVO;
 import com.miguoma.by.modules.record.vo.RecordQrCodeVO;
 import com.miguoma.by.modules.system.dto.SysAccountLoginDTO;
 import com.miguoma.by.modules.equipment.service.EquipmentApkService;
@@ -46,6 +48,7 @@ public class PdaController {
     private final RecordQrCodeReplaceService recordQrCodeReplaceService;
 
     private final RecordQrCodeService recordQrCodeService;
+    private final RecordBoxCodeService recordBoxCodeService;
 
     private final RecordBoxCodeReplaceService recordBoxCodeReplaceService;
     private final EquipmentApkService equipmentApkService;
@@ -151,11 +154,23 @@ public class PdaController {
     /**
      * 查看二维码信息
      */
-    @GetMapping("/recordQrcode/info")
+    @GetMapping("/recordQrCode/info")
     @SysLogCut(module = SysLogModuleEnums.RECORD_QR_CODE, type = SysLogTypeEnums.VIEW)
     @SaCheckLogin
-    public Result<RecordQrCodeVO> recordQrcodeInfo(String code) {
+    public Result<RecordQrCodeVO> recordQrCodeInfo(String code) {
         final RecordQrCodeVO recordQrCodeReplace = recordQrCodeService.getVOByCode(code);
+        return Result.ok(recordQrCodeReplace);
+    }
+
+
+    /**
+     * 查看箱码信息
+     */
+    @GetMapping("/recordBoxCode/info")
+    @SysLogCut(module = SysLogModuleEnums.RECORD_BOX_CODE, type = SysLogTypeEnums.VIEW)
+    @SaCheckLogin
+    public Result<RecordBoxCodeVO> recordBoxCodeInfo(String code) {
+        final RecordBoxCodeVO recordQrCodeReplace = recordBoxCodeService.getVOByCode(code);
         return Result.ok(recordQrCodeReplace);
     }
 

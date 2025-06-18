@@ -55,4 +55,10 @@ public interface RecordBoxCodeService extends BaseService<RecordBoxCode> {
       */
      Long getCountBySemiFinishedProductionOrderId(Long semiFinishedProductionOrderId);
 
- } 
+     /**
+      *    getVOByCode
+      * @param code
+      * @return
+      */
+     RecordBoxCodeVO getVOByCode(String code);
+ }

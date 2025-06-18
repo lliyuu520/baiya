@@ -1,8 +1,14 @@
 package com.miguoma.by.modules.client.controller;
 
-import cn.dev33.satoken.annotation.SaIgnore;
-import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.date.LocalDateTimeUtil;
+import java.time.LocalDate;
+import java.util.List;
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.miguoma.by.common.annotation.SysLogCut;
 import com.miguoma.by.common.enums.SysLogModuleEnums;
 import com.miguoma.by.common.enums.SysLogTypeEnums;
@@ -22,12 +28,12 @@ import com.miguoma.by.modules.production.service.ProductionDepartAndWorkshopServ
 import com.miguoma.by.modules.production.service.ProductionFactoryService;
 import com.miguoma.by.modules.production.service.ProductionOrderService;
 import com.miguoma.by.modules.production.vo.ProductionOrderVO;
+
+import cn.dev33.satoken.annotation.SaIgnore;
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.date.LocalDateTimeUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalDate;
-import java.util.List;
 
 /**
  * 采集软件控制器
@@ -43,14 +49,11 @@ public class ClientController {
 
     private final ProductionFactoryService productionFactoryService;
 
-
     private final ProductionOrderService orderService;
-
 
     private final ProductionDepartAndWorkshopService productionDepartAndWorkshopService;
 
     private final EquipmentClientService equipmentClientService;
-
 
     /**
      * 登录
@@ -76,28 +79,24 @@ public class ClientController {
             return Result.error("产线不存在");
         }
 
-        final List<String> departCodeList = productionDepartAndWorkshopService.getDepartCodeListByWorkshopName(productionWorkshopCode);
-        if (CollUtil.isEmpty(departCodeList)) {
+        final List<String> deparNameList = productionDepartAndWorkshopService
+                .getDepartNameListByWorkshopName(productionWorkshopCode);
+        if (CollUtil.isEmpty(deparNameList)) {
             log.error("车间不存在:{}", productionWorkshopCode);
             return Result.error("车间不存在");
         }
-        if (CollUtil.size(departCodeList) != 1) {
+        if (CollUtil.size(deparNameList) != 1) {
             log.error("车间配置异常:{}", productionWorkshopCode);
             return Result.error("车间配置异常");
         }
-        final String departCode = departCodeList.get(0);
-        final ProductionDepartAndWorkshop productionDepartAndWorkshop = productionDepartAndWorkshopService.getOneByCode(departCode);
-        if (productionDepartAndWorkshop == null) {
-            log.error("车间不存在:{}", departCode);
-            return Result.error("车间不存在");
-        }
+        final String departName = deparNameList.get(0);
 
         final String macAddress = dto.getMacAddress();
         final String ip = dto.getIp();
         final String machineNo = dto.getMachineNo();
         final EquipmentClientDTO equipmentClientDTO = new EquipmentClientDTO();
         equipmentClientDTO.setFactoryNo(productionFactoryCode);
-        equipmentClientDTO.setDepartCode(departCode);
+        equipmentClientDTO.setDepartNo(departName);
         equipmentClientDTO.setWorkshopNo(productionWorkshopCode);
         equipmentClientDTO.setMacAddress(macAddress);
         equipmentClientDTO.setMachineNo(machineNo);
@@ -125,7 +124,6 @@ public class ClientController {
         return Result.ok(validatePassword);
     }
 
-
     /**
      * 获取订单列表
      *
@@ -135,8 +133,8 @@ public class ClientController {
     @SysLogCut(module = SysLogModuleEnums.CLIENT, type = SysLogTypeEnums.ORDER_LIST)
     public Result<List<ProductionOrderVO>> getProductionOrderList(ProductionOrderQuery query) {
         final EquipmentClient equipmentClient = ClientContextHolder.getEquipmentClient();
-        final String departCode = equipmentClient.getDepartCode();
-        query.setProductionDepartCode(departCode);
+        final String departNo = equipmentClient.getDepartNo();
+        query.setProductionDepartName(departNo);
         query.setReworkFlag(true);
         final LocalDate orderDateEnd = LocalDateTimeUtil.now().toLocalDate();
         final LocalDate orderDateBegin = orderDateEnd.plusDays(-15);
@@ -145,7 +143,6 @@ public class ClientController {
         List<ProductionOrderVO> list = orderService.listVO(query);
         return Result.ok(list);
     }
-
 
     /**
      * 拉码
@@ -158,7 +155,6 @@ public class ClientController {
         return Result.ok(pullCodeVO);
 
     }
-
 
     /**
      * 采集上传
@@ -173,6 +169,5 @@ public class ClientController {
         orderService.collectUpload(recordCodeUploadDTO);
         return Result.ok("采集上传成功");
     }
-
 
 }

@@ -91,4 +91,15 @@ public class RecordBoxCodeServiceImpl extends BaseServiceImpl<RecordBoxCodeMappe
         lambdaQuery.isNotNull(RecordBoxCode::getUploadDateTime);
         return count(lambdaQuery);
     }
+
+    /**
+     * getVOByCode
+     *
+     * @param code
+     * @return
+     */
+    @Override
+    public RecordBoxCodeVO getVOByCode(String code) {
+        return baseMapper.getVOByCode(code);
+    }
 }

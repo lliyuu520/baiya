@@ -59,7 +59,7 @@ public interface ProductionDepartAndWorkshopService extends BaseService<Producti
      * @param workshopName
      * @return
      */
-    List<String> getDepartCodeListByWorkshopName(String workshopName);
+    List<String> getDepartNameListByWorkshopName(String workshopName);
 
     /**
      * 根据编码查询部门&车间信息

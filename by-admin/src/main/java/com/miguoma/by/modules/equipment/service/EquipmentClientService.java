@@ -8,7 +8,7 @@ import com.miguoma.by.modules.equipment.entity.EquipmentClient;
 import com.miguoma.by.modules.equipment.query.EquipmentClientQuery;
 import com.miguoma.by.modules.equipment.vo.EquipmentClientVO;
 import org.springframework.web.multipart.MultipartFile;
-
+    
 /**
  * Client管理服务接口
  * 提供Client版本管理的核心业务逻辑，包括版本发布、查询、更新等功能

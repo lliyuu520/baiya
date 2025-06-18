@@ -55,4 +55,19 @@
 
 
     </select>
+    <select id="getVOByCode" resultType="com.miguoma.by.modules.record.vo.RecordBoxCodeVO">
+
+        select a.id id,
+               a.code code,
+               a.upload_date_time uploadDateTime,
+               a.pull_date_time pullDateTime,
+               b.order_no finishedOrderNo,
+               c.order_no semiFinishedOrderNo,
+               a.CRIB_CODE cribCode,
+               a.CRIB_DATE_TIME cribDateTime
+        from record_box_code a
+                 inner join production_order b on a.finished_product_order_id = b.id
+                 inner join production_order c on a.semi_finished_product_order_id = c.id
+        where a.code = #{code}
+    </select>
 </mapper>

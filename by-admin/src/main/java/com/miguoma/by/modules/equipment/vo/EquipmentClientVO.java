@@ -1,6 +1,6 @@
 package com.miguoma.by.modules.equipment.vo;
 
-import com.miguoma.by.modules.equipment.entity.EquipmentApk;
+import com.miguoma.by.modules.equipment.entity.EquipmentClient;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -9,6 +9,6 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class EquipmentClientVO extends EquipmentApk {
+public class EquipmentClientVO extends EquipmentClient {
 
 }

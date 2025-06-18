@@ -15,8 +15,14 @@ import com.miguoma.by.modules.equipment.mapper.EquipmentClientMapper;
 import com.miguoma.by.modules.equipment.query.EquipmentClientQuery;
 import com.miguoma.by.modules.equipment.service.EquipmentClientService;
 import com.miguoma.by.modules.equipment.vo.EquipmentClientVO;
+import com.miguoma.by.modules.production.entity.ProductionDepartAndWorkshop;
+import com.miguoma.by.modules.production.mapper.ProductionDepartAndWorkshopMapper;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,8 +35,10 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class EquipmentClientServiceImpl extends BaseServiceImpl<EquipmentClientMapper, EquipmentClient> implements EquipmentClientService {
+public class EquipmentClientServiceImpl extends BaseServiceImpl<EquipmentClientMapper, EquipmentClient>
+        implements EquipmentClientService {
 
+    private final ProductionDepartAndWorkshopMapper productionDepartAndWorkshopMapper;
 
     /**
      * 分页查询APK版本列表
@@ -42,7 +50,8 @@ public class EquipmentClientServiceImpl extends BaseServiceImpl<EquipmentClientM
     @Override
     public PageVO<EquipmentClientVO> pageVO(EquipmentClientQuery query) {
         IPage<EquipmentClient> page = page(getPage(query), builderWrapper(query));
-        return PageVO.of(EquipmentClientConvert.INSTANCE.convertList(page.getRecords()), page.getTotal());
+        List<EquipmentClientVO> convertList = EquipmentClientConvert.INSTANCE.convertList(page.getRecords());
+        return PageVO.of(convertList, page.getTotal());
     }
 
     /**
@@ -56,7 +65,7 @@ public class EquipmentClientServiceImpl extends BaseServiceImpl<EquipmentClientM
     public void saveOne(EquipmentClientDTO dto) {
 
         final String macAddress = dto.getMacAddress();
-        final String departCode = dto.getDepartCode();
+        final String departNo = dto.getDepartNo();
         final String ip = dto.getIp();
         final String machineNo = dto.getMachineNo();
         final String factoryNo = dto.getFactoryNo();
@@ -68,7 +77,7 @@ public class EquipmentClientServiceImpl extends BaseServiceImpl<EquipmentClientM
             equipmentClient.setIp(ip);
             equipmentClient.setFactoryNo(factoryNo);
             equipmentClient.setWorkshopNo(workshopNo);
-            equipmentClient.setDepartCode(departCode);
+            equipmentClient.setDepartNo(departNo);
             updateById(equipmentClient);
             return;
 
@@ -78,11 +87,10 @@ public class EquipmentClientServiceImpl extends BaseServiceImpl<EquipmentClientM
         entity.setIp(ip);
         entity.setFactoryNo(factoryNo);
         entity.setWorkshopNo(workshopNo);
-        entity.setDepartCode(departCode);
+        entity.setDepartNo(departNo);
         entity.setPassword("123456");
         entity.setMacAddress(macAddress);
         save(entity);
-
 
     }
 

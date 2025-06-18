@@ -37,4 +37,11 @@ public interface RecordBoxCodeMapper extends IBaseMapper<RecordBoxCode> {
 
     }
 
+    /**
+     * getVOByCode
+     * @param code
+     * @return
+     */
+
+    RecordBoxCodeVO getVOByCode(@Param("code")String code);
 }

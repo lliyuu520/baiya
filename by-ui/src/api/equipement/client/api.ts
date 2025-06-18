@@ -3,9 +3,10 @@ import service from "@/utils/request";
 
 const baseUrl = '/equipment/client'
 const clientApi = new BaseApi({ baseUrl, moduleName: 'client' })
+export const useClientApi = (id: number) => clientApi.getInfo(id)
 
 
-const useUpdatePasswordApi=(data:any)=> {
+export const useUpdatePasswordApi=(data:any)=> {
 
     return service.post(`${baseUrl}/updatePassword`,data)
 }
