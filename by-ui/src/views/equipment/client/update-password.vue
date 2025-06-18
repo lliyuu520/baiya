@@ -2,7 +2,7 @@
 	<el-dialog v-model="visible" :title="!dataForm.id ? '新增' : '修改'" :close-on-click-modal="false">
 		<el-form ref="dataFormRef" :model="dataForm" :rules="dataRules" label-width="100px" @keyup.enter="submitHandle()">
 			<el-form-item label="密码" prop="password">
-				<el-input v-model="dataForm.password"class="password-input"></el-input>
+				<el-input v-model="dataForm.password" class="password-input"></el-input>
 			</el-form-item>
 		</el-form>
 		<template #footer>
