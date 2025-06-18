@@ -3,13 +3,7 @@
 
 <mapper namespace="com.miguoma.by.modules.system.mapper.SysMenuMapper">
 
-    <select id="getMenuList" resultType="com.miguoma.by.modules.system.entity.SysMenu">
-        select * from sys_menu 
-        <if test="type != null">
-            where TYPE = #{type}
-        </if>
-        order by WEIGHT
-    </select>
+
 
     <select id="getUserMenuList" resultType="com.miguoma.by.modules.system.entity.SysMenu">
         select t3.* from sys_user_role t1

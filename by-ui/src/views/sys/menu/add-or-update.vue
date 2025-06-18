@@ -5,7 +5,6 @@
 				<el-radio-group v-model="dataForm.type" :disabled="!!dataForm.id" @change="menuTypeChange()">
 					<el-radio :value="0">菜单</el-radio>
 					<el-radio :value="1">按钮</el-radio>
-					<el-radio :value="2">接口</el-radio>
 				</el-radio-group>
 			</el-form-item>
 			<el-form-item label="名称" prop="name">
@@ -41,14 +40,25 @@
 			<el-form-item label="排序" prop="weight">
 				<el-input-number v-model="dataForm.weight" :min="0" controls-position="right" label="排序"></el-input-number>
 			</el-form-item>
-			<el-form-item v-if="dataForm.type === 0" label="打开方式" prop="openStyle">
-				<el-radio-group v-model="dataForm.openStyle">
-					<el-radio :value="0">内部打开</el-radio>
-					<el-radio :value="1">外部打开</el-radio>
-				</el-radio-group>
-			</el-form-item>
 			<el-form-item label="授权标识" prop="perms">
-				<el-input v-model="dataForm.perms" placeholder="多个用逗号分隔，如：sys:menu:save,sys:menu:update"></el-input>
+				<el-input
+					v-model="permsInput"
+					placeholder="输入后回车或逗号添加，多个用Tag显示"
+					@keyup.enter.native="addPermTag"
+					@blur="formatPermsInput"
+					clearable
+				/>
+				<div style="margin-top: 8px;">
+					<el-tag
+						v-for="(tag, idx) in permsTags"
+						:key="String(tag)"
+						closable
+						@close="removePermTag(idx)"
+						style="margin-right: 4px;"
+					>
+						{{ tag }}
+					</el-tag>
+				</div>
 			</el-form-item>
 		</el-form>
 		<template #footer>
@@ -59,9 +69,9 @@
 </template>
 
 <script lang="ts" setup>
-import {useMenuApi, useMenuListApi, useMenuSubmitApi} from "@/api/sys/menu";
-import {ElMessage} from "element-plus/es";
-import {reactive, ref} from "vue";
+import { useMenuApi, useMenuListApi, useMenuSubmitApi } from "@/api/sys/menu";
+import { ElMessage } from "element-plus/es";
+import { reactive, ref, watch } from "vue";
 
 const emit = defineEmits(['refreshDataList'])
 
@@ -75,13 +85,28 @@ const dataForm = reactive({
 	id: '',
 	type: 0,
 	name: '',
-	parentId: '0',
+	parentId: 0,
 	parentName: '',
 	url: '',
 	perms: '',
   weight: 0,
 	openStyle: 0
 })
+
+const permsInput = ref('')
+const permsTags = ref<string[]>([])
+
+watch(
+	() => dataForm.perms,
+	(val) => {
+		if (typeof val === 'string' && val) {
+			permsTags.value = val.split(',').map(s => s.trim()).filter(s => !!s)
+		} else {
+			permsTags.value = []
+		}
+	},
+	{ immediate: true }
+)
 
 const init = (id?: number) => {
 	visible.value = true
@@ -121,7 +146,7 @@ const getMenu = (id: number) => {
 	useMenuApi(id).then(res => {
 		Object.assign(dataForm, res.data)
 
-		if (dataForm.parentId == '0') {
+		if (dataForm.parentId == 0) {
 			return treeSetDefaultHandle()
 		}
 
@@ -131,7 +156,7 @@ const getMenu = (id: number) => {
 
 // 上级菜单树, 设置默认值
 const treeSetDefaultHandle = () => {
-	dataForm.parentId = '0'
+	dataForm.parentId = 0
 	dataForm.parentName = '一级菜单'
 }
 
@@ -146,8 +171,28 @@ const dataRules = ref({
 	parentName: [{ required: true, message: '必填项不能为空', trigger: 'blur' }]
 })
 
+const addPermTag = () => {
+	if (!permsInput.value) return
+	const tags = permsInput.value.split(/,|，/).map(s => s.trim()).filter(Boolean)
+	tags.forEach(tag => {
+		if (tag && !permsTags.value.includes(tag)) {
+			permsTags.value.push(tag)
+		}
+	})
+	permsInput.value = ''
+}
+
+const removePermTag = (idx: number) => {
+	permsTags.value.splice(idx, 1)
+}
+
+const formatPermsInput = () => {
+	addPermTag()
+}
+
 // 表单提交
 const submitHandle = () => {
+	dataForm.perms = permsTags.value.join(',')
 	dataFormRef.value.validate((valid: boolean) => {
 		if (!valid) {
 			return false

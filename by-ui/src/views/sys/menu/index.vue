@@ -29,20 +29,23 @@
 			></el-table-column>
 			<el-table-column align="center" fixed="right" header-align="center" label="操作" width="150">
 				<template #default="scope">
+					<el-button v-auth="'sys:menu:save'" link type="primary" @click="addSubHandle(scope.row.id,scope.row.parentName)">新增子级</el-button>
 					<el-button v-auth="'sys:menu:update'" link type="primary" @click="addOrUpdateHandle(scope.row.id)">修改</el-button>
 					<el-button v-auth="'sys:menu:delete'" link type="primary" @click="deleteHandle(scope.row.id)">删除</el-button>
 				</template>
 			</el-table-column>
 		</el-table>
 		<add-or-update ref="addOrUpdateRef" @refresh-data-list="getDataList"></add-or-update>
+		<add-sub ref="addSubRef" @refresh-data-list="getDataList"></add-sub>
 	</el-card>
 </template>
 
 <script lang="ts" setup>
-import {useCrud} from "@/hooks";
-import {reactive, ref} from "vue";
+import { reactive, ref } from "vue";
 import AddOrUpdate from "./add-or-update.vue";
+import AddSub from "@/views/sys/menu/add-sub.vue";
 import {IHooksOptions} from "@/hooks/interface";
+import {useCrud} from "@/hooks";
 
 const state: IHooksOptions = reactive({
 	dataListUrl: '/sys/menu/list',
@@ -53,6 +56,11 @@ const state: IHooksOptions = reactive({
 const addOrUpdateRef = ref()
 const addOrUpdateHandle = (id?: number) => {
 	addOrUpdateRef.value.init(id)
+}
+const addSubRef = ref()
+
+const addSubHandle = (id: number,parentName:string) => {
+  addSubRef.value.init(id,parentName)
 }
 
 const { getDataList, deleteHandle } = useCrud(state)

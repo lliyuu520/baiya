@@ -16,11 +16,13 @@ import com.miguoma.by.modules.system.entity.SysMenu;
 import com.miguoma.by.modules.system.mapper.SysMenuMapper;
 import com.miguoma.by.modules.system.service.SysMenuService;
 import com.miguoma.by.modules.system.service.SysRoleMenuService;
+import com.miguoma.by.modules.system.vo.SysMenuVO;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 菜单管理
@@ -90,7 +92,6 @@ public class SysMenuServiceImpl extends BaseServiceImpl<SysMenuMapper, SysMenu> 
     public List<Tree<Long>> getMenuList(final Integer type) {
         final LambdaQueryWrapper<SysMenu> wrapper = Wrappers.lambdaQuery();
         if (type != null) {
-
             wrapper.eq(SysMenu::getType, type);
         }
 
@@ -162,15 +163,25 @@ public class SysMenuServiceImpl extends BaseServiceImpl<SysMenuMapper, SysMenu> 
      * @return
      */
     private List<Tree<Long>> getTreeList(final List<SysMenu> menuList) {
-        final List<TreeNode<Long>> treeNodeList = menuList.stream().map(m -> {
+        final List<SysMenuVO> sysMenuVOList = SysMenuConvert.INSTANCE.convertList(menuList);
+        final Map<Long, String> sysMenuNameMap = sysMenuVOList.stream().collect(Collectors.toMap(SysMenuVO::getId, SysMenuVO::getName));
+        final List<TreeNode<Long>> treeNodeList = sysMenuVOList.stream().map(m -> {
             final Long id = m.getId();
             String name = m.getName();
-            final TreeNode<Long> longTreeNode = new TreeNode<>(id, m.getParentId(), name, m.getWeight());
+            final Long parentId = m.getParentId();
+
+            final TreeNode<Long> longTreeNode = new TreeNode<>(id, parentId, name, m.getWeight());
             final HashMap<String, Object> map = new HashMap<>();
             map.put("perms", m.getPerms());
             map.put("openStyle", m.getOpenStyle());
             map.put("type", m.getType());
             map.put("url", m.getUrl());
+
+            if(parentId==0){
+                map.put("parentName", "一级菜单");
+            }else {
+                map.put("parentName", sysMenuNameMap.get(parentId));
+            }
             longTreeNode.setExtra(map);
             return longTreeNode;
         }).toList();

@@ -25,12 +25,7 @@ public interface SysMenuMapper extends IBaseMapper<SysMenu> {
      */
     void deleteMenu(@Param("id") Long id);  
 
-    /**
-     * 查询所有菜单列表
-     *
-     * @param type 菜单类型
-     */
-    List<SysMenu> getMenuList(@Param("type") Integer type);
+
 
     /**
      * 查询用户菜单列表
