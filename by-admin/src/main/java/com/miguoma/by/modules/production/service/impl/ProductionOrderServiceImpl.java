@@ -703,11 +703,10 @@ public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderM
             // 二维码
             // 按照 数量生成二维码
             final List<String> qrCodeSet = qrCodeCache.getQrCode(qrCodeNum);
-            final List<String> list = qrCodeSet.stream().map(m -> qrCodeUrlPrefix + encode + m).toList();
 
             final PullCodeVO.QrCodeTypeData qrCodeTypeData = new PullCodeVO.QrCodeTypeData();
             pullCodeVO.setQrCodeTypeData(qrCodeTypeData);
-            qrCodeTypeData.setQrCodeList(list);
+            qrCodeTypeData.setQrCodeList(qrCodeSet);
             List<PullCodeVO.BoxCodeData> boxCodeDataList = new ArrayList<>();
             for (int i = 0; i < boxCodeList.size(); i++) {
                 final PullCodeVO.BoxCodeData boxCodeData = new PullCodeVO.BoxCodeData();

@@ -5,6 +5,6 @@
 
     <!-- 获取最新APK版本 -->
     <!-- 查询当前最新的APK版本信息，按版本号降序排序取第一条记录 -->
-    <select id="getLatest" resultType="com.miguoma.by.modules.equipment.vo.EquipmentApkVO"> SELECT *FROM
-        equipment_APK WHERE ROWNUM = 1 ORDER BY version_no DESC </select>
+    <select id="getLatest" resultType="com.miguoma.by.modules.equipment.vo.EquipmentApkVO"> SELECT * FROM
+        equipment_APK WHERE version_no = (SELECT MAX(version_no) FROM equipment_APK) </select>
 </mapper>

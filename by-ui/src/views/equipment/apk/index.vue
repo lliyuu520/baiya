@@ -15,7 +15,7 @@
 			</el-form-item>
 		</el-form>
 		<el-table v-loading="state.dataListLoading" :data="state.dataList" border style="width: 100%" @selection-change="selectionChangeHandle">
-			<el-table-column  align="center" header-align="center" label="编码" prop="versionNo"></el-table-column>
+			<el-table-column  align="center" header-align="center" label="版本号" prop="versionNo"></el-table-column>
 			<el-table-column  align="center" header-align="center" label="名称" prop="versionName"></el-table-column>
 			<el-table-column  align="center" header-align="center" label="描述" prop="versionDesc"></el-table-column>
 			<el-table-column  align="center" header-align="center" label="APK文件" prop="apkUrl">
