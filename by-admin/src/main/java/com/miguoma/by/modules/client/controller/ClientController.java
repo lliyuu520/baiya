@@ -18,6 +18,7 @@ import com.miguoma.by.modules.client.dto.MachineLoginDTO;
 import com.miguoma.by.modules.client.dto.MachineVerifyPasswordDTO;
 import com.miguoma.by.modules.client.dto.PullCodeDTO;
 import com.miguoma.by.modules.client.dto.RecordCodeUploadDTO;
+import com.miguoma.by.modules.client.dto.VerifyPasswordDTO;
 import com.miguoma.by.modules.client.vo.PullCodeVO;
 import com.miguoma.by.modules.equipment.dto.EquipmentClientDTO;
 import com.miguoma.by.modules.equipment.entity.EquipmentClient;
@@ -32,6 +33,7 @@ import com.miguoma.by.modules.production.vo.ProductionOrderVO;
 import cn.dev33.satoken.annotation.SaIgnore;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.LocalDateTimeUtil;
+import cn.hutool.core.util.StrUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -109,19 +111,25 @@ public class ClientController {
     /**
      * 采集软件验证密码
      *
-     * @param password
+     * @param validatePasswordDTO
      * @return
      */
     @PostMapping("/verifyPassword")
     @SysLogCut(module = SysLogModuleEnums.CLIENT, type = SysLogTypeEnums.VERIFY_PASSWORD)
-    public Result<Boolean> verifyPassword(String password) {
+    public Result<Boolean> verifyPassword(@RequestBody VerifyPasswordDTO validatePasswordDTO) {
+        String password = validatePasswordDTO.getPassword();
+        if (StrUtil.isBlank(password)) {
+            return Result.error("密码不能为空!");
+
+    
+        }
         final EquipmentClient equipmentClient = ClientContextHolder.getEquipmentClient();
         MachineVerifyPasswordDTO machineVerifyPasswordDTO = new MachineVerifyPasswordDTO();
         machineVerifyPasswordDTO.setMacAddress(equipmentClient.getMacAddress());
         machineVerifyPasswordDTO.setPassword(password);
-        final Boolean validatePassword = equipmentClientService.validatePassword(machineVerifyPasswordDTO);
+        final Boolean value = equipmentClientService.validatePassword(machineVerifyPasswordDTO);
 
-        return Result.ok(validatePassword);
+        return Result.ok(value);
     }
 
     /**

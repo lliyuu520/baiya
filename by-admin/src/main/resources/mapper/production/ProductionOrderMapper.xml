@@ -25,11 +25,11 @@
             </if>
             <if
                     test="query.productionWorkshopName!=null and query.productionWorkshopName!=''">AND
-                E.NAME like '%' || #{query.productionWorkshopName} || '%'
+                e.NAME like '%' || #{query.productionWorkshopName} || '%'
             </if>
             <if
                     test="query.productionDepartName!=null and query.productionDepartName!=''">AND
-                E.NAME like '%' || #{query.productionDepartName} || '%'
+                d.NAME like '%' || #{query.productionDepartName} || '%'
             </if>
             <if
 

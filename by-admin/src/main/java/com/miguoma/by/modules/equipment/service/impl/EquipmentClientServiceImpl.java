@@ -72,14 +72,7 @@ public class EquipmentClientServiceImpl extends BaseServiceImpl<EquipmentClientM
 
         final EquipmentClient equipmentClient = baseMapper.selectOneByMacAddress(macAddress);
         if (equipmentClient != null) {
-            equipmentClient.setMachineNo(machineNo);
-            equipmentClient.setIp(ip);
-            equipmentClient.setFactoryNo(factoryNo);
-            equipmentClient.setWorkshopNo(workshopNo);
-            equipmentClient.setDepartNo(departNo);
-            updateById(equipmentClient);
-            return equipmentClient.getId();
-
+           throw new BaseException("该MAC地址已存在:{}", macAddress);
         }
         EquipmentClient entity = new EquipmentClient();
         entity.setMachineNo(machineNo);
