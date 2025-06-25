@@ -40,36 +40,11 @@ public class ProductionDepartAndWorkshopServiceImpl
      */
     @Override
     public PageVO<ProductionDepartAndWorkshopVO> pageVO(ProductionDepartAndWorkshopQuery query) {
-        IPage<ProductionDepartAndWorkshop> page = page(getPage(query), builderWrapper(query));
-        return PageVO.of(ProductionDepartAndWorkshopConvert.INSTANCE.convertList(page.getRecords()), page.getTotal());
+        IPage<ProductionDepartAndWorkshopVO> pageVO = baseMapper.pageVO(getPage(query), query);
+        return PageVO.of(pageVO);
     }
 
-    /**
-     * 构建查询条件
-     *
-     * @param query 查询条件
-     * @return 查询包装器
-     */
-    private LambdaQueryWrapper<ProductionDepartAndWorkshop> builderWrapper(ProductionDepartAndWorkshopQuery query) {
-        LambdaQueryWrapper<ProductionDepartAndWorkshop> wrapper = Wrappers.lambdaQuery();
 
-        // 按名称模糊查询
-        final String name = query.getName();
-        if (StrUtil.isNotBlank(name)) {
-            wrapper.like(ProductionDepartAndWorkshop::getName, name);
-        }
-
-        // 按编码精确查询
-        final String code = query.getCode();
-        if (StrUtil.isNotBlank(code)) {
-            wrapper.eq(ProductionDepartAndWorkshop::getCode, code);
-        }
-
-        // 按创建时间降序排序
-        wrapper.orderByDesc(ProductionDepartAndWorkshop::getId);
-
-        return wrapper;
-    }
 
 
     /**

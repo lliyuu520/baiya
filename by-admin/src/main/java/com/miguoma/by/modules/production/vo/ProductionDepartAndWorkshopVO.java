@@ -13,4 +13,11 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class ProductionDepartAndWorkshopVO extends ProductionDepartAndWorkshop {
+    /** 父级名称 */
+
+    private String parentName;
+    /**
+     * 父级编码
+     */
+    private String parentCode;
 }

@@ -1,9 +1,9 @@
 <template>
 	<div class="login-container">
 		<div class="login-intro">
-			<h1>标题</h1>
+			<h1>百亚追溯系统</h1>
 			<div class="desc">
-				描述
+			百亚追溯系统
 			</div>
 			<div class="login-bg"><img src="@/assets/login.png" /></div>
 		</div>

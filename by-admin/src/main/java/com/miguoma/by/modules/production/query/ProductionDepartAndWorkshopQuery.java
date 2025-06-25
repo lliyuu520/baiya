@@ -13,15 +13,15 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class ProductionDepartAndWorkshopQuery extends BaseQuery {
-    /**
-     * 工厂编码
-     */
-    private String code;
+    
 
     /**
-     * 工厂名称
+     * 名称
      */
     private String name;
+/**父级名称 */
+    private String parentName;
+
 
   
 }

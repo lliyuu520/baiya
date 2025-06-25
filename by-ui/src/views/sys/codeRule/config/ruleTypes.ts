@@ -34,7 +34,7 @@ export const encodeTypeList: EncodeTypeOption[] = [
 ]
 
 export const boxCodeSourceFieldList: SourceFieldOption[] = [
-    { code: 'FINISHED_LIMITED_USE_DATE', name: '成品限用日期' },
+    { code: 'FINISHED_ORDER_DATE', name: '订单日期' },
     { code: 'FINISHED_DEPART_CODE', name: '成品部门编码' },
     { code: 'FINISHED_WORKSHOP_CODE', name: '成品车间编码' },
     { code: 'FINISHED_TEAM_CODE', name: '成品班次编码' },
@@ -47,7 +47,7 @@ export const boxCodeSourceFieldList: SourceFieldOption[] = [
 ]
 
 export const innerBoxCodeSourceFieldList: SourceFieldOption[] = [
-    { code: 'FINISHED_LIMITED_USE_DATE', name: '成品限用日期' },
+    { code: 'FINISHED_ORDER_DATE', name: '成品订单日期' },
     { code: 'FINISHED_DEPART_CODE', name: '成品部门编码' },
     { code: 'FINISHED_WORKSHOP_CODE', name: '成品车间编码' },
     { code: 'FINISHED_TEAM_CODE', name: '成品班次编码' },
@@ -60,7 +60,7 @@ export const innerBoxCodeSourceFieldList: SourceFieldOption[] = [
 ]
 
 export const bagCodeSourceFieldList: SourceFieldOption[] = [
-    { code: 'SEMI_FINISHED_LIMITED_USE_DATE', name: '半成品限用日期' },
+    { code: 'SEMI_FINISHED_ORDER_DATE', name: '半成品订单日期' },
     { code: 'FINISHED_ORDER_CODE', name: '成品订单编码' },
     { code: 'FINISHED_PRODUCT_CODE', name: '成品产品编码' },
     { code: 'SEMI_FINISHED_DEPART_CODE', name: '半成品部门编码' },
@@ -76,7 +76,7 @@ export const bagCodeSourceFieldList: SourceFieldOption[] = [
 export const universalCodeSourceFieldList: SourceFieldOption[] = [
     { code: 'FINISHED_ORDER_CODE', name: '成品订单编码' },
     { code: 'FINISHED_PRODUCT_CODE', name: '成品产品编码' },
-    { code: 'SEMI_FINISHED_LIMITED_USE_DATE', name: '半成品限用日期' },
+    { code: 'SEMI_FINISHED_ORDER_DATE', name: '半成品订单日期' },
     { code: 'SEMI_FINISHED_DEPART_CODE', name: '半成品部门编码' },
     { code: 'SEMI_FINISHED_WORKSHOP_CODE', name: '半成品车间编码' },
     { code: 'SEMI_FINISHED_TEAM_CODE', name: '半成品班次编码' },

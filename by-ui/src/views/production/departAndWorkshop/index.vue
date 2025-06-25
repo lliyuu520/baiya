@@ -1,11 +1,8 @@
 <template>
 	<el-card>
 		<el-form :inline="true" :model="state.queryForm" @keyup.enter="getDataList()">
-			<el-form-item label="父级编码">
-				<el-input v-model="state.queryForm.parentCode" clearable></el-input>
-			</el-form-item>
-			<el-form-item  label="编码">
-				<el-input v-model="state.queryForm.code" clearable></el-input>
+			<el-form-item label="父级名称">
+				<el-input v-model="state.queryForm.parentName" clearable></el-input>
 			</el-form-item>
 			<el-form-item  label="名称">
 				<el-input v-model="state.queryForm.name" clearable></el-input>
@@ -16,13 +13,10 @@
 			
 		</el-form>
 		<el-table v-loading="state.dataListLoading" :data="state.dataList" border style="width: 100%" @selection-change="selectionChangeHandle">
-			<el-table-column  align="center" header-align="center" label="编码" prop="code"></el-table-column>
+			<el-table-column  align="center" header-align="center" label="父级名称" prop="parentName"></el-table-column>
+			<el-table-column  align="center" header-align="center" label="父级编码" prop="parentCode"></el-table-column>
 			<el-table-column  align="center" header-align="center" label="名称" prop="name"></el-table-column>
-			<el-table-column  align="center" header-align="center" label="父级编码" prop="parentCode">
-				<template #default="scope">
-					{{ filterDepartAndWorkshop(scope.row.parentCode)?.name }}
-				</template>
-			</el-table-column>
+			<el-table-column  align="center" header-align="center" label="编码" prop="code"></el-table-column>
 			<el-table-column  align="center" header-align="center" label="别名" prop="alias"></el-table-column>
 			<el-table-column  align="center" header-align="center" label="编码规则" prop="codeRuleId">
 				<template #default="scope">
@@ -66,9 +60,8 @@ const state: IHooksOptions = reactive({
 	dataListUrl: '/production/departAndWorkshop/page',
 	deleteUrl: '/production/departAndWorkshop/delete',
 	queryForm: {
-		code: '',
 		name: '',
-		parentCode:''
+		parentName:''
 	}
 })
 
