@@ -1,6 +1,5 @@
 package com.miguoma.by.common.utils;
 
-import com.miguoma.by.modules.client.dto.MachineLoginDTO;
 import com.miguoma.by.modules.equipment.entity.EquipmentClient;
 import lombok.extern.slf4j.Slf4j;
 

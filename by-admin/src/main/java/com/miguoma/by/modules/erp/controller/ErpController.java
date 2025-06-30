@@ -4,7 +4,6 @@ package com.miguoma.by.modules.erp.controller;
 import cn.dev33.satoken.annotation.SaIgnore;
 import com.miguoma.by.common.annotation.ErpLogCut;
 import com.miguoma.by.common.enums.ErpLogModuleEnums;
-import com.miguoma.by.common.enums.ErpLogTypeEnums;
 import com.miguoma.by.common.utils.Result;
 import com.miguoma.by.modules.erp.annotation.SignatureCheck;
 import com.miguoma.by.modules.erp.dto.ErpDepartDTO;

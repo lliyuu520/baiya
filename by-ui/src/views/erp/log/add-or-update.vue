@@ -29,9 +29,9 @@
 </template>
 
 <script lang="ts" setup>
-import { useLogApi } from "@/api/erp/log/api";
-import { ElMessage } from "element-plus";
-import { reactive, ref } from "vue";
+import {useLogApi} from "@/api/erp/log/api";
+import {ElMessage} from "element-plus";
+import {reactive, ref} from "vue";
 
 const visible = ref(false)
 const dataForm = reactive({

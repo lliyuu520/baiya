@@ -13,7 +13,7 @@
 </template>
 
 <script setup lang="ts">
-import {useClientApi,useUpdatePasswordApi} from '@/api/equipement/client/api'
+import {useClientApi, useUpdatePasswordApi} from '@/api/equipement/client/api'
 import {ElMessage} from 'element-plus/es'
 import {reactive, ref} from 'vue'
 

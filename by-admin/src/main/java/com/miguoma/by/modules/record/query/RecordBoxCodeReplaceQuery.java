@@ -1,11 +1,10 @@
 package com.miguoma.by.modules.record.query;
 
-import java.time.LocalDateTime;
-
 import com.miguoma.by.common.base.query.BaseQuery;
-
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
+import java.time.LocalDateTime;
 
 /**
  * 箱码替换记录查询条件

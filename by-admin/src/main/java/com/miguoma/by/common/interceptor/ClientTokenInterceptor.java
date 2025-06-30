@@ -1,21 +1,17 @@
 package com.miguoma.by.common.interceptor;
 
-import com.miguoma.by.modules.equipment.entity.EquipmentClient;
-import com.miguoma.by.modules.equipment.service.EquipmentClientService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
-import org.springframework.web.servlet.HandlerInterceptor;
-
-import com.miguoma.by.common.utils.ClientContextHolder;
-import com.miguoma.by.common.utils.Result;
-import com.miguoma.by.modules.client.dto.MachineLoginDTO;
-
-import cn.hutool.core.codec.Base62;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
+import com.miguoma.by.common.utils.ClientContextHolder;
+import com.miguoma.by.common.utils.Result;
+import com.miguoma.by.modules.equipment.entity.EquipmentClient;
+import com.miguoma.by.modules.equipment.service.EquipmentClientService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.HandlerInterceptor;
 
 /**
  * 客户端软件token拦截器

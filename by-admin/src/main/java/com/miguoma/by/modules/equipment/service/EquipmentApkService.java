@@ -1,13 +1,12 @@
 package com.miguoma.by.modules.equipment.service;
 
-import com.miguoma.by.modules.equipment.dto.EquipmentApkDTO;
-import com.miguoma.by.modules.equipment.entity.EquipmentApk;
-import com.miguoma.by.modules.equipment.vo.EquipmentApkVO;
-import org.springframework.web.multipart.MultipartFile;
-
 import com.miguoma.by.common.base.page.PageVO;
 import com.miguoma.by.common.base.service.BaseService;
+import com.miguoma.by.modules.equipment.dto.EquipmentApkDTO;
+import com.miguoma.by.modules.equipment.entity.EquipmentApk;
 import com.miguoma.by.modules.equipment.query.EquipmentApkQuery;
+import com.miguoma.by.modules.equipment.vo.EquipmentApkVO;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * APK管理服务接口

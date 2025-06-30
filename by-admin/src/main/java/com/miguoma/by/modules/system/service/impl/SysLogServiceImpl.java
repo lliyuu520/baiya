@@ -10,10 +10,9 @@ import com.miguoma.by.modules.system.entity.SysLog;
 import com.miguoma.by.modules.system.mapper.SysLogMapper;
 import com.miguoma.by.modules.system.query.SysLogQuery;
 import com.miguoma.by.modules.system.service.SysLogService;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-
-import org.springframework.stereotype.Service;
 
 /**
  * 系统日志服务实现类

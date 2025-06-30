@@ -1,12 +1,11 @@
 package com.miguoma.by.modules.record.query;
 
-import java.time.LocalDateTime;
-
-import com.miguoma.by.common.base.query.BaseQuery;
-
 import cn.hutool.core.util.ArrayUtil;
+import com.miguoma.by.common.base.query.BaseQuery;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
+import java.time.LocalDateTime;
 
 /**
  * 件码查询条件

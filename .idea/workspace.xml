@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="c32addde-dda9-4fb1-8704-b516f3da83d4" name="更改" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/ApifoxUploaderProjectSetting.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/ApifoxUploaderProjectSetting.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/AugmentWebviewStateStore.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/baiya.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/baiya.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/fastRequest/fastRequestCollection.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/fastRequest/fastRequestCurrentParamGroup.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/fastRequest/fastRequestCurrentProjectLocalConfig.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/fastRequest/fastRequestHistoryConfig.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/git_toolbox_prj.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/jarRepositories.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/material_theme_project_new.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/prettier.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/prettier.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/runConfigurations/.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/runConfigurations/ByAdminApplication.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sqldialects.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/by-admin/src/main/java/com/miguoma/by/common/aspect/ErpLogAspect.java" beforeDir="false" afterPath="$PROJECT_DIR$/by-admin/src/main/java/com/miguoma/by/common/aspect/ErpLogAspect.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/by-admin/src/main/java/com/miguoma/by/common/aspect/SysLogAspect.java" beforeDir="false" afterPath="$PROJECT_DIR$/by-admin/src/main/java/com/miguoma/by/common/aspect/SysLogAspect.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/by-admin/src/main/java/com/miguoma/by/common/cache/QrCodeCache.java" beforeDir="false" afterPath="$PROJECT_DIR$/by-admin/src/main/java/com/miguoma/by/common/cache/QrCodeCache.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/by-admin/src/main/java/com/miguoma/by/common/config/AsyncConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/by-admin/src/main/java/com/miguoma/by/common/config/AsyncConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/by-admin/src/main/java/com/miguoma/by/common/config/MybatisPlusConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/by-admin/src/main/java/com/miguoma/by/common/config/MybatisPlusConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/by-admin/src/main/java/com/miguoma/by/common/config/SshTunnelConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/by-admin/src/main/java/com/miguoma/by/common/config/SshTunnelConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/by-admin/src/main/java/com/miguoma/by/common/config/WebMvcConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/by-admin/src/main/java/com/miguoma/by/common/config/WebMvcConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/by-admin/src/main/java/com/miguoma/by/common/handler/ServerExceptionHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/by-admin/src/main/java/com/miguoma/by/common/handler/ServerExceptionHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/by-admin/src/main/java/com/miguoma/by/common/interceptor/ClientTokenInterceptor.java" beforeDir="false" afterPath="$PROJECT_DIR$/by-admin/src/main/java/com/miguoma/by/common/interceptor/ClientTokenInterceptor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/by-admin/src/main/java/com/miguoma/by/common/utils/ClientContextHolder.java" beforeDir="false" afterPath="$PROJECT_DIR$/by-admin/src/main/java/com/miguoma/by/common/utils/ClientContextHolder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/by-admin/src/main/java/com/miguoma/by/modules/client/controller/ClientController.java" beforeDir="false" afterPath="$PROJECT_DIR$/by-admin/src/main/java/com/miguoma/by/modules/client/controller/ClientController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/by-admin/src/main/java/com/miguoma/by/modules/client/controller/PdaController.java" beforeDir="false" afterPath="$PROJECT_DIR$/by-admin/src/main/java/com/miguoma/by/modules/client/controller/PdaController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/by-admin/src/main/java/com/miguoma/by/modules/client/dto/RecordCodeUploadDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/by-admin/src/main/java/com/miguoma/by/modules/client/dto/RecordCodeUploadDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/by-admin/src/main/java/com/miguoma/by/modules/client/dto/RecordQrCodeReplaceDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/by-admin/src/main/java/com/miguoma/by/modules/client/dto/RecordQrCodeReplaceDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/by-admin/src/main/java/com/miguoma/by/modules/client/dto/VerifyPasswordDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/by-admin/src/main/java/com/miguoma/by/modules/client/dto/VerifyPasswordDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/by-admin/src/main/java/com/miguoma/by/modules/equipment/controller/EquipmentApkController.java" beforeDir="false" afterPath="$PROJECT_DIR$/by-admin/src/main/java/com/miguoma/by/modules/equipment/controller/EquipmentApkController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/by-admin/src/main/java/com/miguoma/by/modules/equipment/controller/EquipmentClientController.java" beforeDir="false" afterPath="$PROJECT_DIR$/by-admin/src/main/java/com/miguoma/by/modules/equipment/controller/EquipmentClientController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/by-admin/src/main/java/com/miguoma/by/modules/equipment/convert/EquipmentApkConvert.java" beforeDir="false" afterPath="$PROJECT_DIR$/by-admin/src/main/java/com/miguoma/by/modules/equipment/convert/EquipmentApkConvert.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/by-admin/src/main/java/com/miguoma/by/modules/equipment/dto/EquipmentApkDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/by-admin/src/main/java/com/miguoma/by/modules/equipment/dto/EquipmentApkDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/by-admin/src/main/java/com/miguoma/by/modules/equipment/entity/EquipmentApk.java" beforeDir="false" afterPath="$PROJECT_DIR$/by-admin/src/main/java/com/miguoma/by/modules/equipment/entity/EquipmentApk.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/by-admin/src/main/java/com/miguoma/by/modules/equipment/entity/EquipmentClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/by-admin/src/main/java/com/miguoma/by/modules/equipment/entity/EquipmentClient.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/by-admin/src/main/java/com/miguoma/by/modules/equipment/mapper/EquipmentApkMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/by-admin/src/main/java/com/miguoma/by/modules/equipment/mapper/EquipmentApkMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/by-admin/src/main/java/com/miguoma/by/modules/equipment/query/EquipmentApkQuery.java" beforeDir="false" afterPath="$PROJECT_DIR$/by-admin/src/main/java/com/miguoma/by/modules/equipment/query/EquipmentApkQuery.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/by-admin/src/main/java/com/miguoma/by/modules/equipment/service/EquipmentApkService.java" beforeDir="false" afterPath="$PROJECT_DIR$/by-admin/src/main/java/com/miguoma/by/modules/equipment/service/EquipmentApkService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/by-admin/src/main/java/com/miguoma/by/modules/equipment/service/EquipmentClientService.java" beforeDir="false" afterPath="$PROJECT_DIR$/by-admin/src/main/java/com/miguoma/by/modules/equipment/service/EquipmentClientService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/by-admin/src/main/java/com/miguoma/by/modules/equipment/service/impl/EquipmentClientServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/by-admin/src/main/java/com/miguoma/by/modules/equipment/service/impl/EquipmentClientServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/by-admin/src/main/java/com/miguoma/by/modules/equipment/vo/EquipmentApkVO.java" beforeDir="false" afterPath="$PROJECT_DIR$/by-admin/src/main/java/com/miguoma/by/modules/equipment/vo/EquipmentApkVO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/by-admin/src/main/java/com/miguoma/by/modules/erp/controller/ErpController.java" beforeDir="false" afterPath="$PROJECT_DIR$/by-admin/src/main/java/com/miguoma/by/modules/erp/controller/ErpController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/by-admin/src/main/java/com/miguoma/by/modules/erp/service/impl/ErpLogServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/by-admin/src/main/java/com/miguoma/by/modules/erp/service/impl/ErpLogServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/by-admin/src/main/java/com/miguoma/by/modules/production/mapper/ProductionDepartAndWorkshopMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/by-admin/src/main/java/com/miguoma/by/modules/production/mapper/ProductionDepartAndWorkshopMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/by-admin/src/main/java/com/miguoma/by/modules/production/service/impl/ProductionDepartAndWorkshopServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/by-admin/src/main/java/com/miguoma/by/modules/production/service/impl/ProductionDepartAndWorkshopServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/by-admin/src/main/java/com/miguoma/by/modules/production/service/impl/ProductionOrderServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/by-admin/src/main/java/com/miguoma/by/modules/production/service/impl/ProductionOrderServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/by-admin/src/main/java/com/miguoma/by/modules/record/controller/RecordBoxCodeReplaceController.java" beforeDir="false" afterPath="$PROJECT_DIR$/by-admin/src/main/java/com/miguoma/by/modules/record/controller/RecordBoxCodeReplaceController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/by-admin/src/main/java/com/miguoma/by/modules/record/mapper/RecordBoxCodeReplaceMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/by-admin/src/main/java/com/miguoma/by/modules/record/mapper/RecordBoxCodeReplaceMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/by-admin/src/main/java/com/miguoma/by/modules/record/mapper/RecordQrCodeReplaceMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/by-admin/src/main/java/com/miguoma/by/modules/record/mapper/RecordQrCodeReplaceMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/by-admin/src/main/java/com/miguoma/by/modules/record/query/RecordBoxCodeQuery.java" beforeDir="false" afterPath="$PROJECT_DIR$/by-admin/src/main/java/com/miguoma/by/modules/record/query/RecordBoxCodeQuery.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/by-admin/src/main/java/com/miguoma/by/modules/record/query/RecordBoxCodeReplaceQuery.java" beforeDir="false" afterPath="$PROJECT_DIR$/by-admin/src/main/java/com/miguoma/by/modules/record/query/RecordBoxCodeReplaceQuery.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/by-admin/src/main/java/com/miguoma/by/modules/record/service/impl/RecordBoxCodeReplaceServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/by-admin/src/main/java/com/miguoma/by/modules/record/service/impl/RecordBoxCodeReplaceServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/by-admin/src/main/java/com/miguoma/by/modules/record/service/impl/RecordQrCodeReplaceServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/by-admin/src/main/java/com/miguoma/by/modules/record/service/impl/RecordQrCodeReplaceServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/by-admin/src/main/java/com/miguoma/by/modules/system/controller/SysUserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/by-admin/src/main/java/com/miguoma/by/modules/system/controller/SysUserController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/by-admin/src/main/java/com/miguoma/by/modules/system/dto/SysCodeRuleDetailDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/by-admin/src/main/java/com/miguoma/by/modules/system/dto/SysCodeRuleDetailDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/by-admin/src/main/java/com/miguoma/by/modules/system/entity/SysLog.java" beforeDir="false" afterPath="$PROJECT_DIR$/by-admin/src/main/java/com/miguoma/by/modules/system/entity/SysLog.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/by-admin/src/main/java/com/miguoma/by/modules/system/enums/EncodeTypeEnums.java" beforeDir="false" afterPath="$PROJECT_DIR$/by-admin/src/main/java/com/miguoma/by/modules/system/enums/EncodeTypeEnums.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/by-admin/src/main/java/com/miguoma/by/modules/system/service/impl/SysCodeRuleServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/by-admin/src/main/java/com/miguoma/by/modules/system/service/impl/SysCodeRuleServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/by-admin/src/main/java/com/miguoma/by/modules/system/service/impl/SysLogServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/by-admin/src/main/java/com/miguoma/by/modules/system/service/impl/SysLogServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/by-ui/src/views/equipment/apk/add-or-update.vue" beforeDir="false" afterPath="$PROJECT_DIR$/by-ui/src/views/equipment/apk/add-or-update.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/by-ui/src/views/equipment/client/update-password.vue" beforeDir="false" afterPath="$PROJECT_DIR$/by-ui/src/views/equipment/client/update-password.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/by-ui/src/views/erp/log/add-or-update.vue" beforeDir="false" afterPath="$PROJECT_DIR$/by-ui/src/views/erp/log/add-or-update.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/by-ui/src/views/erp/log/index.vue" beforeDir="false" afterPath="$PROJECT_DIR$/by-ui/src/views/erp/log/index.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/by-ui/src/views/login/account.vue" beforeDir="false" afterPath="$PROJECT_DIR$/by-ui/src/views/login/account.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/by-ui/src/views/record/bagCode/index.vue" beforeDir="false" afterPath="$PROJECT_DIR$/by-ui/src/views/record/bagCode/index.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/by-ui/src/views/record/boxCode/index.vue" beforeDir="false" afterPath="$PROJECT_DIR$/by-ui/src/views/record/boxCode/index.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/by-ui/src/views/record/boxCodeReplace/index.vue" beforeDir="false" afterPath="$PROJECT_DIR$/by-ui/src/views/record/boxCodeReplace/index.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/by-ui/src/views/record/qrCode/index.vue" beforeDir="false" afterPath="$PROJECT_DIR$/by-ui/src/views/record/qrCode/index.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/by-ui/src/views/record/qrCodeReplace/index.vue" beforeDir="false" afterPath="$PROJECT_DIR$/by-ui/src/views/record/qrCodeReplace/index.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/by-ui/src/views/sys/codeRule/add-or-update.vue" beforeDir="false" afterPath="$PROJECT_DIR$/by-ui/src/views/sys/codeRule/add-or-update.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/by-ui/src/views/sys/codeRule/components/RuleTable.vue" beforeDir="false" afterPath="$PROJECT_DIR$/by-ui/src/views/sys/codeRule/components/RuleTable.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/by-ui/src/views/sys/codeRule/config/ruleTypes.ts" beforeDir="false" afterPath="$PROJECT_DIR$/by-ui/src/views/sys/codeRule/config/ruleTypes.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/by-ui/src/views/sys/log/add-or-update.vue" beforeDir="false" afterPath="$PROJECT_DIR$/by-ui/src/views/sys/log/add-or-update.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/by-ui/src/views/sys/log/index.vue" beforeDir="false" afterPath="$PROJECT_DIR$/by-ui/src/views/sys/log/index.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/by-ui/src/views/sys/menu/add-or-update.vue" beforeDir="false" afterPath="$PROJECT_DIR$/by-ui/src/views/sys/menu/add-or-update.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/by-ui/src/views/sys/menu/add-sub.vue" beforeDir="false" afterPath="$PROJECT_DIR$/by-ui/src/views/sys/menu/add-sub.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/by-ui/src/views/sys/menu/index.vue" beforeDir="false" afterPath="$PROJECT_DIR$/by-ui/src/views/sys/menu/index.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/by.code-workspace" beforeDir="false" afterPath="$PROJECT_DIR$/by.code-workspace" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;lliyuu520&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/lliyuu520/baiya.git&quot;,
+    &quot;accountId&quot;: &quot;1af295d8-864d-403a-9ce3-8c13c5662a74&quot;
+  }
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 4
+}</component>
+  <component name="ProjectId" id="2z5AfDKrvJLLxVYHlWdGJq0fF9a" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+    <option name="showScratchesAndConsoles" value="false" />
+    <option name="showVisibilityIcons" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "main",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "prettierjs.PrettierConfiguration.Package": "D:\\project\\baiya\\by-ui\\node_modules\\prettier",
+    "project.structure.last.edited": "项目",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0",
+    "settings.editor.selected.configurable": "reference.settings.project.maven.archetype.catalogs",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-fbdcb00ec9e3-intellij.indexing.shared.core-IU-251.26927.53" />
+        <option value="bundled-js-predefined-d6986cc7102b-09060db00ec0-JavaScript-IU-251.26927.53" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="默认任务">
+      <changelist id="c32addde-dda9-4fb1-8704-b516f3da83d4" name="更改" comment="" />
+      <created>1751010663180</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1751010663180</updated>
+      <workItem from="1751010664699" duration="2674000" />
+      <workItem from="1751013450258" duration="637000" />
+      <workItem from="1751248929673" duration="1047000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>

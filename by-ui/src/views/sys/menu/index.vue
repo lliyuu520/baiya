@@ -41,7 +41,7 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, ref } from "vue";
+import {reactive, ref} from "vue";
 import AddOrUpdate from "./add-or-update.vue";
 import AddSub from "@/views/sys/menu/add-sub.vue";
 import {IHooksOptions} from "@/hooks/interface";

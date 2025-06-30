@@ -1,8 +1,9 @@
 package com.miguoma.by.common.config;
 
-import java.time.format.DateTimeFormatter;
-
+import cn.dev33.satoken.interceptor.SaInterceptor;
+import cn.hutool.core.date.DatePattern;
 import com.miguoma.by.common.interceptor.ClientTokenInterceptor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.format.datetime.standard.DateTimeFormatterRegistrar;
@@ -10,9 +11,7 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import cn.dev33.satoken.interceptor.SaInterceptor;
-import cn.hutool.core.date.DatePattern;
-import lombok.RequiredArgsConstructor;
+import java.time.format.DateTimeFormatter;
 
 /**
  * WebMvc配置

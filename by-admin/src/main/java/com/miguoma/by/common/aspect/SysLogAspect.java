@@ -6,7 +6,6 @@ import com.alibaba.fastjson.JSON;
 import com.miguoma.by.common.annotation.SysLogCut;
 import com.miguoma.by.common.utils.ClientContextHolder;
 import com.miguoma.by.common.utils.SysUserUtil;
-import com.miguoma.by.modules.client.dto.MachineLoginDTO;
 import com.miguoma.by.modules.equipment.entity.EquipmentClient;
 import com.miguoma.by.modules.system.entity.SysLog;
 import com.miguoma.by.modules.system.service.SysLogService;

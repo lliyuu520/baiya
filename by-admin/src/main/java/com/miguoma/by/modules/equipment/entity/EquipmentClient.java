@@ -1,7 +1,6 @@
 package com.miguoma.by.modules.equipment.entity;
 
 import com.miguoma.by.common.base.entity.BaseEntity;
-
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

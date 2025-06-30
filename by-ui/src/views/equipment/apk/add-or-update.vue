@@ -30,7 +30,7 @@
 </template>
 
 <script setup lang="ts">
-import {useApkApi, useApkSubmitApi, useUploadApkApi} from '@/api/equipement/apk/api'
+import {useApkApi, useApkSubmitApi} from '@/api/equipement/apk/api'
 import {ElMessage} from 'element-plus/es'
 import {reactive, ref} from 'vue'
 import service from "@/utils/request";

@@ -70,6 +70,7 @@ public class SysCodeRuleServiceImpl extends BaseServiceImpl<SysCodeRuleMapper, S
         }
 
         // 按创建时间降序排序
+        wrapper.orderByDesc(SysCodeRule::getEnabled);
         wrapper.orderByDesc(SysCodeRule::getId);
 
         return wrapper;

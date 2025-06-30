@@ -1,13 +1,12 @@
 package com.miguoma.by.modules.equipment.convert;
 
-import java.util.List;
-
 import com.miguoma.by.modules.equipment.dto.EquipmentApkDTO;
+import com.miguoma.by.modules.equipment.entity.EquipmentApk;
 import com.miguoma.by.modules.equipment.vo.EquipmentApkVO;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
-import com.miguoma.by.modules.equipment.entity.EquipmentApk;
+import java.util.List;
 
 /**
  * APK对象转换器

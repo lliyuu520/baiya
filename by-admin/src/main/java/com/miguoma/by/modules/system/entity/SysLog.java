@@ -1,11 +1,10 @@
 package com.miguoma.by.modules.system.entity;
 
-import java.time.LocalDateTime;
-
 import com.miguoma.by.common.base.entity.BaseEntity;
-
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
+import java.time.LocalDateTime;
 
 /**
  * 系统日志实体

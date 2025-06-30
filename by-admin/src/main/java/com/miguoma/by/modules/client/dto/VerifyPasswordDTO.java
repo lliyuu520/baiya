@@ -1,8 +1,8 @@
 package com.miguoma.by.modules.client.dto;
 
-import java.io.Serializable;
-
 import lombok.Data;
+
+import java.io.Serializable;
 
 /**
  * 验证密码dto

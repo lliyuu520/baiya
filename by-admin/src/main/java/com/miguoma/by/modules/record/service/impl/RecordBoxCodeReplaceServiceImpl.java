@@ -1,13 +1,11 @@
 package com.miguoma.by.modules.record.service.impl;
 
-import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.miguoma.by.common.base.page.PageVO;
 import com.miguoma.by.common.base.service.impl.BaseServiceImpl;
 import com.miguoma.by.common.satoken.user.UserDetail;
@@ -26,7 +24,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 /**
  * 二维码替换记录服务实现类

@@ -1,8 +1,7 @@
 package com.miguoma.by.common.config;
 
-import org.springframework.boot.context.properties.ConfigurationProperties;
-
 import lombok.Data;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
  * SSH隧道配置类

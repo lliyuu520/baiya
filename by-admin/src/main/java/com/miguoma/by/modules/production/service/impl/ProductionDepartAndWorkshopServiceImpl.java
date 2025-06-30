@@ -1,13 +1,11 @@
 package com.miguoma.by.modules.production.service.impl;
 
-import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.miguoma.by.common.base.page.PageVO;
 import com.miguoma.by.common.base.service.impl.BaseServiceImpl;
 import com.miguoma.by.modules.erp.dto.ErpDepartDTO;
-import com.miguoma.by.modules.production.convert.ProductionDepartAndWorkshopConvert;
 import com.miguoma.by.modules.production.dto.ProductionDepartAndWorkshopDTO;
 import com.miguoma.by.modules.production.entity.ProductionDepartAndWorkshop;
 import com.miguoma.by.modules.production.mapper.ProductionDepartAndWorkshopMapper;

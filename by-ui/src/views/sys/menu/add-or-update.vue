@@ -69,9 +69,9 @@
 </template>
 
 <script lang="ts" setup>
-import { useMenuApi, useMenuListApi, useMenuSubmitApi } from "@/api/sys/menu";
-import { ElMessage } from "element-plus/es";
-import { reactive, ref, watch } from "vue";
+import {useMenuApi, useMenuListApi, useMenuSubmitApi} from "@/api/sys/menu";
+import {ElMessage} from "element-plus/es";
+import {reactive, ref, watch} from "vue";
 
 const emit = defineEmits(['refreshDataList'])
 

@@ -48,9 +48,9 @@
 </template>
 
 <script lang="ts" setup>
-import { useMenuSubmitApi } from "@/api/sys/menu";
-import { ElMessage } from "element-plus/es";
-import { reactive, ref, watch } from "vue";
+import {useMenuSubmitApi} from "@/api/sys/menu";
+import {ElMessage} from "element-plus/es";
+import {reactive, ref, watch} from "vue";
 
 const emit = defineEmits(['refreshDataList'])
 

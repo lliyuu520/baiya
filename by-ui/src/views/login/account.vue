@@ -14,7 +14,7 @@
 </template>
 
 <script setup lang="ts">
-import {onBeforeUnmount, onMounted, reactive, ref} from 'vue'
+import {reactive, ref} from 'vue'
 import {Lock, User} from '@element-plus/icons-vue'
 import store from '@/store'
 import {useRouter} from 'vue-router'

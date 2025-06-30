@@ -13,7 +13,6 @@ import com.miguoma.by.modules.equipment.service.EquipmentClientService;
 import com.miguoma.by.modules.equipment.vo.EquipmentClientVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 /**
  * Client管理控制器

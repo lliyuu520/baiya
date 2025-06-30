@@ -15,16 +15,12 @@ import com.miguoma.by.modules.equipment.mapper.EquipmentClientMapper;
 import com.miguoma.by.modules.equipment.query.EquipmentClientQuery;
 import com.miguoma.by.modules.equipment.service.EquipmentClientService;
 import com.miguoma.by.modules.equipment.vo.EquipmentClientVO;
-import com.miguoma.by.modules.production.entity.ProductionDepartAndWorkshop;
-import com.miguoma.by.modules.production.mapper.ProductionDepartAndWorkshopMapper;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
-import java.util.List;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * APK管理服务实现类

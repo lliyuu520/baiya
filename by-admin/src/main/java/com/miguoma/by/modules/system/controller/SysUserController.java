@@ -1,16 +1,8 @@
 package com.miguoma.by.modules.system.controller;
 
-import java.util.List;
-
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
+import cn.dev33.satoken.annotation.SaCheckPermission;
+import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.util.StrUtil;
 import com.miguoma.by.common.annotation.SysLogCut;
 import com.miguoma.by.common.base.page.PageVO;
 import com.miguoma.by.common.enums.SysLogModuleEnums;
@@ -27,11 +19,10 @@ import com.miguoma.by.modules.system.query.SysUserQuery;
 import com.miguoma.by.modules.system.service.SysUserRoleService;
 import com.miguoma.by.modules.system.service.SysUserService;
 import com.miguoma.by.modules.system.vo.SysUserVO;
-
-import cn.dev33.satoken.annotation.SaCheckPermission;
-import cn.hutool.core.util.ObjUtil;
-import cn.hutool.core.util.StrUtil;
 import lombok.AllArgsConstructor;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * 用户管理

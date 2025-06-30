@@ -1,5 +1,6 @@
 package com.miguoma.by.modules.system.dto;
 
+import com.miguoma.by.modules.system.enums.RandomTypeEnums;
 import lombok.Data;
 
 import java.io.Serializable;

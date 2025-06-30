@@ -1,7 +1,6 @@
 package com.miguoma.by.modules.equipment.vo;
 
 import com.miguoma.by.modules.equipment.entity.EquipmentApk;
-
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

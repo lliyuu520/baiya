@@ -1,41 +1,30 @@
 package com.miguoma.by.modules.client.controller;
 
-import java.time.LocalDate;
-import java.util.List;
-
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
+import cn.dev33.satoken.annotation.SaIgnore;
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.date.LocalDateTimeUtil;
+import cn.hutool.core.util.StrUtil;
 import com.miguoma.by.common.annotation.SysLogCut;
 import com.miguoma.by.common.enums.SysLogModuleEnums;
 import com.miguoma.by.common.enums.SysLogTypeEnums;
 import com.miguoma.by.common.utils.ClientContextHolder;
 import com.miguoma.by.common.utils.Result;
-import com.miguoma.by.modules.client.dto.MachineLoginDTO;
-import com.miguoma.by.modules.client.dto.MachineVerifyPasswordDTO;
-import com.miguoma.by.modules.client.dto.PullCodeDTO;
-import com.miguoma.by.modules.client.dto.RecordCodeUploadDTO;
-import com.miguoma.by.modules.client.dto.VerifyPasswordDTO;
+import com.miguoma.by.modules.client.dto.*;
 import com.miguoma.by.modules.client.vo.PullCodeVO;
 import com.miguoma.by.modules.equipment.dto.EquipmentClientDTO;
 import com.miguoma.by.modules.equipment.entity.EquipmentClient;
 import com.miguoma.by.modules.equipment.service.EquipmentClientService;
-import com.miguoma.by.modules.production.entity.ProductionDepartAndWorkshop;
 import com.miguoma.by.modules.production.query.ProductionOrderQuery;
 import com.miguoma.by.modules.production.service.ProductionDepartAndWorkshopService;
 import com.miguoma.by.modules.production.service.ProductionFactoryService;
 import com.miguoma.by.modules.production.service.ProductionOrderService;
 import com.miguoma.by.modules.production.vo.ProductionOrderVO;
-
-import cn.dev33.satoken.annotation.SaIgnore;
-import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.date.LocalDateTimeUtil;
-import cn.hutool.core.util.StrUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
+import java.util.List;
 
 /**
  * 采集软件控制器

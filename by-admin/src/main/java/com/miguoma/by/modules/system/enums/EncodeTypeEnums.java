@@ -10,20 +10,18 @@ import lombok.Getter;
  */
 @Getter
 @AllArgsConstructor
-public enum EncodeTypeEnums  {
-/**
-     * Base10
-     */
-    BASE_10("BASE_10", "BASE_10"),
+public enum EncodeTypeEnums {
+ 
     /**
-     * Base32
+     * Base36
      */
-    BASE_32 ("BASE_32", "BASE_32"),
+    BASE_36("BASE_36", "BASE_36"),
     /**
      * Base62
      */
     BASE_62("BASE_62", "BASE_62"),
     ;
+
     /**
      * 编码方式
      */

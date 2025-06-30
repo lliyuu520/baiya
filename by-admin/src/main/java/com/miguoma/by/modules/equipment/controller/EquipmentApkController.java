@@ -1,15 +1,6 @@
 package com.miguoma.by.modules.equipment.controller;
 
-import com.miguoma.by.modules.equipment.vo.EquipmentApkVO;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
-
+import cn.dev33.satoken.annotation.SaCheckPermission;
 import com.miguoma.by.common.annotation.SysLogCut;
 import com.miguoma.by.common.base.page.PageVO;
 import com.miguoma.by.common.enums.SysLogModuleEnums;
@@ -18,9 +9,10 @@ import com.miguoma.by.common.utils.Result;
 import com.miguoma.by.modules.equipment.dto.EquipmentApkDTO;
 import com.miguoma.by.modules.equipment.query.EquipmentApkQuery;
 import com.miguoma.by.modules.equipment.service.EquipmentApkService;
-
-import cn.dev33.satoken.annotation.SaCheckPermission;
+import com.miguoma.by.modules.equipment.vo.EquipmentApkVO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * APK管理控制器

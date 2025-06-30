@@ -1,9 +1,8 @@
 package com.miguoma.by.modules.production.service.impl;
 
-import cn.hutool.core.codec.Base32;
-import cn.hutool.core.codec.Base62;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.LocalDateTimeUtil;
+import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.miguoma.by.common.base.page.PageVO;
@@ -24,20 +23,20 @@ import com.miguoma.by.modules.production.enums.ProductTypeEnum;
 import com.miguoma.by.modules.production.mapper.*;
 import com.miguoma.by.modules.production.query.ProductionOrderQuery;
 import com.miguoma.by.modules.production.service.ProductionOrderService;
+import com.miguoma.by.modules.production.strategy.BaseCodeFieldStrategy;
+import com.miguoma.by.modules.production.strategy.CodeFieldContext;
+import com.miguoma.by.modules.production.strategy.RandomStringUtil;
+import com.miguoma.by.modules.production.strategy.impl.*;
 import com.miguoma.by.modules.production.vo.ProductionOrderVO;
 import com.miguoma.by.modules.record.entity.RecordBagCode;
 import com.miguoma.by.modules.record.entity.RecordBoxCode;
 import com.miguoma.by.modules.record.entity.RecordQrCode;
-import com.miguoma.by.modules.record.mapper.RecordQrCodeMapper;
-import com.miguoma.by.modules.record.mapper.RecordQrCodeReplaceMapper;
 import com.miguoma.by.modules.record.service.RecordBagCodeService;
 import com.miguoma.by.modules.record.service.RecordBoxCodeService;
 import com.miguoma.by.modules.record.service.RecordQrCodeService;
 import com.miguoma.by.modules.system.entity.SysCodeRule;
 import com.miguoma.by.modules.system.entity.SysCodeRuleDetail;
-import com.miguoma.by.modules.system.enums.EncodeTypeEnums;
 import com.miguoma.by.modules.system.enums.RuleTypeEnums;
-import com.miguoma.by.modules.system.enums.SourceFiledEnums;
 import com.miguoma.by.modules.system.mapper.SysCodeRuleDetailMapper;
 import com.miguoma.by.modules.system.mapper.SysCodeRuleMapper;
 import lombok.RequiredArgsConstructor;
@@ -49,7 +48,10 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.regex.Pattern;
 
 /**
  * 生产订单服务实现类
@@ -73,8 +75,48 @@ public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderM
     private final ProductionShiftMapper productionShiftMapper;
     private final ProductionTeamMapper productionTeamMapper;
     private final ProductionDepartAndWorkshopMapper productionDepartAndWorkshopMapper;
-    private final RecordQrCodeMapper recordQrCodeMapper;
-    private final RecordQrCodeReplaceMapper recordQrCodeReplaceMapper;
+
+    // sourceField 策略注册表
+    private static final Map<String, BaseCodeFieldStrategy> CODE_FIELD_STRATEGY_MAP = new HashMap<>();
+    static {
+        // 成品相关 sourceField 策略注册
+        // 成品生产日期（如20240530）
+        CODE_FIELD_STRATEGY_MAP.put("FINISHED_PRODUCTION_DATE", new FinishedProductionDateStrategy());
+        // 成品车间编码（如CJ01）
+        CODE_FIELD_STRATEGY_MAP.put("FINISHED_DEPART_CODE", new FinishedDepartCodeStrategy());
+        // 成品产线编码（如CX01）
+        CODE_FIELD_STRATEGY_MAP.put("FINISHED_WORKSHOP_CODE", new FinishedWorkshopCodeStrategy());
+        // 成品班次编码（如A班、B班）
+        CODE_FIELD_STRATEGY_MAP.put("FINISHED_TEAM_CODE", new FinishedTeamCodeStrategy());
+        // 成品订单编码（如PO20240530001）
+        CODE_FIELD_STRATEGY_MAP.put("FINISHED_ORDER_CODE", new FinishedOrderCodeStrategy());
+        // 成品产品编码（如P20240530001）
+        CODE_FIELD_STRATEGY_MAP.put("FINISHED_PRODUCT_CODE", new FinishedProductCodeStrategy());
+
+        // 半成品相关 sourceField 策略注册
+        // 半成品生产日期（如20240530）
+        CODE_FIELD_STRATEGY_MAP.put("SEMI_FINISHED_PRODUCTION_DATE", new SemiFinishedProductionDateStrategy());
+        // 半成品车间编码（如CJ02）
+        CODE_FIELD_STRATEGY_MAP.put("SEMI_FINISHED_DEPART_CODE", new SemiFinishedDepartCodeStrategy());
+        // 半成品产线编码（如CX02）
+        CODE_FIELD_STRATEGY_MAP.put("SEMI_FINISHED_WORKSHOP_CODE", new SemiFinishedWorkshopCodeStrategy());
+        // 半成品班次编码（如C班、D班）
+        CODE_FIELD_STRATEGY_MAP.put("SEMI_FINISHED_TEAM_CODE", new SemiFinishedTeamCodeStrategy());
+        // 半成品订单编码（如PO20240530002）
+        CODE_FIELD_STRATEGY_MAP.put("SEMI_FINISHED_ORDER_CODE", new SemiFinishedOrderCodeStrategy());
+        // 半成品产品编码（如P20240530002）
+        CODE_FIELD_STRATEGY_MAP.put("SEMI_FINISHED_PRODUCT_CODE", new SemiFinishedProductCodeStrategy());
+
+        // 通用/特殊 sourceField 策略注册
+        // 随机字符串（如4位随机码）
+        CODE_FIELD_STRATEGY_MAP.put("RANDOM_STRING", new RandomStringStrategy());
+        // 箱号（如0001、0002）
+        CODE_FIELD_STRATEGY_MAP.put("BOX_NO", new BoxNoStrategy());
+        // 常量（自定义固定值）
+        CODE_FIELD_STRATEGY_MAP.put("CONSTANT", new ConstantStrategy());
+        // 指定箱号（如外部传入箱号）
+        CODE_FIELD_STRATEGY_MAP.put("SPECIFY_BOX_NO", new SpecifyBoxNoStrategy());
+    }
 
     /**
      * 分页查询生产订单列表
@@ -228,8 +270,8 @@ public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderM
             throw new BaseException("半成品订单不存在");
         }
 
-        final String finishProductCode = finishedProductionOrder.getProductCode();
-        final ProductionProduct finishProductionProduct = productionProductMapper.getOneByCode(finishProductCode);
+        final String finishedProductCode = finishedProductionOrder.getProductCode();
+        final ProductionProduct finishProductionProduct = productionProductMapper.getOneByCode(finishedProductCode);
         if (finishProductionProduct == null) {
             throw new BaseException("成品产品不存在");
         }
@@ -243,11 +285,19 @@ public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderM
         // 按照成品产品的包装比例
         final Integer oneBoxPackageNum = finishProductionProduct.getOneBoxPackageNum();
 
-        // 成品相关信息
+        // 成品
         final String finishedOrderNo = finishedProductionOrder.getOrderNo();
         final LocalDate finishedProductionDate = finishedProductionOrder.getProductionDate();
         final String finishedProductionDepartCode = finishedProductionOrder.getProductionDepartCode();
         final String finishedProductionWorkshopCode = finishedProductionOrder.getProductionWorkshopCode();
+        final String finishedTeamCode = semiFinishedProductionOrder.getProductionTeamCode();
+        // 半成品
+        final String semiFinishedOrderNo = semiFinishedProductionOrder.getOrderNo();
+        final LocalDate semiFinishedProductionDate = semiFinishedProductionOrder.getProductionDate();
+        final String semiFinishedProductionDepartCode = semiFinishedProductionOrder.getProductionDepartCode();
+        final String semiFinishedProductionWorkshopCode = semiFinishedProductionOrder.getProductionWorkshopCode();
+        final String semiFinishedTeamCode = semiFinishedProductionOrder.getProductionTeamCode();
+
         final ProductionDepartAndWorkshop fineshedProductionDepartAndWorkshop = productionDepartAndWorkshopMapper
                 .getOneByCode(finishedProductionWorkshopCode);
         final Long finishedCodeRuleId = fineshedProductionDepartAndWorkshop.getCodeRuleId();
@@ -277,182 +327,75 @@ public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderM
         refreshBoxNo(finishedProductionOrder, boxNoBegin, boxCodeNum);
 
         // 箱码
+        StringBuilder boxCodeStrBuilder = new StringBuilder();
         final List<SysCodeRuleDetail> boxCodeRuleDetailList = sysCodeRuleDetailMapper
                 .selectListByRuleIdSAndType(finishedCodeRule.getId(), RuleTypeEnums.BOX.getCode());
-
-        StringBuilder boxCodeStrBuilder = new StringBuilder();
         for (SysCodeRuleDetail m : boxCodeRuleDetailList) {
-            final String sourceField = m.getSourceField();
-            final String constant = m.getConstant();
-            final Integer indexBegin = m.getIndexBegin();
-            final Integer indexEnd = m.getIndexEnd();
-            final String encodeType = m.getEncodeType();
-
-            String str = "";
-            // 限用日期
-            if (StrUtil.equals(sourceField, SourceFiledEnums.FINISHED_LIMITED_USE_DATE.getCode())) {
-                final LocalDate limitedUseDate = finishedProductionDate.plusYears(3);
-                str = LocalDateTimeUtil.format(limitedUseDate, "yyyyMMdd");
-                str = StrUtil.sub(str, indexBegin, indexEnd);
-                // 修改编码方式
-                if (StrUtil.equals(encodeType, EncodeTypeEnums.BASE_62.getCode())) {
-                    str = Base62.encode(str);
-                }
-                if (StrUtil.equals(encodeType, EncodeTypeEnums.BASE_32.getCode())) {
-                    str = Base32.encode(str);
-                }
+            String sourceField = m.getSourceField();
+            BaseCodeFieldStrategy strategy = CODE_FIELD_STRATEGY_MAP.get(sourceField);
+            if (strategy == null) {
+                throw new BaseException("未注册 sourceField 策略: " + sourceField);
             }
-            // 部门编码
-            if (StrUtil.equals(sourceField, SourceFiledEnums.FINISHED_PRODUCTION_DEPART_CODE.getCode())) {
-                str = finishedProductionDepartCode;
-                str = StrUtil.sub(str, indexBegin, indexEnd);
-                // 修改编码方式
-                if (StrUtil.equals(encodeType, EncodeTypeEnums.BASE_62.getCode())) {
-                    str = Base62.encode(str);
-                }
-                if (StrUtil.equals(encodeType, EncodeTypeEnums.BASE_32.getCode())) {
-                    str = Base32.encode(str);
-                }
-            }
-            // 车间编码
-            if (StrUtil.equals(sourceField, SourceFiledEnums.FINISHED_PRODUCTION_WORKSHOP_CODE.getCode())) {
-                str = finishedProductionWorkshopCode;
-                str = StrUtil.sub(str, indexBegin, indexEnd);
-                // 修改编码方式
-                if (StrUtil.equals(encodeType, EncodeTypeEnums.BASE_62.getCode())) {
-                    str = Base62.encode(str);
-                }
-                if (StrUtil.equals(encodeType, EncodeTypeEnums.BASE_32.getCode())) {
-                    str = Base32.encode(str);
-                }
-            }
-            // 订单编码
-            if (StrUtil.equals(sourceField, SourceFiledEnums.FINISHED_ORDER_CODE.getCode())) {
-                str = finishedOrderNo;
-                str = StrUtil.sub(str, indexBegin, indexEnd);
-                // 修改编码方式
-                if (StrUtil.equals(encodeType, EncodeTypeEnums.BASE_62.getCode())) {
-                    str = Base62.encode(str);
-                }
-                if (StrUtil.equals(encodeType, EncodeTypeEnums.BASE_32.getCode())) {
-                    str = Base32.encode(str);
-                }
-            }
-            // 产品编码
-            if (StrUtil.equals(sourceField, SourceFiledEnums.FINISHED_PRODUCT_CODE.getCode())) {
-                str = finishProductCode;
-                str = StrUtil.sub(str, indexBegin, indexEnd);
-                // 修改编码方式
-                if (StrUtil.equals(encodeType, EncodeTypeEnums.BASE_62.getCode())) {
-                    str = Base62.encode(str);
-                }
-                if (StrUtil.equals(encodeType, EncodeTypeEnums.BASE_32.getCode())) {
-                    str = Base32.encode(str);
-                }
-            }
-            // 箱号 需要填充 使用占位符即可
-            if (StrUtil.equals(sourceField, SourceFiledEnums.BOX_NO.getCode())) {
-                str = "{}";
-
-            }
-            // 常量
-            if (StrUtil.equals(sourceField, SourceFiledEnums.CONSTANT.getCode())) {
-                str = constant;
-            }
+            CodeFieldContext context = new CodeFieldContext();
+            context.setFinishedProductionDate(finishedProductionDate);
+            context.setFinishedProductionDepartCode(finishedProductionDepartCode);
+            context.setFinishedProductionWorkshopCode(finishedProductionWorkshopCode);
+            context.setFinishedOrderNo(finishedOrderNo);
+            context.setFinishedProductCode(finishedProductCode);
+            context.setSemiFinishedProductionDate(semiFinishedProductionDate);
+            context.setSemiFinishedProductionDepartCode(semiFinishedProductionDepartCode);
+            context.setSemiFinishedProductionWorkshopCode(semiFinishedProductionWorkshopCode);
+            context.setSemiFinishedOrderNo(semiFinishedOrderNo);
+            context.setSemiFinishedProductCode(semiFinishedProductCode);
+            context.setFinishedTeamCode(finishedTeamCode);
+            context.setSemiFinishedTeamCode(semiFinishedTeamCode);
+            context.setSourceField(sourceField);
+            context.setConstant(m.getConstant());
+            context.setIndexBegin(m.getIndexBegin());
+            context.setIndexEnd(m.getIndexEnd());
+            context.setEncodeType(m.getEncodeType());
+            context.setOffsetYears(m.getOffsetYears());
+            context.setRandomType(m.getRandomType());
+            String str = strategy.apply(context);
             boxCodeStrBuilder.append(str);
         }
 
         // 内箱码
+        StringBuilder innerBoxCodeStrBuilder = new StringBuilder();
         final List<SysCodeRuleDetail> innerBoxCodeRuleDetailList = sysCodeRuleDetailMapper
                 .selectListByRuleIdSAndType(finishedCodeRule.getId(), RuleTypeEnums.INNER_BOX.getCode());
-
-        StringBuilder innerBoxCodeStrBuilder = new StringBuilder();
         for (SysCodeRuleDetail m : innerBoxCodeRuleDetailList) {
-            final String sourceField = m.getSourceField();
-            final String constant = m.getConstant();
-            final Integer indexBegin = m.getIndexBegin();
-            final Integer indexEnd = m.getIndexEnd();
-            final String encodeType = m.getEncodeType();
-
-            String str = "";
-            // 限用日期
-            if (StrUtil.equals(sourceField, SourceFiledEnums.FINISHED_LIMITED_USE_DATE.getCode())) {
-                final LocalDate limitedUseDate = finishedProductionDate.plusYears(3);
-                str = LocalDateTimeUtil.format(limitedUseDate, "yyyyMMdd");
-                str = StrUtil.sub(str, indexBegin, indexEnd);
-                // 修改编码方式
-                if (StrUtil.equals(encodeType, EncodeTypeEnums.BASE_62.getCode())) {
-                    str = Base62.encode(str);
-                }
-                if (StrUtil.equals(encodeType, EncodeTypeEnums.BASE_32.getCode())) {
-                    str = Base32.encode(str);
-                }
+            String sourceField = m.getSourceField();
+            BaseCodeFieldStrategy strategy = CODE_FIELD_STRATEGY_MAP.get(sourceField);
+            if (strategy == null) {
+                throw new BaseException("未注册 sourceField 策略: " + sourceField);
             }
-            // 部门编码
-            if (StrUtil.equals(sourceField, SourceFiledEnums.FINISHED_PRODUCTION_DEPART_CODE.getCode())) {
-                str = finishedProductionDepartCode;
-                str = StrUtil.sub(str, indexBegin, indexEnd);
-                // 修改编码方式
-                if (StrUtil.equals(encodeType, EncodeTypeEnums.BASE_62.getCode())) {
-                    str = Base62.encode(str);
-                }
-                if (StrUtil.equals(encodeType, EncodeTypeEnums.BASE_32.getCode())) {
-                    str = Base32.encode(str);
-                }
-            }
-            // 车间编码
-            if (StrUtil.equals(sourceField, SourceFiledEnums.FINISHED_PRODUCTION_WORKSHOP_CODE.getCode())) {
-                str = finishedProductionWorkshopCode;
-                str = StrUtil.sub(str, indexBegin, indexEnd);
-                // 修改编码方式
-                if (StrUtil.equals(encodeType, EncodeTypeEnums.BASE_62.getCode())) {
-                    str = Base62.encode(str);
-                }
-                if (StrUtil.equals(encodeType, EncodeTypeEnums.BASE_32.getCode())) {
-                    str = Base32.encode(str);
-                }
-            }
-            // 订单编码
-            if (StrUtil.equals(sourceField, SourceFiledEnums.FINISHED_ORDER_CODE.getCode())) {
-                str = finishedOrderNo;
-                str = StrUtil.sub(str, indexBegin, indexEnd);
-                // 修改编码方式
-                if (StrUtil.equals(encodeType, EncodeTypeEnums.BASE_62.getCode())) {
-                    str = Base62.encode(str);
-                }
-                if (StrUtil.equals(encodeType, EncodeTypeEnums.BASE_32.getCode())) {
-                    str = Base32.encode(str);
-                }
-            }
-            // 产品编码
-            if (StrUtil.equals(sourceField, SourceFiledEnums.FINISHED_PRODUCT_CODE.getCode())) {
-                str = finishProductCode;
-                str = StrUtil.sub(str, indexBegin, indexEnd);
-                // 修改编码方式
-                if (StrUtil.equals(encodeType, EncodeTypeEnums.BASE_62.getCode())) {
-                    str = Base62.encode(str);
-                }
-                if (StrUtil.equals(encodeType, EncodeTypeEnums.BASE_32.getCode())) {
-                    str = Base32.encode(str);
-                }
-            }
-            // 箱号 需要填充 使用占位符即可
-            if (StrUtil.equals(sourceField, SourceFiledEnums.BOX_NO.getCode())) {
-                str = "{}";
-
-            }
-            // 常量
-            if (StrUtil.equals(sourceField, SourceFiledEnums.CONSTANT.getCode())) {
-                str = constant;
-            }
+            CodeFieldContext context = new CodeFieldContext();
+            context.setFinishedProductionDate(finishedProductionDate);
+            context.setFinishedProductionDepartCode(finishedProductionDepartCode);
+            context.setFinishedProductionWorkshopCode(finishedProductionWorkshopCode);
+            context.setFinishedOrderNo(finishedOrderNo);
+            context.setFinishedProductCode(finishedProductCode);
+            context.setSemiFinishedProductionDate(semiFinishedProductionDate);
+            context.setSemiFinishedProductionDepartCode(semiFinishedProductionDepartCode);
+            context.setSemiFinishedProductionWorkshopCode(semiFinishedProductionWorkshopCode);
+            context.setSemiFinishedOrderNo(semiFinishedOrderNo);
+            context.setSemiFinishedProductCode(semiFinishedProductCode);
+            context.setFinishedTeamCode(finishedTeamCode);
+            context.setSemiFinishedTeamCode(semiFinishedTeamCode);
+            context.setSourceField(sourceField);
+            context.setConstant(m.getConstant());
+            context.setIndexBegin(m.getIndexBegin());
+            context.setIndexEnd(m.getIndexEnd());
+            context.setEncodeType(m.getEncodeType());
+            context.setOffsetYears(m.getOffsetYears());
+            context.setRandomType(m.getRandomType());
+            String str = strategy.apply(context);
             innerBoxCodeStrBuilder.append(str);
         }
 
         // 半成品相关信息
-        final String semiFinishedOrderNo = semiFinishedProductionOrder.getOrderNo();
-        final LocalDate semiFinishedProductionDate = semiFinishedProductionOrder.getProductionDate();
-        final String semiFinishedProductionDepartCode = semiFinishedProductionOrder.getProductionDepartCode();
-        final String semiFinishedProductionWorkshopCode = semiFinishedProductionOrder.getProductionWorkshopCode();
+
         final ProductionDepartAndWorkshop semiFinishedProductionDepartAndWorkshop = productionDepartAndWorkshopMapper
                 .getOneByCode(semiFinishedProductionWorkshopCode);
         final Long semiFinishedCodeRuleId = semiFinishedProductionDepartAndWorkshop.getCodeRuleId();
@@ -473,105 +416,33 @@ public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderM
         StringBuilder bagCodeStrBuilder = new StringBuilder();
         for (SysCodeRuleDetail m : bagCodeRuleDetailList) {
             final String sourceField = m.getSourceField();
-            final String constant = m.getConstant();
-            final Integer indexBegin = m.getIndexBegin();
-            final Integer indexEnd = m.getIndexEnd();
-            final String encodeType = m.getEncodeType();
-
-            String str = "";
-
-            // 订单编码
-            if (StrUtil.equals(sourceField, SourceFiledEnums.FINISHED_ORDER_CODE.getCode())) {
-                str = finishedOrderNo;
-                str = StrUtil.sub(str, indexBegin, indexEnd);
-                // 修改编码方式
-                if (StrUtil.equals(encodeType, EncodeTypeEnums.BASE_62.getCode())) {
-                    str = Base62.encode(str);
-                }
-                if (StrUtil.equals(encodeType, EncodeTypeEnums.BASE_32.getCode())) {
-                    str = Base32.encode(str);
-                }
+            BaseCodeFieldStrategy strategy = CODE_FIELD_STRATEGY_MAP.get(sourceField);
+            if (strategy == null) {
+                throw new BaseException("未注册 sourceField 策略: " + sourceField);
             }
-            // 产品编码
-            if (StrUtil.equals(sourceField, SourceFiledEnums.FINISHED_PRODUCT_CODE.getCode())) {
-                str = finishProductCode;
-                str = StrUtil.sub(str, indexBegin, indexEnd);
-                // 修改编码方式
-                if (StrUtil.equals(encodeType, EncodeTypeEnums.BASE_62.getCode())) {
-                    str = Base62.encode(str);
-                }
-                if (StrUtil.equals(encodeType, EncodeTypeEnums.BASE_32.getCode())) {
-                    str = Base32.encode(str);
-                }
-            }
-            // 限用日期
-            if (StrUtil.equals(sourceField, SourceFiledEnums.SEMI_FINISHED_LIMITED_USE_DATE.getCode())) {
-                final LocalDate limitedUseDate = semiFinishedProductionDate.plusYears(3);
-                str = LocalDateTimeUtil.format(limitedUseDate, "yyyyMMdd");
-                str = StrUtil.sub(str, indexBegin, indexEnd);
-                // 修改编码方式
-                if (StrUtil.equals(encodeType, EncodeTypeEnums.BASE_62.getCode())) {
-                    str = Base62.encode(str);
-                }
-                if (StrUtil.equals(encodeType, EncodeTypeEnums.BASE_32.getCode())) {
-                    str = Base32.encode(str);
-                }
-
-            }
-            // 部门编码
-            if (StrUtil.equals(sourceField, SourceFiledEnums.SEMI_FINISHED_PRODUCTION_DEPART_CODE.getCode())) {
-                str = semiFinishedProductionDepartCode;
-                str = StrUtil.sub(str, indexBegin, indexEnd);
-                // 修改编码方式
-                if (StrUtil.equals(encodeType, EncodeTypeEnums.BASE_62.getCode())) {
-                    str = Base62.encode(str);
-                }
-                if (StrUtil.equals(encodeType, EncodeTypeEnums.BASE_32.getCode())) {
-                    str = Base32.encode(str);
-                }
-            }
-            // 车间编码
-            if (StrUtil.equals(sourceField, SourceFiledEnums.SEMI_FINISHED_PRODUCTION_WORKSHOP_CODE.getCode())) {
-                str = semiFinishedProductionWorkshopCode;
-                str = StrUtil.sub(str, indexBegin, indexEnd);
-                // 修改编码方式
-                if (StrUtil.equals(encodeType, EncodeTypeEnums.BASE_62.getCode())) {
-                    str = Base62.encode(str);
-                }
-                if (StrUtil.equals(encodeType, EncodeTypeEnums.BASE_32.getCode())) {
-                    str = Base32.encode(str);
-                }
-            }
-            // 订单编码
-            if (StrUtil.equals(sourceField, SourceFiledEnums.SEMI_FINISHED_ORDER_CODE.getCode())) {
-                str = semiFinishedOrderNo;
-                str = StrUtil.sub(str, indexBegin, indexEnd);
-                // 修改编码方式
-                if (StrUtil.equals(encodeType, EncodeTypeEnums.BASE_62.getCode())) {
-                    str = Base62.encode(str);
-                }
-                if (StrUtil.equals(encodeType, EncodeTypeEnums.BASE_32.getCode())) {
-                    str = Base32.encode(str);
-                }
-            }
-            // 产品编码
-            if (StrUtil.equals(sourceField, SourceFiledEnums.SEMI_FINISHED_PRODUCT_CODE.getCode())) {
-                str = semiFinishedProductCode;
-                str = StrUtil.sub(str, indexBegin, indexEnd);
-                // 修改编码方式
-                if (StrUtil.equals(encodeType, EncodeTypeEnums.BASE_62.getCode())) {
-                    str = Base62.encode(str);
-                }
-                if (StrUtil.equals(encodeType, EncodeTypeEnums.BASE_32.getCode())) {
-                    str = Base32.encode(str);
-                }
-            }
-
-            // 箱号 需要填充 使用占位符即可
-            if (StrUtil.equals(sourceField, SourceFiledEnums.BOX_NO.getCode())) {
-                str = "{}";
-            }
+            CodeFieldContext context = new CodeFieldContext();
+            context.setFinishedProductionDate(finishedProductionDate);
+            context.setFinishedProductionDepartCode(finishedProductionDepartCode);
+            context.setFinishedProductionWorkshopCode(finishedProductionWorkshopCode);
+            context.setFinishedOrderNo(finishedOrderNo);
+            context.setFinishedProductCode(finishedProductCode);
+            context.setSemiFinishedProductionDate(semiFinishedProductionDate);
+            context.setSemiFinishedProductionDepartCode(semiFinishedProductionDepartCode);
+            context.setSemiFinishedProductionWorkshopCode(semiFinishedProductionWorkshopCode);
+            context.setSemiFinishedOrderNo(semiFinishedOrderNo);
+            context.setSemiFinishedProductCode(semiFinishedProductCode);
+            context.setFinishedTeamCode(finishedTeamCode);
+            context.setSemiFinishedTeamCode(semiFinishedTeamCode);
+            context.setSourceField(sourceField);
+            context.setConstant(m.getConstant());
+            context.setIndexBegin(m.getIndexBegin());
+            context.setIndexEnd(m.getIndexEnd());
+            context.setEncodeType(m.getEncodeType());
+            context.setOffsetYears(m.getOffsetYears());
+            context.setRandomType(m.getRandomType());
+            String str = strategy.apply(context);
             bagCodeStrBuilder.append(str);
+
         }
 
         // 万用码
@@ -580,104 +451,31 @@ public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderM
         StringBuilder universalCodeStrBuilder = new StringBuilder();
         for (SysCodeRuleDetail m : universalCodeRuleDetailList) {
             final String sourceField = m.getSourceField();
-            final String constant = m.getConstant();
-            final Integer indexBegin = m.getIndexBegin();
-            final Integer indexEnd = m.getIndexEnd();
-            final String encodeType = m.getEncodeType();
-
-            String str = "";
-
-            // 订单编码
-            if (StrUtil.equals(sourceField, SourceFiledEnums.FINISHED_ORDER_CODE.getCode())) {
-                str = finishedOrderNo;
-                str = StrUtil.sub(str, indexBegin, indexEnd);
-                // 修改编码方式
-                if (StrUtil.equals(encodeType, EncodeTypeEnums.BASE_62.getCode())) {
-                    str = Base62.encode(str);
-                }
-                if (StrUtil.equals(encodeType, EncodeTypeEnums.BASE_32.getCode())) {
-                    str = Base32.encode(str);
-                }
+            BaseCodeFieldStrategy strategy = CODE_FIELD_STRATEGY_MAP.get(sourceField);
+            if (strategy == null) {
+                throw new BaseException("未注册 sourceField 策略: " + sourceField);
             }
-            // 产品编码
-            if (StrUtil.equals(sourceField, SourceFiledEnums.FINISHED_PRODUCT_CODE.getCode())) {
-                str = finishProductCode;
-                str = StrUtil.sub(str, indexBegin, indexEnd);
-                // 修改编码方式
-                if (StrUtil.equals(encodeType, EncodeTypeEnums.BASE_62.getCode())) {
-                    str = Base62.encode(str);
-                }
-                if (StrUtil.equals(encodeType, EncodeTypeEnums.BASE_32.getCode())) {
-                    str = Base32.encode(str);
-                }
-            }
-            // 限用日期
-            if (StrUtil.equals(sourceField, SourceFiledEnums.SEMI_FINISHED_LIMITED_USE_DATE.getCode())) {
-                final LocalDate limitedUseDate = semiFinishedProductionDate.plusYears(3);
-                str = LocalDateTimeUtil.format(limitedUseDate, "yyyyMMdd");
-                str = StrUtil.sub(str, indexBegin, indexEnd);
-                // 修改编码方式
-                if (StrUtil.equals(encodeType, EncodeTypeEnums.BASE_62.getCode())) {
-                    str = Base62.encode(str);
-                }
-                if (StrUtil.equals(encodeType, EncodeTypeEnums.BASE_32.getCode())) {
-                    str = Base32.encode(str);
-                }
-
-            }
-            // 部门编码
-            if (StrUtil.equals(sourceField, SourceFiledEnums.SEMI_FINISHED_PRODUCTION_DEPART_CODE.getCode())) {
-                str = semiFinishedProductionDepartCode;
-                str = StrUtil.sub(str, indexBegin, indexEnd);
-                // 修改编码方式
-                if (StrUtil.equals(encodeType, EncodeTypeEnums.BASE_62.getCode())) {
-                    str = Base62.encode(str);
-                }
-                if (StrUtil.equals(encodeType, EncodeTypeEnums.BASE_32.getCode())) {
-                    str = Base32.encode(str);
-                }
-            }
-            // 车间编码
-            if (StrUtil.equals(sourceField, SourceFiledEnums.SEMI_FINISHED_PRODUCTION_WORKSHOP_CODE.getCode())) {
-                str = semiFinishedProductionWorkshopCode;
-                str = StrUtil.sub(str, indexBegin, indexEnd);
-                // 修改编码方式
-                if (StrUtil.equals(encodeType, EncodeTypeEnums.BASE_62.getCode())) {
-                    str = Base62.encode(str);
-                }
-                if (StrUtil.equals(encodeType, EncodeTypeEnums.BASE_32.getCode())) {
-                    str = Base32.encode(str);
-                }
-            }
-            // 订单编码
-            if (StrUtil.equals(sourceField, SourceFiledEnums.SEMI_FINISHED_ORDER_CODE.getCode())) {
-                str = semiFinishedOrderNo;
-                str = StrUtil.sub(str, indexBegin, indexEnd);
-                // 修改编码方式
-                if (StrUtil.equals(encodeType, EncodeTypeEnums.BASE_62.getCode())) {
-                    str = Base62.encode(str);
-                }
-                if (StrUtil.equals(encodeType, EncodeTypeEnums.BASE_32.getCode())) {
-                    str = Base32.encode(str);
-                }
-            }
-            // 产品编码
-            if (StrUtil.equals(sourceField, SourceFiledEnums.SEMI_FINISHED_PRODUCT_CODE.getCode())) {
-                str = semiFinishedProductCode;
-                str = StrUtil.sub(str, indexBegin, indexEnd);
-                // 修改编码方式
-                if (StrUtil.equals(encodeType, EncodeTypeEnums.BASE_62.getCode())) {
-                    str = Base62.encode(str);
-                }
-                if (StrUtil.equals(encodeType, EncodeTypeEnums.BASE_32.getCode())) {
-                    str = Base32.encode(str);
-                }
-            }
-            // 箱号 需要填充 使用占位符即可
-            if (StrUtil.equals(sourceField, SourceFiledEnums.SPECIFY_BOX_NO.getCode())) {
-                str = constant;
-
-            }
+            CodeFieldContext context = new CodeFieldContext();
+            context.setFinishedProductionDate(finishedProductionDate);
+            context.setFinishedProductionDepartCode(finishedProductionDepartCode);
+            context.setFinishedProductionWorkshopCode(finishedProductionWorkshopCode);
+            context.setFinishedOrderNo(finishedOrderNo);
+            context.setFinishedProductCode(finishedProductCode);
+            context.setSemiFinishedProductionDate(semiFinishedProductionDate);
+            context.setSemiFinishedProductionDepartCode(semiFinishedProductionDepartCode);
+            context.setSemiFinishedProductionWorkshopCode(semiFinishedProductionWorkshopCode);
+            context.setSemiFinishedOrderNo(semiFinishedOrderNo);
+            context.setSemiFinishedProductCode(semiFinishedProductCode);
+            context.setFinishedTeamCode(finishedTeamCode);
+            context.setSemiFinishedTeamCode(semiFinishedTeamCode);
+            context.setSourceField(sourceField);
+            context.setConstant(m.getConstant());
+            context.setIndexBegin(m.getIndexBegin());
+            context.setIndexEnd(m.getIndexEnd());
+            context.setEncodeType(m.getEncodeType());
+            context.setOffsetYears(m.getOffsetYears());
+            context.setRandomType(m.getRandomType());
+            String str = strategy.apply(context);
             universalCodeStrBuilder.append(str);
         }
 
@@ -685,12 +483,110 @@ public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderM
         List<String> boxCodeList = new ArrayList<>();
         List<String> innerBoxCodeList = new ArrayList<>();
         List<String> bagCodeList = new ArrayList<>();
+        List<String> universalCodeList = new ArrayList<>();
+
+        String boxCodeTemplate = boxCodeStrBuilder.toString();
+        String innerBoxCodeTemplate = innerBoxCodeStrBuilder.toString();
+        String bagCodeTemplate = bagCodeStrBuilder.toString();
+        String universalCodeTemplate = universalCodeStrBuilder.toString();
+
+        // 处理箱号{BOX_NO:数字}
+        final Pattern pattern = Pattern.compile("\\{(BOX_NO:\\d+)\\}");
+        final List<String> boxNoTmpList = ReUtil.findAllGroup0(pattern, boxCodeTemplate);
+        int boxNoLength = 0;
+        for (String boxNoTmp : boxNoTmpList) {
+            final List<String> boxNoTmpList2 = StrUtil.split(boxNoTmp, ":");
+            boxNoLength = Integer.parseInt(boxNoTmpList2.get(1));
+        }
+        final List<String> innerBoxNoTmpList = ReUtil.findAllGroup0(pattern, innerBoxCodeTemplate);
+        int innerBoxNoLength = 0;
+        for (String innerBoxNoTmp : innerBoxNoTmpList) {
+            final List<String> innerBoxNoTmpList2 = StrUtil.split(innerBoxNoTmp, ":");
+            innerBoxNoLength = Integer.parseInt(innerBoxNoTmpList2.get(1));
+        }
+        final List<String> bagNoTmpList = ReUtil.findAllGroup0(pattern, bagCodeTemplate);
+        int bagNoLength = 0;
+        for (String bagNoTmp : bagNoTmpList) {
+            final List<String> bagNoTmpList2 = StrUtil.split(bagNoTmp, ":");
+            bagNoLength = Integer.parseInt(bagNoTmpList2.get(1));
+        }
+        final List<String> universalNoTmpList = ReUtil.findAllGroup0(pattern, universalCodeTemplate);
+        int universalNoLength = 0;
+        for (String universalNoTmp : universalNoTmpList) {
+            final List<String> universalNoTmpList2 = StrUtil.split(universalNoTmp, ":");
+            universalNoLength = Integer.parseInt(universalNoTmpList2.get(1));
+        }
+        // 处理随机字符串 {RANDOM_STRING:类型:数字}
+        final Pattern randomPattern = Pattern.compile("\\{(RANDOM_STRING:\\w+:\\d+)\\}");
+        final List<String> boxCodeRandomStringTmpList = ReUtil.findAllGroup0(randomPattern, boxCodeTemplate);
+        String boxCodeRandomType = null;
+        int boxCodeRandomLength = 0;
+        for (String randomStringTmp : boxCodeRandomStringTmpList) {
+            final List<String> randomStringTmpList2 = StrUtil.split(randomStringTmp, ":");
+            final String randomStringType = randomStringTmpList2.get(1);
+            final int randomStringLength = Integer.parseInt(randomStringTmpList2.get(2));
+            boxCodeRandomType = randomStringType;
+            boxCodeRandomLength = randomStringLength;
+        }
+        final List<String> innerBoxCodeRandomStringTmpList = ReUtil.findAllGroup0(randomPattern, innerBoxCodeTemplate);
+        String innerBoxCodeRandomType = null;
+        int innerBoxCodeRandomLength = 0;
+        for (String randomStringTmp : innerBoxCodeRandomStringTmpList) {
+            final List<String> randomStringTmpList2 = StrUtil.split(randomStringTmp, ":");
+            final String randomStringType = randomStringTmpList2.get(1);
+            final int randomStringLength = Integer.parseInt(randomStringTmpList2.get(2));
+            innerBoxCodeRandomType = randomStringType;
+            innerBoxCodeRandomLength = randomStringLength;
+        }
+        final List<String> bagCodeRandomStringTmpList = ReUtil.findAllGroup0(randomPattern, bagCodeTemplate);
+        String bagCodeRandomType = null;
+        int bagCodeRandomLength = 0;
+        for (String randomStringTmp : bagCodeRandomStringTmpList) {
+            final List<String> randomStringTmpList2 = StrUtil.split(randomStringTmp, ":");
+            final String randomStringType = randomStringTmpList2.get(1);
+            final int randomStringLength = Integer.parseInt(randomStringTmpList2.get(2));
+            bagCodeRandomType = randomStringType;
+            bagCodeRandomLength = randomStringLength;
+        }
+        final List<String> universalCodeRandomStringTmpList = ReUtil.findAllGroup0(randomPattern, universalCodeTemplate);
+        String universalCodeRandomType = null;
+        int universalCodeRandomLength = 0;
+        for (String randomStringTmp : universalCodeRandomStringTmpList) {
+            final List<String> randomStringTmpList2 = StrUtil.split(randomStringTmp, ":");
+            final String randomStringType = randomStringTmpList2.get(1);
+            final int randomStringLength = Integer.parseInt(randomStringTmpList2.get(2));
+            universalCodeRandomType = randomStringType;
+            universalCodeRandomLength = randomStringLength;
+        }
 
         for (int i = boxNoBegin; i < boxNoEnd; i++) {
-            String boxNo = StrUtil.fillBefore(String.valueOf(i), '0', 4);
-            boxCodeList.add(StrUtil.format(boxCodeStrBuilder, boxNo));
-            bagCodeList.add(StrUtil.format(bagCodeStrBuilder, boxNo));
-            innerBoxCodeList.add(StrUtil.format(innerBoxCodeStrBuilder, boxNo));
+            // 箱号
+            final String boxNo = StrUtil.fillBefore(String.valueOf(i), '0', boxNoLength);
+            boxCodeTemplate = ReUtil.replaceAll(boxCodeTemplate, pattern, boxNo);
+
+            final String innerBoxNo = StrUtil.fillBefore(String.valueOf(i), '0', innerBoxNoLength);
+            innerBoxCodeTemplate = ReUtil.replaceAll(innerBoxCodeTemplate, pattern, innerBoxNo);
+            final String bagNo = StrUtil.fillBefore(String.valueOf(i), '0', bagNoLength);
+            bagCodeTemplate = ReUtil.replaceAll(bagCodeTemplate, pattern, bagNo);
+            final String universalNo = StrUtil.fillBefore(String.valueOf(i), '0', universalNoLength);
+            universalCodeTemplate = ReUtil.replaceAll(universalCodeTemplate, pattern, universalNo);
+            bagCodeTemplate = ReUtil.replaceAll(bagCodeTemplate, pattern, bagNo);
+            universalCodeTemplate = ReUtil.replaceAll(universalCodeTemplate, pattern, universalNo);
+
+            // 随机字符串
+            final String boxCodeRandomString = RandomStringUtil.generate(boxCodeRandomType, boxCodeRandomLength);
+            boxCodeTemplate = ReUtil.replaceAll(boxCodeTemplate, randomPattern, boxCodeRandomString);
+            final String innerBoxCodeRandomString = RandomStringUtil.generate(innerBoxCodeRandomType, innerBoxCodeRandomLength);
+            innerBoxCodeTemplate = ReUtil.replaceAll(innerBoxCodeTemplate, randomPattern, innerBoxCodeRandomString);
+            final String bagCodeRandomString = RandomStringUtil.generate(bagCodeRandomType, bagCodeRandomLength);
+            bagCodeTemplate = ReUtil.replaceAll(bagCodeTemplate, randomPattern, bagCodeRandomString);
+            final String universalCodeRandomString = RandomStringUtil.generate(universalCodeRandomType, universalCodeRandomLength);
+            universalCodeTemplate = ReUtil.replaceAll(universalCodeTemplate, randomPattern, universalCodeRandomString);
+
+            boxCodeList.add(boxCodeTemplate);
+            innerBoxCodeList.add(innerBoxCodeTemplate);
+            bagCodeList.add(bagCodeTemplate);
+            universalCodeList.add(universalCodeTemplate);
 
         }
 
@@ -698,8 +594,6 @@ public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderM
         final LocalDateTime now = LocalDateTimeUtil.now();
         final PullCodeVO pullCodeVO = new PullCodeVO();
         if (StrUtil.equals("QR_CODE", type)) {
-            final String format = LocalDateTimeUtil.format(now, "yyyyMMdd");
-            final String encode = WebBase62.encode(Long.parseLong(format));
             // 二维码
             // 按照 数量生成二维码
             final List<String> qrCodeSet = qrCodeCache.getQrCode(qrCodeNum);
@@ -737,7 +631,7 @@ public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderM
             recordBoxCodeService.saveBatch(recordBoxCodeList);
             final List<RecordQrCode> recordQrCodeList = qrCodeSet.stream().map(m -> {
                 final RecordQrCode recordQrCode = new RecordQrCode();
-                recordQrCode.setCode(encode + m);
+                recordQrCode.setCode(m);
                 recordQrCode.setPullDateTime(now);
                 recordQrCode.setFinishedProductOrderId(finishedProductOrderId);
                 recordQrCode.setSemiFinishedProductOrderId(semiFinishedProductOrderId);

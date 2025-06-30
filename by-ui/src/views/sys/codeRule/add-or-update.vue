@@ -81,7 +81,12 @@ import Sortable from "sortablejs";
 import {computed, nextTick, reactive, ref, watch} from "vue";
 import RuleTable from "./components/RuleTable.vue";
 import type {RuleDetail} from "./config/ruleTypes";
-import {bagCodeSourceFieldList, boxCodeSourceFieldList, innerBoxCodeSourceFieldList, universalCodeSourceFieldList} from "./config/ruleTypes";
+import {
+  bagCodeSourceFieldList,
+  boxCodeSourceFieldList,
+  innerBoxCodeSourceFieldList,
+  universalCodeSourceFieldList
+} from "./config/ruleTypes";
 
 const emit = defineEmits(['refreshDataList'])
 

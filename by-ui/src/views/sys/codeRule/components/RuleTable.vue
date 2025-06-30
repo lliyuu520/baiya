@@ -37,7 +37,7 @@
                     :disabled=" row.sourceField === 'SPECIFY_BOX_NO' || row.sourceField === 'CONSTANT' || row.sourceField === 'BOX_NO' || row.sourceField === 'RANDOM_STRING' || row.sourceField === 'FINISHED_TEAM_CODE' || row.sourceField === 'SEMI_FINISHED_TEAM_CODE'" />
                 </template>
             </el-table-column>
-            <el-table-column align="center" label="编码类型" width="180">
+            <el-table-column align="center" label="编码" width="180">
                 <template #default="{ row }">
                     <el-select v-model="row.encodeType" class="form-input input-encode" 
                     :disabled=" row.sourceField === 'SPECIFY_BOX_NO' || row.sourceField === 'CONSTANT' || row.sourceField === 'BOX_NO' || row.sourceField === 'FINISHED_TEAM_CODE' || row.sourceField === 'SEMI_FINISHED_TEAM_CODE'" >
@@ -75,6 +75,13 @@
                         disabled />
                 </template>
             </el-table-column>
+            <el-table-column align="center" label="偏移年份" width="100">
+                <template #default="{ row }">
+                    <el-input-number v-model="row.offsetYears" :controls="false" :min="0" class="input-number-mini" 
+                    :disabled=" row.sourceField !== 'FINISHED_ORDER_DATE' && row.sourceField !== 'SEMI_FINISHED_ORDER_DATE'"
+                    />
+                </template>
+            </el-table-column>
 
             <el-table-column :resizable="false" align="center" label="操作" width="160">
                 <template #default="{ $index }">
@@ -89,10 +96,10 @@
 </template>
 
 <script lang="ts" setup>
-import { ArrowDown, ArrowUp, Delete, Plus, Rank } from "@element-plus/icons-vue";
-import { computed } from "vue";
-import type { RuleDetail, SourceFieldOption } from "../config/ruleTypes";
-import { encodeTypeList, randomTypeList } from "../config/ruleTypes";
+import {ArrowDown, ArrowUp, Delete, Plus, Rank} from "@element-plus/icons-vue";
+import {computed} from "vue";
+import type {RuleDetail, SourceFieldOption} from "../config/ruleTypes";
+import {encodeTypeList, randomTypeList} from "../config/ruleTypes";
 
 const props = defineProps<{
     ruleList: RuleDetail[]
