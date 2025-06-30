@@ -19,6 +19,6 @@ public class BoxNoStrategy implements BaseCodeFieldStrategy {
         Integer length = context.getLength();
         // 箱号实际给不出来,需要后面来填充,这里预留一个占位符,且把长度给出来
         // 箱号占位符
-        return "{" + "BOX_CODE" + ":" + length + "}";
+        return "{" + "BOX_NO" + ":" + length + "}";
     }
 }

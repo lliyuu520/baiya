@@ -4,6 +4,7 @@ import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.core.util.StrUtil;
 import com.miguoma.by.common.exception.BaseException;
+import com.miguoma.by.common.utils.BaseConverUtils;
 import com.miguoma.by.common.utils.encode.WebBase36;
 import com.miguoma.by.common.utils.encode.WebBase62;
 import com.miguoma.by.modules.system.enums.EncodeTypeEnums;
@@ -38,7 +39,7 @@ public interface BaseCodeFieldStrategy {
     String apply(CodeFieldContext context);
 
     /**
-     * 获取编码后的字符串
+     * 进制转换
      * 
      * @param str        字符串
      * @param encodeType 编码类型
@@ -46,20 +47,16 @@ public interface BaseCodeFieldStrategy {
      */
 
     default String getEncodeStr(String str, String encodeType) {
-        long i;
-        String result = "";
+        int i;
         try {
-            i = Long.parseLong(str);
+            i = Integer.parseInt(str);
         } catch (NumberFormatException e) {
             throw new BaseException("编码格式错误,请联系管理员");
         }
-        if (EncodeTypeEnums.BASE_62.getCode().equals(encodeType)) {
-            result = WebBase62.encode(i);
-        }
-        if (EncodeTypeEnums.BASE_36.getCode().equals(encodeType)) {
-            result = WebBase36.encode(i);
-        }
-        return result;
+        return BaseConverUtils.convert(i, encodeType);
+
+
+        
     }
 
     /**

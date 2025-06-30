@@ -1,0 +1,17 @@
+# 拉取订单列表
+GET http://localhost:8080/client/productionOrderList
+token: 1935871861900468225
+###
+
+# 拉码
+POST http://localhost:8080/client/pullCode
+token: 1935871861900468225
+Content-Type: application/json
+
+{
+    "finishedProductOrderId": 1934146686250184706,
+    "semiFinishedProductOrderId": 1933005369629536258,
+    "type": "LOGISTICS_CODE",
+    "boxNoBegin": 412,
+    "boxCodeNum": 10
+}

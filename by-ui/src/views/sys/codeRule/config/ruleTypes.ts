@@ -28,9 +28,12 @@ export interface RandomTypeOption {
 }
 
 export const encodeTypeList: EncodeTypeOption[] = [
-    { code: 'BASE_10', name: 'BASE_10' },
-    { code: 'BASE_36', name: 'BASE_36' },
-    { code: 'BASE_62', name: 'BASE_62' }
+    { code: 'BASE_10', name: '10进制' },
+    { code: 'BASE_16', name: '16进制' },
+    { code: 'BASE_26', name: '26进制' },
+    { code: 'BASE_36', name: '36进制' },
+    { code: 'BASE_52', name: '52进制' },
+    { code: 'BASE_62', name: '62进制' }
 ]
 
 export const boxCodeSourceFieldList: SourceFieldOption[] = [

@@ -9,6 +9,7 @@ import com.miguoma.by.common.base.page.PageVO;
 import com.miguoma.by.common.base.service.impl.BaseServiceImpl;
 import com.miguoma.by.common.cache.QrCodeCache;
 import com.miguoma.by.common.exception.BaseException;
+import com.miguoma.by.common.utils.BaseConverUtils;
 import com.miguoma.by.common.utils.encode.WebBase62;
 import com.miguoma.by.modules.client.dto.PullCodeDTO;
 import com.miguoma.by.modules.client.dto.RecordCodeUploadDTO;
@@ -263,23 +264,27 @@ public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderM
         final Long semiFinishedProductOrderId = pullCodeDTO.getSemiFinishedProductOrderId();
         final ProductionOrder finishedProductionOrder = getById(finishedProductOrderId);
         if (finishedProductionOrder == null) {
-            throw new BaseException("成品订单不存在");
+            log.error("成品订单不存在:{}", finishedProductOrderId);
+            throw new BaseException("成品订单不存在:{}", finishedProductOrderId);
         }
         final ProductionOrder semiFinishedProductionOrder = getById(semiFinishedProductOrderId);
         if (semiFinishedProductionOrder == null) {
-            throw new BaseException("半成品订单不存在");
+            log.error("半成品订单不存在:{}", semiFinishedProductOrderId);
+            throw new BaseException("半成品订单不存在:{}", semiFinishedProductOrderId);
         }
 
         final String finishedProductCode = finishedProductionOrder.getProductCode();
         final ProductionProduct finishProductionProduct = productionProductMapper.getOneByCode(finishedProductCode);
         if (finishProductionProduct == null) {
-            throw new BaseException("成品产品不存在");
+            log.error("成品产品不存在:{}", finishedProductCode);
+            throw new BaseException("成品产品不存在:{}", finishedProductCode);
         }
         final String semiFinishedProductCode = semiFinishedProductionOrder.getProductCode();
         final ProductionProduct semiFinishedProductionProduct = productionProductMapper
                 .getOneByCode(semiFinishedProductCode);
         if (semiFinishedProductionProduct == null) {
-            throw new BaseException("半成品产品不存在");
+            log.error("半成品产品不存在:{}", semiFinishedProductCode);
+            throw new BaseException("半成品产品不存在:{}", semiFinishedProductCode);
         }
 
         // 按照成品产品的包装比例
@@ -843,7 +848,7 @@ public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderM
         final LocalDate productionDate = m.getProductionDate();
         if (productionDate != null) {
             final String productionDateStr = LocalDateTimeUtil.format(productionDate, "yyyyMMdd");
-            m.setProductionBatchNo(WebBase62.encode(Long.parseLong(productionDateStr)));
+            m.setProductionBatchNo(BaseConverUtils.convert(Integer.parseInt(productionDateStr), BaseConverUtils.BASE_62));
             final LocalDate limitedUseDate = productionDate.plusYears(3);
             m.setLimitedUseDateStr(LocalDateTimeUtil.format(limitedUseDate, "yyyyMMdd"));
         }

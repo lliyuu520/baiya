@@ -78,7 +78,7 @@
             <el-table-column align="center" label="偏移年份" width="100">
                 <template #default="{ row }">
                     <el-input-number v-model="row.offsetYears" :controls="false" :min="0" class="input-number-mini" 
-                    :disabled=" row.sourceField !== 'FINISHED_ORDER_DATE' && row.sourceField !== 'SEMI_FINISHED_ORDER_DATE'"
+                    :disabled=" row.sourceField !== 'FINISHED_PRODUCTION_DATE' && row.sourceField !== 'SEMI_FINISHED_PRODUCTION_DATE'"
                     />
                 </template>
             </el-table-column>
@@ -96,10 +96,10 @@
 </template>
 
 <script lang="ts" setup>
-import {ArrowDown, ArrowUp, Delete, Plus, Rank} from "@element-plus/icons-vue";
-import {computed} from "vue";
-import type {RuleDetail, SourceFieldOption} from "../config/ruleTypes";
-import {encodeTypeList, randomTypeList} from "../config/ruleTypes";
+import { ArrowDown, ArrowUp, Delete, Plus, Rank } from "@element-plus/icons-vue";
+import { computed } from "vue";
+import type { RuleDetail, SourceFieldOption } from "../config/ruleTypes";
+import { encodeTypeList, randomTypeList } from "../config/ruleTypes";
 
 const props = defineProps<{
     ruleList: RuleDetail[]
