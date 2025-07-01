@@ -9,8 +9,7 @@ import com.miguoma.by.common.base.page.PageVO;
 import com.miguoma.by.common.base.service.impl.BaseServiceImpl;
 import com.miguoma.by.common.cache.QrCodeCache;
 import com.miguoma.by.common.exception.BaseException;
-import com.miguoma.by.common.utils.BaseConverUtils;
-import com.miguoma.by.common.utils.encode.WebBase62;
+import com.miguoma.by.common.utils.EncodeConverUtils;
 import com.miguoma.by.modules.client.dto.PullCodeDTO;
 import com.miguoma.by.modules.client.dto.RecordCodeUploadDTO;
 import com.miguoma.by.modules.client.vo.PullCodeVO;
@@ -848,7 +847,7 @@ public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderM
         final LocalDate productionDate = m.getProductionDate();
         if (productionDate != null) {
             final String productionDateStr = LocalDateTimeUtil.format(productionDate, "yyyyMMdd");
-            m.setProductionBatchNo(BaseConverUtils.convert(Integer.parseInt(productionDateStr), BaseConverUtils.BASE_62));
+            m.setProductionBatchNo(EncodeConverUtils.convert(Integer.parseInt(productionDateStr), EncodeConverUtils.BASE_62));
             final LocalDate limitedUseDate = productionDate.plusYears(3);
             m.setLimitedUseDateStr(LocalDateTimeUtil.format(limitedUseDate, "yyyyMMdd"));
         }

@@ -4,10 +4,7 @@ import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.core.util.StrUtil;
 import com.miguoma.by.common.exception.BaseException;
-import com.miguoma.by.common.utils.BaseConverUtils;
-import com.miguoma.by.common.utils.encode.WebBase36;
-import com.miguoma.by.common.utils.encode.WebBase62;
-import com.miguoma.by.modules.system.enums.EncodeTypeEnums;
+import com.miguoma.by.common.utils.EncodeConverUtils;
 
 import java.time.LocalDate;
 
@@ -53,7 +50,7 @@ public interface BaseCodeFieldStrategy {
         } catch (NumberFormatException e) {
             throw new BaseException("编码格式错误,请联系管理员");
         }
-        return BaseConverUtils.convert(i, encodeType);
+        return EncodeConverUtils.convert(i, encodeType);
 
 
         

@@ -16,7 +16,7 @@ import lombok.experimental.UtilityClass;
  * BaseConverUtils.convert(12345, "BASE_36");
  */
 @UtilityClass
-public class BaseConverUtils {
+public class EncodeConverUtils {
 
    public static final String BASE_10 = "BASE_10";
    

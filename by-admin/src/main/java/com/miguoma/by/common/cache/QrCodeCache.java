@@ -6,7 +6,7 @@ import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
-import com.miguoma.by.common.utils.BaseConverUtils;
+import com.miguoma.by.common.utils.EncodeConverUtils;
 import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -60,7 +60,7 @@ public class QrCodeCache {
         LocalDate localDate = beginDateTime;
         while (localDate.isBefore(endDateTime)) {
             final String dayFormat = LocalDateTimeUtil.format(localDate, DatePattern.PURE_DATE_PATTERN);
-            final String dayEncode = BaseConverUtils.convert(Integer.parseInt(dayFormat), BaseConverUtils.BASE_62);
+            final String dayEncode = EncodeConverUtils.convert(Integer.parseInt(dayFormat), EncodeConverUtils.BASE_62);
             // 补齐到5位，不足左侧补0，确保二维码总长10位
             final String encodePrefix = StrUtil.fillBefore(dayEncode, '0', QR_CODE_SUFFIX_LENGTH);
             final String key = StrUtil.format(QR_CODE_CACHE, dayFormat);

@@ -1,9 +1,9 @@
 package com.miguoma.by.modules.system.entity;
 
 import com.miguoma.by.common.base.entity.BaseEntity;
-import com.miguoma.by.modules.system.enums.EncodeTypeEnums;
 import com.miguoma.by.modules.system.enums.RandomTypeEnums;
 import com.miguoma.by.modules.system.enums.RuleTypeEnums;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -20,16 +20,14 @@ public class SysCodeRuleDetail extends BaseEntity {
     private Long ruleId;
 
     /**
-     * 编码类型 {@link EncodeTypeEnums}
+     * 编码类型 {@link EncodeConverUtils}
      */
     private String encodeType;
-
 
     /**
      * 来源字段
      */
     private String sourceField;
-
 
     /**
      * 规则类型 {@link RuleTypeEnums}
@@ -40,9 +38,9 @@ public class SysCodeRuleDetail extends BaseEntity {
      * 开始索引(从0开始)
      */
     private Integer indexBegin;
-    
+
     /**
-     *结束索引(-1代表最后一个)
+     * 结束索引(-1代表最后一个)
      */
     private Integer indexEnd;
     /**
@@ -64,7 +62,5 @@ public class SysCodeRuleDetail extends BaseEntity {
      * 偏移年份
      */
     private Integer offsetYears;
-
-
 
 }
