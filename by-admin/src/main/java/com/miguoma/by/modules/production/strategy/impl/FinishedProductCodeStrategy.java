@@ -18,6 +18,9 @@ public class FinishedProductCodeStrategy implements BaseCodeFieldStrategy {
     @Override
     public String apply(CodeFieldContext context) {
         String finishedProductCode = context.getFinishedProductCode();
+        if (StrUtil.isBlank(finishedProductCode)) {
+            return StrUtil.EMPTY;
+        }
         Integer indexBegin = context.getIndexBegin();
         Integer indexEnd = context.getIndexEnd();
         String encodeType = context.getEncodeType();

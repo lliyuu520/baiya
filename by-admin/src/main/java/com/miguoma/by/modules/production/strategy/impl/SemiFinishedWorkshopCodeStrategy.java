@@ -11,13 +11,16 @@ import com.miguoma.by.modules.production.strategy.CodeFieldContext;
 public class SemiFinishedWorkshopCodeStrategy implements BaseCodeFieldStrategy {
     /**
      * 处理半成品产线编码字段
-     * 
+     *
      * @param context
      * @return
      */
     @Override
     public String apply(CodeFieldContext context) {
         String semiFinishedProductionWorkshopCode = context.getSemiFinishedProductionWorkshopCode();
+        if (StrUtil.isBlank(semiFinishedProductionWorkshopCode)) {
+            return StrUtil.EMPTY;
+        }
         Integer indexBegin = context.getIndexBegin();
         Integer indexEnd = context.getIndexEnd();
         String encodeType = context.getEncodeType();

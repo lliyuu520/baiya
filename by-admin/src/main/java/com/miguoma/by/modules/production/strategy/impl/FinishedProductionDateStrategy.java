@@ -18,6 +18,9 @@ public class FinishedProductionDateStrategy implements BaseCodeFieldStrategy {
     @Override
     public String apply(CodeFieldContext context) {
         LocalDate finishedProductionDate = context.getFinishedProductionDate();
+        if (finishedProductionDate == null) {
+            return StrUtil.EMPTY;
+        }
         final Integer offsetYears = context.getOffsetYears();
         String str = getOffsetYears(finishedProductionDate, offsetYears);
         return str;

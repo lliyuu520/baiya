@@ -51,7 +51,7 @@ public class SysCodeRuleDetail extends BaseEntity {
     /**
      * 长度
      */
-    private Long length;
+    private Integer length;
 
     /**
      * 随机类型 {@link RandomTypeEnums}
@@ -62,5 +62,9 @@ public class SysCodeRuleDetail extends BaseEntity {
      * 偏移年份
      */
     private Integer offsetYears;
+    /**
+     * 特殊箱号
+     */
+    private String specifyBoxNo;
 
 }

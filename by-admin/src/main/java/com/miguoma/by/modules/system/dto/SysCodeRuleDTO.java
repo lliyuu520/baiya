@@ -1,54 +1,17 @@
 package com.miguoma.by.modules.system.dto;
 
+import com.miguoma.by.modules.system.entity.SysCodeRule;
 import lombok.Data;
-
-import java.io.Serializable;
-import java.util.List;
+import lombok.EqualsAndHashCode;
 
 /**
  * 编码规则数据传输对象
  */
 @Data
-public class SysCodeRuleDTO implements Serializable {
+@EqualsAndHashCode(callSuper = true)
+public class SysCodeRuleDTO extends SysCodeRule {
 
-    /**
-     * ID
-     */
-    private Long id;
 
-    /**
-     * 规则名称
-     */
-    private String name;
 
-    /**
-     * 规则编码
-     */
-    private String code;
-    /**
-     * 二维码URL前缀
-     */
-
-    private String qrCodeUrlPrefix;
-
-    /**
-     * 箱码规则详情
-     */
-    private List<SysCodeRuleDetailDTO> boxCodeRuleList;
-
-    /**
-     * 内箱码规则详情
-     */
-    private List<SysCodeRuleDetailDTO> innerBoxCodeRuleList;
-
-    /**
-     * 袋码规则详情
-     */
-    private List<SysCodeRuleDetailDTO> bagCodeRuleList;
-
-    /**
-     * 万用码规则详情
-     */
-    private List<SysCodeRuleDetailDTO> universalCodeRuleList;
 
 }

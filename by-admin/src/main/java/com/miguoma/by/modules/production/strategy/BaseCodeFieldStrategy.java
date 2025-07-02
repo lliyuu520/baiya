@@ -1,12 +1,15 @@
 package com.miguoma.by.modules.production.strategy;
 
+import java.time.LocalDate;
+
+import org.slf4j.LoggerFactory;
+
+import com.miguoma.by.common.exception.BaseException;
+import com.miguoma.by.common.utils.EncodeConvertUtils;
+
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.core.util.StrUtil;
-import com.miguoma.by.common.exception.BaseException;
-import com.miguoma.by.common.utils.EncodeConverUtils;
-
-import java.time.LocalDate;
 
 /**
  * 码字段处理策略接口
@@ -26,6 +29,7 @@ import java.time.LocalDate;
  * 
  */
 @FunctionalInterface
+
 public interface BaseCodeFieldStrategy {
     /**
      * 处理并返回码片段
@@ -48,12 +52,12 @@ public interface BaseCodeFieldStrategy {
         try {
             i = Integer.parseInt(str);
         } catch (NumberFormatException e) {
+            LoggerFactory.getLogger(this.getClass()).error("编码格式错误, str: {}, encodeType: {}", str,
+                    encodeType, e);
             throw new BaseException("编码格式错误,请联系管理员");
         }
-        return EncodeConverUtils.convert(i, encodeType);
+        return EncodeConvertUtils.convert(i, encodeType);
 
-
-        
     }
 
     /**

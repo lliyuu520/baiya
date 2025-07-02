@@ -9,15 +9,18 @@ import com.miguoma.by.modules.production.strategy.CodeFieldContext;
  * 对应sourceField: SEMI_FINISHED_PRODUCT_CODE
  */
 public class SemiFinishedProductCodeStrategy implements BaseCodeFieldStrategy {
-   /**
-    * 处理半成品产品编码字段
-    * 
-    * @param context
-    * @return
-    */
+    /**
+     * 处理半成品产品编码字段
+     *
+     * @param context
+     * @return
+     */
     @Override
     public String apply(CodeFieldContext context) {
         String semiFinishedProductCode = context.getSemiFinishedProductCode();
+        if (StrUtil.isBlank(semiFinishedProductCode)) {
+            return StrUtil.EMPTY;
+        }
         Integer indexBegin = context.getIndexBegin();
         Integer indexEnd = context.getIndexEnd();
         String encodeType = context.getEncodeType();

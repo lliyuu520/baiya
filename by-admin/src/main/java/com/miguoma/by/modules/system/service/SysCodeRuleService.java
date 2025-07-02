@@ -55,17 +55,21 @@ public interface SysCodeRuleService extends BaseService<SysCodeRule> {
 
     /**
      * 设置当前编码规则
+     *
      * @param id
      */
     void setCurrentCodeRule(Long id);
-    
-    
-    
 
 
     /**
      * 获取编码规则列表
+     *
      * @return
      */
     List<SysCodeRuleVO> listVO();
+
+    /**
+     * 处理数据
+     */
+    void handleData();
 }

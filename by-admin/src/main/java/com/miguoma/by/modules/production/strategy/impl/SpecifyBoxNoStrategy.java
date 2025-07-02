@@ -1,5 +1,6 @@
 package com.miguoma.by.modules.production.strategy.impl;
 
+import cn.hutool.core.util.StrUtil;
 import com.miguoma.by.modules.production.strategy.BaseCodeFieldStrategy;
 import com.miguoma.by.modules.production.strategy.CodeFieldContext;
 
@@ -11,6 +12,9 @@ public class SpecifyBoxNoStrategy implements BaseCodeFieldStrategy {
     @Override
     public String apply(CodeFieldContext context) {
         String specifyBoxNo = context.getSpecifyBoxNo();
+        if (StrUtil.isBlank(specifyBoxNo)) {
+            return StrUtil.EMPTY;
+        }
         return specifyBoxNo;
     }
 }

@@ -11,6 +11,9 @@ public class FinishedProductionWorkshopCodeStrategy implements BaseCodeFieldStra
     @Override
     public String apply(CodeFieldContext context) {
         String finishedProductionWorkshopCode = context.getFinishedProductionWorkshopCode();
+        if (StrUtil.isBlank(finishedProductionWorkshopCode)) {
+            return StrUtil.EMPTY;
+        }
         Integer indexBegin = context.getIndexBegin();
         Integer indexEnd = context.getIndexEnd();
         String encodeType = context.getEncodeType();

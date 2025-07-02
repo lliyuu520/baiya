@@ -11,6 +11,9 @@ public class FinishedTeamCodeStrategy implements BaseCodeFieldStrategy {
     @Override
     public String apply(CodeFieldContext context) {
         String finishedProductionWorkshopCode = context.getFinishedProductionWorkshopCode();
+        if (StrUtil.isBlank(finishedProductionWorkshopCode)) {
+            return StrUtil.EMPTY;
+        }
       // 取首字母
       String str = StrUtil.sub(finishedProductionWorkshopCode, 0, 1);
      return str;

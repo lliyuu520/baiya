@@ -50,7 +50,7 @@ public class SshTunnelConfiguration {
                     session.connect();
 
                     session.setPortForwardingL(sshTunnelConfig.getLocalPort(), sshTunnelConfig.getRemoteHost(), sshTunnelConfig.getRemotePort());
-                    log.info("SSH tunnel established successfully!!!!!!!!!!!!!!!!!!!!!!!");
+                    log.info("SSH 隧道建立成功!");
                 } catch (Exception e) {
                     throw new RuntimeException("Failed to establish SSH tunnel", e);
                 }

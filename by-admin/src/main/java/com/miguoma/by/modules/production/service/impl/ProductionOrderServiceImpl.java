@@ -1,6 +1,7 @@
 package com.miguoma.by.modules.production.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
@@ -8,8 +9,10 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.miguoma.by.common.base.page.PageVO;
 import com.miguoma.by.common.base.service.impl.BaseServiceImpl;
 import com.miguoma.by.common.cache.QrCodeCache;
+import com.miguoma.by.common.enums.BaseEncodeEnums;
+import com.miguoma.by.common.enums.PullCodeEnums;
 import com.miguoma.by.common.exception.BaseException;
-import com.miguoma.by.common.utils.EncodeConverUtils;
+import com.miguoma.by.common.utils.EncodeConvertUtils;
 import com.miguoma.by.modules.client.dto.PullCodeDTO;
 import com.miguoma.by.modules.client.dto.RecordCodeUploadDTO;
 import com.miguoma.by.modules.client.vo.PullCodeVO;
@@ -51,6 +54,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -64,20 +68,13 @@ import java.util.regex.Pattern;
 public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderMapper, ProductionOrder>
         implements ProductionOrderService {
 
-    private final SysCodeRuleMapper sysCodeRuleMapper;
-    private final SysCodeRuleDetailMapper sysCodeRuleDetailMapper;
-    private final QrCodeCache qrCodeCache;
-
-    private final ProductionProductMapper productionProductMapper;
-    private final RecordBoxCodeService recordBoxCodeService;
-    private final RecordQrCodeService recordQrCodeService;
-    private final RecordBagCodeService recordBagCodeService;
-    private final ProductionShiftMapper productionShiftMapper;
-    private final ProductionTeamMapper productionTeamMapper;
-    private final ProductionDepartAndWorkshopMapper productionDepartAndWorkshopMapper;
-
     // sourceField 策略注册表
     private static final Map<String, BaseCodeFieldStrategy> CODE_FIELD_STRATEGY_MAP = new HashMap<>();
+    // 提取箱号Pattern为类字段
+    private static final Pattern BOX_NO_PATTERN = Pattern.compile("\\{BOX_NO:(\\d+)\\}");
+    private static final Pattern RANDOM_STRING_PATTERN = Pattern.compile("\\{(RANDOM_STRING:\\w+:\\d+)\\}");
+    private static final Pattern RANDOM_STRING_GROUP_PATTERN = Pattern.compile("\\{RANDOM_STRING:([A-Z_]+):(\\d+)\\}");
+
     static {
         // 成品相关 sourceField 策略注册
         // 成品生产日期（如20240530）
@@ -117,6 +114,17 @@ public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderM
         // 指定箱号（如外部传入箱号）
         CODE_FIELD_STRATEGY_MAP.put("SPECIFY_BOX_NO", new SpecifyBoxNoStrategy());
     }
+
+    private final SysCodeRuleMapper sysCodeRuleMapper;
+    private final SysCodeRuleDetailMapper sysCodeRuleDetailMapper;
+    private final QrCodeCache qrCodeCache;
+    private final ProductionProductMapper productionProductMapper;
+    private final RecordBoxCodeService recordBoxCodeService;
+    private final RecordQrCodeService recordQrCodeService;
+    private final RecordBagCodeService recordBagCodeService;
+    private final ProductionShiftMapper productionShiftMapper;
+    private final ProductionTeamMapper productionTeamMapper;
+    private final ProductionDepartAndWorkshopMapper productionDepartAndWorkshopMapper;
 
     /**
      * 分页查询生产订单列表
@@ -317,11 +325,11 @@ public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderM
             throw new BaseException("编码规则不存在");
         }
         // 箱号开始
-        final Integer boxNoBegin = pullCodeDTO.getBoxNoBegin();
+        final int boxNoBegin = pullCodeDTO.getBoxNoBegin();
         // 箱号数量
-        final Integer boxCodeNum = pullCodeDTO.getBoxCodeNum();
+        final int boxCodeNum = pullCodeDTO.getBoxCodeNum();
         // 二维码数量
-        final Integer qrCodeNum = oneBoxPackageNum * (boxCodeNum + 2);
+        final int qrCodeNum = oneBoxPackageNum * (boxCodeNum + 2);
         // 拉码类型
         final String type = pullCodeDTO.getType();
         final Long ruleId = finishedCodeRule.getId();
@@ -355,6 +363,7 @@ public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderM
             context.setSemiFinishedTeamCode(semiFinishedTeamCode);
             context.setSourceField(sourceField);
             context.setConstant(m.getConstant());
+            context.setLength(m.getLength());
             context.setIndexBegin(m.getIndexBegin());
             context.setIndexEnd(m.getIndexEnd());
             context.setEncodeType(m.getEncodeType());
@@ -389,6 +398,7 @@ public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderM
             context.setSemiFinishedTeamCode(semiFinishedTeamCode);
             context.setSourceField(sourceField);
             context.setConstant(m.getConstant());
+            context.setLength(m.getLength());
             context.setIndexBegin(m.getIndexBegin());
             context.setIndexEnd(m.getIndexEnd());
             context.setEncodeType(m.getEncodeType());
@@ -439,6 +449,7 @@ public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderM
             context.setSemiFinishedTeamCode(semiFinishedTeamCode);
             context.setSourceField(sourceField);
             context.setConstant(m.getConstant());
+            context.setLength(m.getLength());
             context.setIndexBegin(m.getIndexBegin());
             context.setIndexEnd(m.getIndexEnd());
             context.setEncodeType(m.getEncodeType());
@@ -474,10 +485,12 @@ public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderM
             context.setSemiFinishedTeamCode(semiFinishedTeamCode);
             context.setSourceField(sourceField);
             context.setConstant(m.getConstant());
+            context.setLength(m.getLength());
             context.setIndexBegin(m.getIndexBegin());
             context.setIndexEnd(m.getIndexEnd());
             context.setEncodeType(m.getEncodeType());
             context.setOffsetYears(m.getOffsetYears());
+            context.setSpecifyBoxNo(m.getSpecifyBoxNo());
             context.setRandomType(m.getRandomType());
             String str = strategy.apply(context);
             universalCodeStrBuilder.append(str);
@@ -490,102 +503,130 @@ public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderM
         List<String> universalCodeList = new ArrayList<>();
 
         String boxCodeTemplate = boxCodeStrBuilder.toString();
+        log.info("boxCodeTemplate:{}", boxCodeTemplate);
         String innerBoxCodeTemplate = innerBoxCodeStrBuilder.toString();
+        log.info("innerBoxCodeTemplate:{}", innerBoxCodeTemplate);
         String bagCodeTemplate = bagCodeStrBuilder.toString();
+        log.info("bagCodeTemplate:{}", bagCodeTemplate);
         String universalCodeTemplate = universalCodeStrBuilder.toString();
+        log.info("universalCodeTemplate:{}", universalCodeTemplate);
 
         // 处理箱号{BOX_NO:数字}
-        final Pattern pattern = Pattern.compile("\\{(BOX_NO:\\d+)\\}");
-        final List<String> boxNoTmpList = ReUtil.findAllGroup0(pattern, boxCodeTemplate);
+        final List<String> boxNoTmpList = ReUtil.findAllGroup0(BOX_NO_PATTERN, boxCodeTemplate);
         int boxNoLength = 0;
-        for (String boxNoTmp : boxNoTmpList) {
-            final List<String> boxNoTmpList2 = StrUtil.split(boxNoTmp, ":");
-            boxNoLength = Integer.parseInt(boxNoTmpList2.get(1));
+        if (CollUtil.isNotEmpty(boxNoTmpList)) {
+            Matcher matcher = BOX_NO_PATTERN.matcher(boxNoTmpList.get(0));
+            if (matcher.find()) {
+                boxNoLength = Integer.parseInt(matcher.group(1));
+            }
         }
-        final List<String> innerBoxNoTmpList = ReUtil.findAllGroup0(pattern, innerBoxCodeTemplate);
+
+        final List<String> innerBoxNoTmpList = ReUtil.findAllGroup0(BOX_NO_PATTERN, innerBoxCodeTemplate);
         int innerBoxNoLength = 0;
-        for (String innerBoxNoTmp : innerBoxNoTmpList) {
-            final List<String> innerBoxNoTmpList2 = StrUtil.split(innerBoxNoTmp, ":");
-            innerBoxNoLength = Integer.parseInt(innerBoxNoTmpList2.get(1));
+        if (CollUtil.isNotEmpty(innerBoxNoTmpList)) {
+            Matcher matcher = BOX_NO_PATTERN.matcher(innerBoxNoTmpList.get(0));
+            if (matcher.find()) {
+                innerBoxNoLength = Integer.parseInt(matcher.group(1));
+            }
         }
-        final List<String> bagNoTmpList = ReUtil.findAllGroup0(pattern, bagCodeTemplate);
+        final List<String> bagNoTmpList = ReUtil.findAllGroup0(BOX_NO_PATTERN, bagCodeTemplate);
         int bagNoLength = 0;
-        for (String bagNoTmp : bagNoTmpList) {
-            final List<String> bagNoTmpList2 = StrUtil.split(bagNoTmp, ":");
-            bagNoLength = Integer.parseInt(bagNoTmpList2.get(1));
+        if (CollUtil.isNotEmpty(bagNoTmpList)) {
+            Matcher matcher = BOX_NO_PATTERN.matcher(bagNoTmpList.get(0));
+            if (matcher.find()) {
+                bagNoLength = Integer.parseInt(matcher.group(1));
+            }
         }
-        final List<String> universalNoTmpList = ReUtil.findAllGroup0(pattern, universalCodeTemplate);
+
+        final List<String> universalNoTmpList = ReUtil.findAllGroup0(BOX_NO_PATTERN, universalCodeTemplate);
         int universalNoLength = 0;
-        for (String universalNoTmp : universalNoTmpList) {
-            final List<String> universalNoTmpList2 = StrUtil.split(universalNoTmp, ":");
-            universalNoLength = Integer.parseInt(universalNoTmpList2.get(1));
+        if (CollUtil.isNotEmpty(universalNoTmpList)) {
+            Matcher matcher = BOX_NO_PATTERN.matcher(universalNoTmpList.get(0));
+            if (matcher.find()) {
+                universalNoLength = Integer.parseInt(matcher.group(1));
+            }
         }
         // 处理随机字符串 {RANDOM_STRING:类型:数字}
-        final Pattern randomPattern = Pattern.compile("\\{(RANDOM_STRING:\\w+:\\d+)\\}");
-        final List<String> boxCodeRandomStringTmpList = ReUtil.findAllGroup0(randomPattern, boxCodeTemplate);
         String boxCodeRandomType = null;
         int boxCodeRandomLength = 0;
-        for (String randomStringTmp : boxCodeRandomStringTmpList) {
-            final List<String> randomStringTmpList2 = StrUtil.split(randomStringTmp, ":");
-            final String randomStringType = randomStringTmpList2.get(1);
-            final int randomStringLength = Integer.parseInt(randomStringTmpList2.get(2));
-            boxCodeRandomType = randomStringType;
-            boxCodeRandomLength = randomStringLength;
+        List<String> boxCodeRandomStringTmpList = ReUtil.findAllGroup0(RANDOM_STRING_GROUP_PATTERN, boxCodeTemplate);
+        if (CollUtil.isNotEmpty(boxCodeRandomStringTmpList)) {
+            Matcher matcher = RANDOM_STRING_GROUP_PATTERN.matcher(boxCodeRandomStringTmpList.get(0));
+            if (matcher.find()) {
+                boxCodeRandomType = matcher.group(1);
+                boxCodeRandomLength = Integer.parseInt(matcher.group(2));
+            }
         }
-        final List<String> innerBoxCodeRandomStringTmpList = ReUtil.findAllGroup0(randomPattern, innerBoxCodeTemplate);
+
         String innerBoxCodeRandomType = null;
         int innerBoxCodeRandomLength = 0;
-        for (String randomStringTmp : innerBoxCodeRandomStringTmpList) {
-            final List<String> randomStringTmpList2 = StrUtil.split(randomStringTmp, ":");
-            final String randomStringType = randomStringTmpList2.get(1);
-            final int randomStringLength = Integer.parseInt(randomStringTmpList2.get(2));
-            innerBoxCodeRandomType = randomStringType;
-            innerBoxCodeRandomLength = randomStringLength;
+        List<String> innerBoxCodeRandomStringTmpList = ReUtil.findAllGroup0(RANDOM_STRING_GROUP_PATTERN,
+                innerBoxCodeTemplate);
+        if (CollUtil.isNotEmpty(innerBoxCodeRandomStringTmpList)) {
+            Matcher matcher = RANDOM_STRING_GROUP_PATTERN.matcher(innerBoxCodeRandomStringTmpList.get(0));
+            if (matcher.find()) {
+                innerBoxCodeRandomType = matcher.group(1);
+                innerBoxCodeRandomLength = Integer.parseInt(matcher.group(2));
+            }
         }
-        final List<String> bagCodeRandomStringTmpList = ReUtil.findAllGroup0(randomPattern, bagCodeTemplate);
+
         String bagCodeRandomType = null;
         int bagCodeRandomLength = 0;
-        for (String randomStringTmp : bagCodeRandomStringTmpList) {
-            final List<String> randomStringTmpList2 = StrUtil.split(randomStringTmp, ":");
-            final String randomStringType = randomStringTmpList2.get(1);
-            final int randomStringLength = Integer.parseInt(randomStringTmpList2.get(2));
-            bagCodeRandomType = randomStringType;
-            bagCodeRandomLength = randomStringLength;
+        List<String> bagCodeRandomStringTmpList = ReUtil.findAllGroup0(RANDOM_STRING_GROUP_PATTERN, bagCodeTemplate);
+        if (CollUtil.isNotEmpty(bagCodeRandomStringTmpList)) {
+            Matcher matcher = RANDOM_STRING_GROUP_PATTERN.matcher(bagCodeRandomStringTmpList.get(0));
+            if (matcher.find()) {
+                bagCodeRandomType = matcher.group(1);
+                bagCodeRandomLength = Integer.parseInt(matcher.group(2));
+            }
         }
-        final List<String> universalCodeRandomStringTmpList = ReUtil.findAllGroup0(randomPattern, universalCodeTemplate);
+
         String universalCodeRandomType = null;
         int universalCodeRandomLength = 0;
-        for (String randomStringTmp : universalCodeRandomStringTmpList) {
-            final List<String> randomStringTmpList2 = StrUtil.split(randomStringTmp, ":");
-            final String randomStringType = randomStringTmpList2.get(1);
-            final int randomStringLength = Integer.parseInt(randomStringTmpList2.get(2));
-            universalCodeRandomType = randomStringType;
-            universalCodeRandomLength = randomStringLength;
+        List<String> universalCodeRandomStringTmpList = ReUtil.findAllGroup0(RANDOM_STRING_GROUP_PATTERN,
+                universalCodeTemplate);
+        if (CollUtil.isNotEmpty(universalCodeRandomStringTmpList)) {
+            Matcher matcher = RANDOM_STRING_GROUP_PATTERN.matcher(universalCodeRandomStringTmpList.get(0));
+            if (matcher.find()) {
+                universalCodeRandomType = matcher.group(1);
+                universalCodeRandomLength = Integer.parseInt(matcher.group(2));
+            }
         }
 
-        for (int i = boxNoBegin; i < boxNoEnd; i++) {
+        for (int currentBoxNo = boxNoBegin; currentBoxNo < boxNoEnd; currentBoxNo++) {
             // 箱号
-            final String boxNo = StrUtil.fillBefore(String.valueOf(i), '0', boxNoLength);
-            boxCodeTemplate = ReUtil.replaceAll(boxCodeTemplate, pattern, boxNo);
+            final String currentBoxNoStr = StrUtil.fillBefore(String.valueOf(currentBoxNo), '0', boxNoLength);
+            boxCodeTemplate = ReUtil.replaceAll(boxCodeTemplate, BOX_NO_PATTERN, currentBoxNoStr);
 
-            final String innerBoxNo = StrUtil.fillBefore(String.valueOf(i), '0', innerBoxNoLength);
-            innerBoxCodeTemplate = ReUtil.replaceAll(innerBoxCodeTemplate, pattern, innerBoxNo);
-            final String bagNo = StrUtil.fillBefore(String.valueOf(i), '0', bagNoLength);
-            bagCodeTemplate = ReUtil.replaceAll(bagCodeTemplate, pattern, bagNo);
-            final String universalNo = StrUtil.fillBefore(String.valueOf(i), '0', universalNoLength);
-            universalCodeTemplate = ReUtil.replaceAll(universalCodeTemplate, pattern, universalNo);
-            bagCodeTemplate = ReUtil.replaceAll(bagCodeTemplate, pattern, bagNo);
-            universalCodeTemplate = ReUtil.replaceAll(universalCodeTemplate, pattern, universalNo);
+            final String innerBoxNo = StrUtil.fillBefore(String.valueOf(currentBoxNo), '0', innerBoxNoLength);
+            innerBoxCodeTemplate = ReUtil.replaceAll(innerBoxCodeTemplate, BOX_NO_PATTERN, innerBoxNo);
+
+            final String bagNo = StrUtil.fillBefore(String.valueOf(currentBoxNo), '0', bagNoLength);
+            bagCodeTemplate = ReUtil.replaceAll(bagCodeTemplate, BOX_NO_PATTERN, bagNo);
+
+            final String universalNo = StrUtil.fillBefore(String.valueOf(currentBoxNo), '0', universalNoLength);
+            universalCodeTemplate = ReUtil.replaceAll(universalCodeTemplate, BOX_NO_PATTERN, universalNo);
+
+            bagCodeTemplate = ReUtil.replaceAll(bagCodeTemplate, BOX_NO_PATTERN, bagNo);
+            universalCodeTemplate = ReUtil.replaceAll(universalCodeTemplate, BOX_NO_PATTERN, universalNo);
 
             // 随机字符串
             final String boxCodeRandomString = RandomStringUtil.generate(boxCodeRandomType, boxCodeRandomLength);
-            boxCodeTemplate = ReUtil.replaceAll(boxCodeTemplate, randomPattern, boxCodeRandomString);
-            final String innerBoxCodeRandomString = RandomStringUtil.generate(innerBoxCodeRandomType, innerBoxCodeRandomLength);
-            innerBoxCodeTemplate = ReUtil.replaceAll(innerBoxCodeTemplate, randomPattern, innerBoxCodeRandomString);
+            boxCodeTemplate = ReUtil.replaceAll(boxCodeTemplate, RANDOM_STRING_PATTERN, boxCodeRandomString);
+            final String innerBoxCodeRandomString = RandomStringUtil.generate(innerBoxCodeRandomType,
+                    innerBoxCodeRandomLength);
+            innerBoxCodeTemplate = ReUtil.replaceAll(innerBoxCodeTemplate, RANDOM_STRING_PATTERN,
+                    innerBoxCodeRandomString);
             final String bagCodeRandomString = RandomStringUtil.generate(bagCodeRandomType, bagCodeRandomLength);
-            bagCodeTemplate = ReUtil.replaceAll(bagCodeTemplate, randomPattern, bagCodeRandomString);
-            final String universalCodeRandomString = RandomStringUtil.generate(universalCodeRandomType, universalCodeRandomLength);
-            universalCodeTemplate = ReUtil.replaceAll(universalCodeTemplate, randomPattern, universalCodeRandomString);
+            bagCodeTemplate = ReUtil.replaceAll(bagCodeTemplate, RANDOM_STRING_PATTERN, bagCodeRandomString);
+            final String universalCodeRandomString = RandomStringUtil.generate(universalCodeRandomType,
+                    universalCodeRandomLength);
+            universalCodeTemplate = ReUtil.replaceAll(universalCodeTemplate, RANDOM_STRING_PATTERN,
+                    universalCodeRandomString);
+            log.info("箱号:{} 箱码:{}", currentBoxNo, boxCodeTemplate);
+            log.info("箱号:{} 内箱码:{}", currentBoxNo, innerBoxCodeTemplate);
+            log.info("箱号:{} 袋码:{}", currentBoxNo, bagCodeTemplate);
+            log.info("箱号:{} 万用码:{}", currentBoxNo, universalCodeTemplate);
 
             boxCodeList.add(boxCodeTemplate);
             innerBoxCodeList.add(innerBoxCodeTemplate);
@@ -597,7 +638,7 @@ public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderM
         // 写入箱码
         final LocalDateTime now = LocalDateTimeUtil.now();
         final PullCodeVO pullCodeVO = new PullCodeVO();
-        if (StrUtil.equals("QR_CODE", type)) {
+        if (StrUtil.equals(PullCodeEnums.QR_CODE.getCode(), type)) {
             // 二维码
             // 按照 数量生成二维码
             final List<String> qrCodeSet = qrCodeCache.getQrCode(qrCodeNum);
@@ -627,7 +668,7 @@ public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderM
                 recordBoxCode.setFinishedProductOrderId(finishedProductOrderId);
                 recordBoxCode.setSemiFinishedProductOrderId(semiFinishedProductOrderId);
                 recordBoxCode.setCode(m);
-                recordBoxCode.setPullType("QR_CODE");
+                recordBoxCode.setPullType(PullCodeEnums.QR_CODE.getCode());
                 recordBoxCode.setRuleId(ruleId);
                 recordBoxCode.setPullDateTime(now);
                 return recordBoxCode;
@@ -644,7 +685,7 @@ public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderM
             recordQrCodeService.saveBatch(recordQrCodeList);
 
         }
-        if (StrUtil.equals("LOGISTICS_CODE", type)) {
+        if (StrUtil.equals(PullCodeEnums.LOGISTICS_CODE.getCode(), type)) {
             List<PullCodeVO.LogisticsTypeData> logisticsTypeDataList = new ArrayList<>();
             for (int i = 0; i < boxCodeList.size(); i++) {
                 final PullCodeVO.LogisticsTypeData logisticsTypeData = new PullCodeVO.LogisticsTypeData();
@@ -666,7 +707,7 @@ public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderM
                 recordBoxCode.setFinishedProductOrderId(finishedProductOrderId);
                 recordBoxCode.setSemiFinishedProductOrderId(semiFinishedProductOrderId);
                 recordBoxCode.setCode(boxCode);
-                recordBoxCode.setPullType("LOGISTICS_CODE");
+                recordBoxCode.setPullType(PullCodeEnums.LOGISTICS_CODE.getCode());
                 recordBoxCode.setRuleId(ruleId);
                 recordBoxCode.setPullDateTime(now);
                 recordBoxCodeList.add(recordBoxCode);
@@ -762,9 +803,9 @@ public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderM
         final String orderDateStr = erpOrderDTO.getOrderDate();
         // 2025-05-29 00:00:00.0
         // 截取前10位 2025-05-29 转LocalDate
-        final LocalDate orderDate = LocalDateTimeUtil.parseDate(orderDateStr.substring(0, 10), "yyyy-MM-dd");
+        final LocalDate orderDate = LocalDateTimeUtil.parseDate(orderDateStr.substring(0, 10), DatePattern.NORM_DATE_PATTERN);
         final String productionDateStr = StrUtil.emptyIfNull(erpOrderDTO.getProductionDate());
-        final LocalDate productionDate = LocalDateTimeUtil.parseDate(productionDateStr.substring(0, 10), "yyyy-MM-dd");
+        final LocalDate productionDate = LocalDateTimeUtil.parseDate(productionDateStr.substring(0, 10), DatePattern.NORM_DATE_PATTERN);
         final String productionDepartCode = StrUtil.emptyIfNull(erpOrderDTO.getProductionDepartCode());
         final String productionWorkshopCode = StrUtil.emptyIfNull(erpOrderDTO.getProductionWorkshopCode());
         final String productionShiftCode = StrUtil.emptyIfNull(erpOrderDTO.getProductionShiftCode());
@@ -846,10 +887,11 @@ public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderM
         final String productCode = m.getProductCode();
         final LocalDate productionDate = m.getProductionDate();
         if (productionDate != null) {
-            final String productionDateStr = LocalDateTimeUtil.format(productionDate, "yyyyMMdd");
-            m.setProductionBatchNo(EncodeConverUtils.convert(Integer.parseInt(productionDateStr), EncodeConverUtils.BASE_62));
+            final String productionDateStr = LocalDateTimeUtil.format(productionDate, DatePattern.PURE_DATE_PATTERN);
+            m.setProductionBatchNo(
+                    EncodeConvertUtils.convert(Integer.parseInt(productionDateStr), BaseEncodeEnums.BASE_62.getDesc()));
             final LocalDate limitedUseDate = productionDate.plusYears(3);
-            m.setLimitedUseDateStr(LocalDateTimeUtil.format(limitedUseDate, "yyyyMMdd"));
+            m.setLimitedUseDateStr(LocalDateTimeUtil.format(limitedUseDate, DatePattern.PURE_DATE_PATTERN));
         }
         final String productType = m.getProductType();
         final Long id = m.getId();

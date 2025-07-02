@@ -17,6 +17,9 @@ public class FinishedOrderCodeStrategy implements BaseCodeFieldStrategy {
     @Override
     public String apply(CodeFieldContext context) {
         String finishedOrderNo = context.getFinishedOrderNo();
+        if (StrUtil.isBlank(finishedOrderNo)) {
+            return StrUtil.EMPTY;
+        }
         Integer indexBegin = context.getIndexBegin();
         Integer indexEnd = context.getIndexEnd();
         String encodeType = context.getEncodeType();

@@ -1,5 +1,6 @@
 package com.miguoma.by.modules.system.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -7,9 +8,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.miguoma.by.common.base.page.PageVO;
 import com.miguoma.by.common.base.service.impl.BaseServiceImpl;
 import com.miguoma.by.modules.system.convert.SysCodeRuleConvert;
-import com.miguoma.by.modules.system.convert.SysCodeRuleDetailConvert;
 import com.miguoma.by.modules.system.dto.SysCodeRuleDTO;
-import com.miguoma.by.modules.system.dto.SysCodeRuleDetailDTO;
 import com.miguoma.by.modules.system.entity.SysCodeRule;
 import com.miguoma.by.modules.system.entity.SysCodeRuleDetail;
 import com.miguoma.by.modules.system.enums.RuleTypeEnums;
@@ -22,17 +21,15 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * 编码规则服务实现类
  */
 @Service
 @RequiredArgsConstructor
-public class SysCodeRuleServiceImpl extends BaseServiceImpl<SysCodeRuleMapper, SysCodeRule>
-        implements SysCodeRuleService {
+public class SysCodeRuleServiceImpl extends BaseServiceImpl<SysCodeRuleMapper, SysCodeRule> implements SysCodeRuleService {
+
 
     private final SysCodeRuleDetailMapper sysCodeRuleDetailMapper;
 
@@ -96,75 +93,11 @@ public class SysCodeRuleServiceImpl extends BaseServiceImpl<SysCodeRuleMapper, S
         if (StrUtil.isBlank(name)) {
             throw new IllegalArgumentException("编码规则名称不能为空");
         }
-        final String qrCodeUrlPrefix = dto.getQrCodeUrlPrefix();
 
-        // 保存主表
-        SysCodeRule sysCodeRule = new SysCodeRule();
-        sysCodeRule.setCode(code);
-        sysCodeRule.setName(name);
-        sysCodeRule.setQrCodeUrlPrefix(qrCodeUrlPrefix);
+        SysCodeRule sysCodeRule = SysCodeRuleConvert.INSTANCE.convertFromDTO(dto);
         sysCodeRule.setEnabled(false);
         save(sysCodeRule);
 
-        // 获取规则ID
-        final Long codeRuleId = sysCodeRule.getId();
-
-        // 处理所有类型的规则详情
-        List<SysCodeRuleDetail> allDetails = new ArrayList<>();
-
-        // 处理箱码规则
-        if (dto.getBoxCodeRuleList() != null) {
-            allDetails.addAll(convertRuleDetails(dto.getBoxCodeRuleList(), codeRuleId, RuleTypeEnums.BOX.getCode()));
-        }
-
-        // 处理袋码规则
-        if (dto.getBagCodeRuleList() != null) {
-            allDetails.addAll(convertRuleDetails(dto.getBagCodeRuleList(), codeRuleId, RuleTypeEnums.BAG.getCode()));
-        }
-
-        // 处理通用码规则
-        if (dto.getUniversalCodeRuleList() != null) {
-            allDetails.addAll(convertRuleDetails(dto.getUniversalCodeRuleList(), codeRuleId, RuleTypeEnums.UNIVERSAL_CODE.getCode()));
-        }
-
-        // 处理内箱码规则
-        if (dto.getInnerBoxCodeRuleList() != null) {
-            allDetails.addAll(convertRuleDetails(dto.getInnerBoxCodeRuleList(), codeRuleId, RuleTypeEnums.INNER_BOX.getCode()));
-        }
-
-        // 批量保存规则详情
-        if (!allDetails.isEmpty()) {
-            allDetails.forEach(sysCodeRuleDetailMapper::insert);
-        }
-    }
-
-    /**
-     * 转换规则详情
-     *
-     * @param details  规则详情DTO列表
-     * @param ruleId   规则ID
-     * @param ruleType 规则类型
-     * @return 规则详情实体列表
-     */
-    private List<SysCodeRuleDetail> convertRuleDetails(List<SysCodeRuleDetailDTO> details, Long ruleId,
-            String ruleType) {
-        return details.stream()
-                .map(detail -> {
-                    SysCodeRuleDetail sysCodeRuleDetail = new SysCodeRuleDetail();
-                    sysCodeRuleDetail.setRuleType(ruleType);
-                    sysCodeRuleDetail.setRuleId(ruleId);
-                    sysCodeRuleDetail.setEncodeType(detail.getEncodeType());
-                    sysCodeRuleDetail.setIndexBegin(detail.getIndexBegin());
-                    sysCodeRuleDetail.setIndexEnd(detail.getIndexEnd());
-                    sysCodeRuleDetail.setSourceField(detail.getSourceField());
-                    sysCodeRuleDetail.setConstant(detail.getConstant());
-                    sysCodeRuleDetail.setLength(detail.getLength());
-                    sysCodeRuleDetail.setRandomType(detail.getRandomType());
-                    sysCodeRuleDetail.setOffsetYears(detail.getOffsetYears());
-
-                    return sysCodeRuleDetail;
-                })
-                .collect(Collectors.toList());
     }
 
     /**
@@ -187,45 +120,13 @@ public class SysCodeRuleServiceImpl extends BaseServiceImpl<SysCodeRuleMapper, S
         if (StrUtil.isBlank(name)) {
             throw new IllegalArgumentException("编码规则名称不能为空");
         }
-        final String qrCodeUrlPrefix = dto.getQrCodeUrlPrefix();
 
         // 保存主表
-        final Long ruleId = dto.getId();
-        SysCodeRule sysCodeRule = getById(ruleId);
-        sysCodeRule.setCode(code);
-        sysCodeRule.setName(name);
-        sysCodeRule.setQrCodeUrlPrefix(qrCodeUrlPrefix);
+        SysCodeRule sysCodeRule = SysCodeRuleConvert.INSTANCE.convertFromDTO(dto);
+
         updateById(sysCodeRule);
 
-        // 获取规则ID
-        final Long codeRuleId = sysCodeRule.getId();
 
-        // 处理所有类型的规则详情
-        List<SysCodeRuleDetail> allDetails = new ArrayList<>();
-
-        // 处理箱码规则
-        if (dto.getBoxCodeRuleList() != null) {
-            allDetails.addAll(convertRuleDetails(dto.getBoxCodeRuleList(), codeRuleId, RuleTypeEnums.BOX.getCode()));
-        }
-        // 处理内箱码规则
-        if (dto.getInnerBoxCodeRuleList() != null) {
-            allDetails.addAll(convertRuleDetails(dto.getInnerBoxCodeRuleList(), codeRuleId, RuleTypeEnums.INNER_BOX.getCode()));
-        }
-
-        // 处理袋码规则
-        if (dto.getBagCodeRuleList() != null) {
-            allDetails.addAll(convertRuleDetails(dto.getBagCodeRuleList(), codeRuleId, RuleTypeEnums.BAG.getCode()));
-        }
-
-        // 处理通用码规则
-        if (dto.getUniversalCodeRuleList() != null) {
-            allDetails.addAll(convertRuleDetails(dto.getUniversalCodeRuleList(), codeRuleId, RuleTypeEnums.UNIVERSAL_CODE.getCode()));
-        }
-        sysCodeRuleDetailMapper.deleteByRuleId(ruleId);
-        // 批量保存规则详情
-        if (!allDetails.isEmpty()) {
-            allDetails.forEach(sysCodeRuleDetailMapper::insert);
-        }
     }
 
     /**
@@ -238,19 +139,6 @@ public class SysCodeRuleServiceImpl extends BaseServiceImpl<SysCodeRuleMapper, S
     public SysCodeRuleVO getOneById(Long id) {
         SysCodeRule sysCodeRule = getById(id);
         SysCodeRuleVO codeRuleVO = SysCodeRuleConvert.INSTANCE.convertToVO(sysCodeRule);
-        final List<SysCodeRuleDetail> boxSysCodeRuleDetails = sysCodeRuleDetailMapper
-                .selectListByRuleIdSAndType(sysCodeRule.getId(), RuleTypeEnums.BOX.getCode());
-        codeRuleVO.setBoxCodeRuleList(SysCodeRuleDetailConvert.INSTANCE.convertList(boxSysCodeRuleDetails));
-
-        final List<SysCodeRuleDetail> innerBoxSysCodeRuleDetails = sysCodeRuleDetailMapper
-                .selectListByRuleIdSAndType(sysCodeRule.getId(), RuleTypeEnums.INNER_BOX.getCode());
-                codeRuleVO.setInnerBoxCodeRuleList(SysCodeRuleDetailConvert.INSTANCE.convertList(innerBoxSysCodeRuleDetails));
-        final List<SysCodeRuleDetail> bagSysCodeRuleDetails = sysCodeRuleDetailMapper
-                .selectListByRuleIdSAndType(sysCodeRule.getId(), RuleTypeEnums.BAG.getCode());
-        codeRuleVO.setBagCodeRuleList(SysCodeRuleDetailConvert.INSTANCE.convertList(bagSysCodeRuleDetails));
-        final List<SysCodeRuleDetail> qrSysCodeRuleDetails = sysCodeRuleDetailMapper
-                .selectListByRuleIdSAndType(sysCodeRule.getId(), RuleTypeEnums.UNIVERSAL_CODE.getCode());
-        codeRuleVO.setUniversalCodeRuleList(SysCodeRuleDetailConvert.INSTANCE.convertList(qrSysCodeRuleDetails));
 
         return codeRuleVO;
     }
@@ -286,15 +174,62 @@ public class SysCodeRuleServiceImpl extends BaseServiceImpl<SysCodeRuleMapper, S
 
     }
 
-
-
     /**
      * 获取编码规则列表
+     *
      * @return
      */
     @Override
     public List<SysCodeRuleVO> listVO() {
         List<SysCodeRule> list = list();
         return SysCodeRuleConvert.INSTANCE.convertToList(list);
+    }
+
+    /**
+     * 处理数据
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void handleData() {
+        List<SysCodeRule> list = list();
+        for (SysCodeRule sysCodeRule : list) {
+            Long sysCodeRuleId = sysCodeRule.getId();
+            List<SysCodeRuleDetail> sysCodeRuleDetails = sysCodeRuleDetailMapper.selectListByRuleIdSAndType(sysCodeRuleId, RuleTypeEnums.BOX.getCode());
+            sysCodeRule.setBoxCodeRuleList(sysCodeRuleDetails.stream().map(m -> {
+                com.miguoma.by.modules.system.entity.SysCodeRule.SysCodeRuleDetail sysCodeRuleDetail = new SysCodeRule.SysCodeRuleDetail();
+                BeanUtil.copyProperties(m, sysCodeRuleDetail);
+                return sysCodeRuleDetail;
+
+            }).toList());
+
+
+            List<SysCodeRuleDetail> sysCodeRuleDetails1 = sysCodeRuleDetailMapper.selectListByRuleIdSAndType(sysCodeRuleId, RuleTypeEnums.INNER_BOX.getCode());
+            sysCodeRule.setInnerBoxCodeRuleList(sysCodeRuleDetails1.stream().map(m -> {
+                com.miguoma.by.modules.system.entity.SysCodeRule.SysCodeRuleDetail sysCodeRuleDetail = new SysCodeRule.SysCodeRuleDetail();
+                BeanUtil.copyProperties(m, sysCodeRuleDetail);
+                return sysCodeRuleDetail;
+
+            }).toList());
+
+            List<SysCodeRuleDetail> sysCodeRuleDetails2 = sysCodeRuleDetailMapper.selectListByRuleIdSAndType(sysCodeRuleId, RuleTypeEnums.BAG.getCode());
+            sysCodeRule.setBagCodeRuleList(sysCodeRuleDetails2.stream().map(m -> {
+                com.miguoma.by.modules.system.entity.SysCodeRule.SysCodeRuleDetail sysCodeRuleDetail = new SysCodeRule.SysCodeRuleDetail();
+                BeanUtil.copyProperties(m, sysCodeRuleDetail);
+                return sysCodeRuleDetail;
+
+            }).toList());
+
+            List<SysCodeRuleDetail> sysCodeRuleDetails3 = sysCodeRuleDetailMapper.selectListByRuleIdSAndType(sysCodeRuleId, RuleTypeEnums.UNIVERSAL_CODE.getCode());
+            sysCodeRule.setUniversalCodeRuleList(sysCodeRuleDetails3.stream().map(m -> {
+                com.miguoma.by.modules.system.entity.SysCodeRule.SysCodeRuleDetail sysCodeRuleDetail = new SysCodeRule.SysCodeRuleDetail();
+                BeanUtil.copyProperties(m, sysCodeRuleDetail);
+                return sysCodeRuleDetail;
+
+            }).toList());
+            updateById(sysCodeRule);
+
+
+        }
+
     }
 }

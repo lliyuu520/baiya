@@ -11,13 +11,16 @@ import com.miguoma.by.modules.production.strategy.CodeFieldContext;
 public class SemiFinishedTeamCodeStrategy implements BaseCodeFieldStrategy {
     /**
      * 处理半成品班次编码字段
-     * 
+     *
      * @param context
      * @return
      */
     @Override
     public String apply(CodeFieldContext context) {
         String semiFinishedTeamCode = context.getSemiFinishedTeamCode();
+        if (StrUtil.isBlank(semiFinishedTeamCode)) {
+            return StrUtil.EMPTY;
+        }
         // 取首字母
         String str = StrUtil.sub(semiFinishedTeamCode, 0, 1);
         return str;

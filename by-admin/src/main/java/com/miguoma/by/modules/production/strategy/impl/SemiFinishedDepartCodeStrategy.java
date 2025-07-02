@@ -18,6 +18,9 @@ public class SemiFinishedDepartCodeStrategy implements BaseCodeFieldStrategy {
     @Override
     public String apply(CodeFieldContext context) {
         String semiFinishedProductionDepartCode = context.getSemiFinishedProductionDepartCode();
+        if (StrUtil.isBlank(semiFinishedProductionDepartCode)) {
+            return StrUtil.EMPTY;
+        }
         Integer indexBegin = context.getIndexBegin();
         Integer indexEnd = context.getIndexEnd();
         String encodeType = context.getEncodeType();

@@ -1,10 +1,11 @@
 package com.miguoma.by.common.utils;
 
+import com.miguoma.by.common.enums.BaseEncodeEnums;
+import lombok.experimental.UtilityClass;
+
 import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
-
-import lombok.experimental.UtilityClass;
 
 /**
  * 进制转换工具
@@ -16,29 +17,19 @@ import lombok.experimental.UtilityClass;
  * BaseConverUtils.convert(12345, "BASE_36");
  */
 @UtilityClass
-public class EncodeConverUtils {
+public class EncodeConvertUtils {
 
-   public static final String BASE_10 = "BASE_10";
-   
-   public static final String BASE_16 = "BASE_16";
-   // 小写字母
-   public static final String BASE_26 = "BASE_26";
-   // 数字+小写字母
-   public static final String BASE_36 = "BASE_36";
-   // 小写字母+大写字母
-   public static final String BASE_52 = "BASE_52";
-   // 数字+小写字母+大写字母
-   public static final String BASE_62 = "BASE_62";
+
 
    private static final Map<String, Integer> BASE_MAP = new HashMap<>();
    private static final String DIGITS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
    static {
-      BASE_MAP.put(BASE_10, 10);
-      BASE_MAP.put(BASE_16, 16);
-      BASE_MAP.put(BASE_26, 26);
-      BASE_MAP.put(BASE_36, 36);
-      BASE_MAP.put(BASE_52, 52);
-      BASE_MAP.put(BASE_62, 62);
+      BASE_MAP.put(BaseEncodeEnums.BASE_10.getCode(), 10);
+      BASE_MAP.put(BaseEncodeEnums.BASE_16.getCode(), 16);
+      BASE_MAP.put(BaseEncodeEnums.BASE_26.getCode(), 26);
+      BASE_MAP.put(BaseEncodeEnums.BASE_36.getCode(), 36);
+      BASE_MAP.put(BaseEncodeEnums.BASE_52.getCode(), 52);
+      BASE_MAP.put(BaseEncodeEnums.BASE_62.getCode(), 62);
    }
 
    /**
