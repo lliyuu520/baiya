@@ -59,7 +59,7 @@ public enum SysLogTypeEnums {
     REWORK("返工"),
 
     /**
-     * 撤销返工 
+     * 撤销返工
      */
     CANCEL_REWORK("撤销返工"),
 
@@ -100,7 +100,12 @@ public enum SysLogTypeEnums {
     /**
      * 验证密码
      */
-    VERIFY_PASSWORD("验证密码");
+    VERIFY_PASSWORD("验证密码"),
+    /**
+     * 客户端绑定
+     */
+    CLIENT_BIND("客户端绑定"),
+    ;
 
     private final String desc;
 

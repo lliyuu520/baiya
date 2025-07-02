@@ -870,12 +870,11 @@ public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderM
      */
 
     private void accept(ProductionOrderVO m) {
-        final String productCode = m.getProductCode();
         final LocalDate productionDate = m.getProductionDate();
         if (productionDate != null) {
             final String productionDateStr = LocalDateTimeUtil.format(productionDate, DatePattern.PURE_DATE_PATTERN);
             m.setProductionBatchNo(
-                    EncodeConvertUtils.convert(Integer.parseInt(productionDateStr), BaseEncodeEnums.BASE_62.getDesc()));
+                    EncodeConvertUtils.convert(Integer.parseInt(productionDateStr), BaseEncodeEnums.BASE_62.getCode()));
             final LocalDate limitedUseDate = productionDate.plusYears(3);
             m.setLimitedUseDateStr(LocalDateTimeUtil.format(limitedUseDate, DatePattern.PURE_DATE_PATTERN));
         }

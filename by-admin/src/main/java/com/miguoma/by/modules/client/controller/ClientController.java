@@ -54,7 +54,7 @@ public class ClientController {
      * @return
      */
     @PostMapping("/login")
-    @SysLogCut(module = SysLogModuleEnums.CLIENT, type = SysLogTypeEnums.LOGIN)
+    @SysLogCut(module = SysLogModuleEnums.CLIENT, type = SysLogTypeEnums.CLIENT_BIND)
     public Result<Long> login(@RequestBody MachineLoginDTO dto) {
         final String productionFactoryCode = dto.getProductionFactoryCode();
         final String productionWorkshopCode = dto.getProductionWorkshopCode();
@@ -110,7 +110,7 @@ public class ClientController {
         if (StrUtil.isBlank(password)) {
             return Result.error("密码不能为空!");
 
-    
+
         }
         final EquipmentClient equipmentClient = ClientContextHolder.getEquipmentClient();
         MachineVerifyPasswordDTO machineVerifyPasswordDTO = new MachineVerifyPasswordDTO();

@@ -22,7 +22,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
@@ -63,16 +62,9 @@ public class EquipmentApkServiceImpl extends BaseServiceImpl<EquipmentApkMapper,
      * @param dto APK版本信息，包含版本号、下载地址、版本描述等
      */
     @Override
-    @Transactional(rollbackFor =Exception.class)
+    @Transactional(rollbackFor = Exception.class)
     public void saveOne(EquipmentApkDTO dto) {
         EquipmentApk equipmentApk = EquipmentApkConvert.INSTANCE.convertFromDTO(dto);
-        final String apkUrl = dto.getApkUrl();
-        final String replace = StrUtil.replace(apkUrl, apkLocation, "");
-        final File file = FileUtil.file(apkPath + replace);
-        final String versionName = dto.getVersionName();
-        final Long versionNo = dto.getVersionNo();
-        final File rename = FileUtil.rename(file, versionName + "-" + versionNo, true, true);
-        equipmentApk.setApkUrl(apkLocation + rename.getName());
         save(equipmentApk);
     }
 
@@ -153,7 +145,7 @@ public class EquipmentApkServiceImpl extends BaseServiceImpl<EquipmentApkMapper,
 
         // 需要重命名才行,不然文件会覆盖
         String newFilename = fileName + "_" + IdUtil.fastSimpleUUID() + "." + fileTypeName;
-        String filePath = apkPath  + newFilename;
+        String filePath = apkPath + newFilename;
         final InputStream inputStream;
         try {
             inputStream = file.getInputStream();
@@ -161,7 +153,7 @@ public class EquipmentApkServiceImpl extends BaseServiceImpl<EquipmentApkMapper,
             throw new RuntimeException(e);
         }
         FileUtil.writeFromStream(inputStream, filePath);
-        return apkLocation+newFilename;
+        return apkLocation + newFilename;
 
     }
 

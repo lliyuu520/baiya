@@ -37,7 +37,7 @@
                     :disabled=" row.sourceField === 'SPECIFY_BOX_NO' || row.sourceField === 'CONSTANT' || row.sourceField === 'BOX_NO' || row.sourceField === 'RANDOM_STRING' || row.sourceField === 'FINISHED_TEAM_CODE' || row.sourceField === 'SEMI_FINISHED_TEAM_CODE'" />
                 </template>
             </el-table-column>
-            <el-table-column align="center" label="编码" width="180">
+            <el-table-column align="center" label="进制" width="180">
                 <template #default="{ row }">
                     <el-select v-model="row.encodeType" class="form-input input-encode" 
                     :disabled=" row.sourceField === 'SPECIFY_BOX_NO' || row.sourceField === 'CONSTANT' || row.sourceField === 'BOX_NO' || row.sourceField === 'FINISHED_TEAM_CODE' || row.sourceField === 'SEMI_FINISHED_TEAM_CODE'" >
