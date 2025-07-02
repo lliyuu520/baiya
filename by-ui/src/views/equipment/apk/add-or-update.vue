@@ -49,6 +49,16 @@ const dataForm = reactive({
 
 })
 
+const resetForm = () => {
+	Object.assign(dataForm, {
+		id: '',
+		versionNo: 0,
+		versionName: '',
+		versionDesc: '',
+		apkUrl:''
+	})
+}
+
 const init = (id?: number) => {
 	visible.value = true
 	dataForm.id = ''
@@ -57,7 +67,7 @@ const init = (id?: number) => {
 	if (dataFormRef.value) {
 		dataFormRef.value.resetFields()
 	}
-
+  resetForm()
 	if (id) {
 		getApk(id)
 	}
