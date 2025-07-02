@@ -26,6 +26,6 @@ public class QrCodeCacheInit implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         qrCodeCache.init();
-        sysCodeRuleService.handleData();
+//        sysCodeRuleService.handleData();
     }
 }

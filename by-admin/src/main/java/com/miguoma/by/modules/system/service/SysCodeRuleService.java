@@ -68,8 +68,4 @@ public interface SysCodeRuleService extends BaseService<SysCodeRule> {
      */
     List<SysCodeRuleVO> listVO();
 
-    /**
-     * 处理数据
-     */
-    void handleData();
 }

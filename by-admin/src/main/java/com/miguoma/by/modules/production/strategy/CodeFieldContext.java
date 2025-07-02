@@ -39,7 +39,6 @@ public class CodeFieldContext implements Serializable {
     private String finishedProductCode;
 
 
-
     // 半成品字段
     /**
      * 半成品生产日期
@@ -70,10 +69,6 @@ public class CodeFieldContext implements Serializable {
      * 半成品产品编码
      */
     private String semiFinishedProductCode;
-
-
-
-
 
 
     // 当前规则明细字段
@@ -114,9 +109,5 @@ public class CodeFieldContext implements Serializable {
      */
     private String boxNo;
 
-    /**
-     * 指定箱号
-     */
-    private String specifyBoxNo;
 
 }

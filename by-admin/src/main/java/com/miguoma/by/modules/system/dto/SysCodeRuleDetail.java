@@ -1,26 +1,19 @@
-package com.miguoma.by.modules.system.entity;
+package com.miguoma.by.modules.system.dto;
 
-import com.miguoma.by.common.base.entity.BaseEntity;
 import com.miguoma.by.modules.system.enums.RandomTypeEnums;
-import com.miguoma.by.modules.system.enums.RuleTypeEnums;
-
 import lombok.Data;
-import lombok.EqualsAndHashCode;
+
+import java.io.Serializable;
 
 /**
- * 编码规则明细
+ * 规则明细
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
-public class SysCodeRuleDetail extends BaseEntity {
+public class SysCodeRuleDetail implements Serializable {
+
 
     /**
-     * 规则ID
-     */
-    private Long ruleId;
-
-    /**
-     * 编码类型 {@link EncodeConverUtils}
+     * 编码类型 {@link com.miguoma.by.common.enums.BaseEncodeEnums}
      */
     private String encodeType;
 
@@ -29,10 +22,6 @@ public class SysCodeRuleDetail extends BaseEntity {
      */
     private String sourceField;
 
-    /**
-     * 规则类型 {@link RuleTypeEnums}
-     */
-    private String ruleType;
 
     /**
      * 开始索引(从0开始)
@@ -62,9 +51,7 @@ public class SysCodeRuleDetail extends BaseEntity {
      * 偏移年份
      */
     private Integer offsetYears;
-    /**
-     * 特殊箱号
-     */
+
     private String specifyBoxNo;
 
 }

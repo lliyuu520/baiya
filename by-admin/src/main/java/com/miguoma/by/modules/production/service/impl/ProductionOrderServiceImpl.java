@@ -5,6 +5,7 @@ import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.miguoma.by.common.base.page.PageVO;
 import com.miguoma.by.common.base.service.impl.BaseServiceImpl;
@@ -37,10 +38,8 @@ import com.miguoma.by.modules.record.entity.RecordQrCode;
 import com.miguoma.by.modules.record.service.RecordBagCodeService;
 import com.miguoma.by.modules.record.service.RecordBoxCodeService;
 import com.miguoma.by.modules.record.service.RecordQrCodeService;
+import com.miguoma.by.modules.system.dto.SysCodeRuleDetail;
 import com.miguoma.by.modules.system.entity.SysCodeRule;
-import com.miguoma.by.modules.system.entity.SysCodeRuleDetail;
-import com.miguoma.by.modules.system.enums.RuleTypeEnums;
-import com.miguoma.by.modules.system.mapper.SysCodeRuleDetailMapper;
 import com.miguoma.by.modules.system.mapper.SysCodeRuleMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -116,7 +115,7 @@ public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderM
     }
 
     private final SysCodeRuleMapper sysCodeRuleMapper;
-    private final SysCodeRuleDetailMapper sysCodeRuleDetailMapper;
+
     private final QrCodeCache qrCodeCache;
     private final ProductionProductMapper productionProductMapper;
     private final RecordBoxCodeService recordBoxCodeService;
@@ -340,8 +339,8 @@ public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderM
 
         // 箱码
         StringBuilder boxCodeStrBuilder = new StringBuilder();
-        final List<SysCodeRuleDetail> boxCodeRuleDetailList = sysCodeRuleDetailMapper
-                .selectListByRuleIdSAndType(finishedCodeRule.getId(), RuleTypeEnums.BOX.getCode());
+        final List<SysCodeRuleDetail> boxCodeRuleDetailList = JSONUtil
+                .toList(JSONUtil.toJsonStr(finishedCodeRule.getBoxCodeRuleList()), SysCodeRuleDetail.class);
         for (SysCodeRuleDetail m : boxCodeRuleDetailList) {
             String sourceField = m.getSourceField();
             BaseCodeFieldStrategy strategy = CODE_FIELD_STRATEGY_MAP.get(sourceField);
@@ -375,8 +374,8 @@ public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderM
 
         // 内箱码
         StringBuilder innerBoxCodeStrBuilder = new StringBuilder();
-        final List<SysCodeRuleDetail> innerBoxCodeRuleDetailList = sysCodeRuleDetailMapper
-                .selectListByRuleIdSAndType(finishedCodeRule.getId(), RuleTypeEnums.INNER_BOX.getCode());
+        final List<SysCodeRuleDetail> innerBoxCodeRuleDetailList = JSONUtil
+                .toList(JSONUtil.toJsonStr(finishedCodeRule.getInnerBoxCodeRuleList()), SysCodeRuleDetail.class);
         for (SysCodeRuleDetail m : innerBoxCodeRuleDetailList) {
             String sourceField = m.getSourceField();
             BaseCodeFieldStrategy strategy = CODE_FIELD_STRATEGY_MAP.get(sourceField);
@@ -425,8 +424,8 @@ public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderM
         }
 
         // 袋码
-        final List<SysCodeRuleDetail> bagCodeRuleDetailList = sysCodeRuleDetailMapper
-                .selectListByRuleIdSAndType(semiFinishedSysCodeRule.getId(), RuleTypeEnums.BAG.getCode());
+        final List<SysCodeRuleDetail> bagCodeRuleDetailList = JSONUtil
+                .toList(JSONUtil.toJsonStr(semiFinishedSysCodeRule.getBagCodeRuleList()), SysCodeRuleDetail.class);
         StringBuilder bagCodeStrBuilder = new StringBuilder();
         for (SysCodeRuleDetail m : bagCodeRuleDetailList) {
             final String sourceField = m.getSourceField();
@@ -461,8 +460,8 @@ public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderM
         }
 
         // 万用码
-        final List<SysCodeRuleDetail> universalCodeRuleDetailList = sysCodeRuleDetailMapper
-                .selectListByRuleIdSAndType(semiFinishedSysCodeRule.getId(), RuleTypeEnums.UNIVERSAL_CODE.getCode());
+        final List<SysCodeRuleDetail> universalCodeRuleDetailList = JSONUtil
+                .toList(JSONUtil.toJsonStr(finishedCodeRule.getUniversalCodeRuleList()), SysCodeRuleDetail.class);
         StringBuilder universalCodeStrBuilder = new StringBuilder();
         for (SysCodeRuleDetail m : universalCodeRuleDetailList) {
             final String sourceField = m.getSourceField();
@@ -490,7 +489,6 @@ public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderM
             context.setIndexEnd(m.getIndexEnd());
             context.setEncodeType(m.getEncodeType());
             context.setOffsetYears(m.getOffsetYears());
-            context.setSpecifyBoxNo(m.getSpecifyBoxNo());
             context.setRandomType(m.getRandomType());
             String str = strategy.apply(context);
             universalCodeStrBuilder.append(str);
@@ -500,16 +498,12 @@ public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderM
         List<String> boxCodeList = new ArrayList<>();
         List<String> innerBoxCodeList = new ArrayList<>();
         List<String> bagCodeList = new ArrayList<>();
-        List<String> universalCodeList = new ArrayList<>();
 
         String boxCodeTemplate = boxCodeStrBuilder.toString();
-        log.info("boxCodeTemplate:{}", boxCodeTemplate);
         String innerBoxCodeTemplate = innerBoxCodeStrBuilder.toString();
-        log.info("innerBoxCodeTemplate:{}", innerBoxCodeTemplate);
         String bagCodeTemplate = bagCodeStrBuilder.toString();
-        log.info("bagCodeTemplate:{}", bagCodeTemplate);
         String universalCodeTemplate = universalCodeStrBuilder.toString();
-        log.info("universalCodeTemplate:{}", universalCodeTemplate);
+        log.info("万用码模板:{}", universalCodeTemplate);
 
         // 处理箱号{BOX_NO:数字}
         final List<String> boxNoTmpList = ReUtil.findAllGroup0(BOX_NO_PATTERN, boxCodeTemplate);
@@ -538,14 +532,6 @@ public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderM
             }
         }
 
-        final List<String> universalNoTmpList = ReUtil.findAllGroup0(BOX_NO_PATTERN, universalCodeTemplate);
-        int universalNoLength = 0;
-        if (CollUtil.isNotEmpty(universalNoTmpList)) {
-            Matcher matcher = BOX_NO_PATTERN.matcher(universalNoTmpList.get(0));
-            if (matcher.find()) {
-                universalNoLength = Integer.parseInt(matcher.group(1));
-            }
-        }
         // 处理随机字符串 {RANDOM_STRING:类型:数字}
         String boxCodeRandomType = null;
         int boxCodeRandomLength = 0;
@@ -592,52 +578,50 @@ public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderM
                 universalCodeRandomLength = Integer.parseInt(matcher.group(2));
             }
         }
+        // 万用码做简单替换就行,不会有箱号的
+        final String universalCodeRandomString = RandomStringUtil.generate(universalCodeRandomType,
+                universalCodeRandomLength);
+        String universalCode = ReUtil.replaceAll(universalCodeTemplate, RANDOM_STRING_PATTERN,
+                universalCodeRandomString);
+        log.info("万用码:{}", universalCode);
 
+        String boxCodeTemplateTmp = "";
+        String innerBoxCodeTemplateTmp = "";
+        String bagCodeTemplateTmp = "";
         for (int currentBoxNo = boxNoBegin; currentBoxNo < boxNoEnd; currentBoxNo++) {
-            // 箱号
+            // 箱
+            boxCodeTemplateTmp = boxCodeTemplate;
             final String currentBoxNoStr = StrUtil.fillBefore(String.valueOf(currentBoxNo), '0', boxNoLength);
-            boxCodeTemplate = ReUtil.replaceAll(boxCodeTemplate, BOX_NO_PATTERN, currentBoxNoStr);
-
-            final String innerBoxNo = StrUtil.fillBefore(String.valueOf(currentBoxNo), '0', innerBoxNoLength);
-            innerBoxCodeTemplate = ReUtil.replaceAll(innerBoxCodeTemplate, BOX_NO_PATTERN, innerBoxNo);
-
-            final String bagNo = StrUtil.fillBefore(String.valueOf(currentBoxNo), '0', bagNoLength);
-            bagCodeTemplate = ReUtil.replaceAll(bagCodeTemplate, BOX_NO_PATTERN, bagNo);
-
-            final String universalNo = StrUtil.fillBefore(String.valueOf(currentBoxNo), '0', universalNoLength);
-            universalCodeTemplate = ReUtil.replaceAll(universalCodeTemplate, BOX_NO_PATTERN, universalNo);
-
-            bagCodeTemplate = ReUtil.replaceAll(bagCodeTemplate, BOX_NO_PATTERN, bagNo);
-            universalCodeTemplate = ReUtil.replaceAll(universalCodeTemplate, BOX_NO_PATTERN, universalNo);
-
-            // 随机字符串
+            boxCodeTemplateTmp = ReUtil.replaceAll(boxCodeTemplateTmp, BOX_NO_PATTERN, currentBoxNoStr);
             final String boxCodeRandomString = RandomStringUtil.generate(boxCodeRandomType, boxCodeRandomLength);
-            boxCodeTemplate = ReUtil.replaceAll(boxCodeTemplate, RANDOM_STRING_PATTERN, boxCodeRandomString);
+            boxCodeTemplateTmp = ReUtil.replaceAll(boxCodeTemplateTmp, RANDOM_STRING_PATTERN, boxCodeRandomString);
+            boxCodeList.add(boxCodeTemplateTmp);
+            log.info("箱号:{} ,随机字符串:{},箱码:{}", currentBoxNo, boxCodeRandomString, boxCodeTemplateTmp);
+            // 内箱
+            innerBoxCodeTemplateTmp = innerBoxCodeTemplate;
+            final String currentInnerBoxNoStr = StrUtil.fillBefore(String.valueOf(currentBoxNo), '0', innerBoxNoLength);
+            innerBoxCodeTemplateTmp = ReUtil.replaceAll(innerBoxCodeTemplateTmp, BOX_NO_PATTERN, currentInnerBoxNoStr);
             final String innerBoxCodeRandomString = RandomStringUtil.generate(innerBoxCodeRandomType,
                     innerBoxCodeRandomLength);
-            innerBoxCodeTemplate = ReUtil.replaceAll(innerBoxCodeTemplate, RANDOM_STRING_PATTERN,
+            innerBoxCodeTemplateTmp = ReUtil.replaceAll(innerBoxCodeTemplateTmp, RANDOM_STRING_PATTERN,
                     innerBoxCodeRandomString);
+            innerBoxCodeList.add(innerBoxCodeTemplateTmp);
+            log.info("箱号:{} ,随机字符串:{},内箱码:{}", currentBoxNo, innerBoxCodeRandomString, innerBoxCodeTemplateTmp);
+            // 袋
+            bagCodeTemplateTmp = bagCodeTemplate;
+            final String currentBagNoStr = StrUtil.fillBefore(String.valueOf(currentBoxNo), '0', bagNoLength);
+            bagCodeTemplateTmp = ReUtil.replaceAll(bagCodeTemplateTmp, BOX_NO_PATTERN, currentBagNoStr);
             final String bagCodeRandomString = RandomStringUtil.generate(bagCodeRandomType, bagCodeRandomLength);
-            bagCodeTemplate = ReUtil.replaceAll(bagCodeTemplate, RANDOM_STRING_PATTERN, bagCodeRandomString);
-            final String universalCodeRandomString = RandomStringUtil.generate(universalCodeRandomType,
-                    universalCodeRandomLength);
-            universalCodeTemplate = ReUtil.replaceAll(universalCodeTemplate, RANDOM_STRING_PATTERN,
-                    universalCodeRandomString);
-            log.info("箱号:{} 箱码:{}", currentBoxNo, boxCodeTemplate);
-            log.info("箱号:{} 内箱码:{}", currentBoxNo, innerBoxCodeTemplate);
-            log.info("箱号:{} 袋码:{}", currentBoxNo, bagCodeTemplate);
-            log.info("箱号:{} 万用码:{}", currentBoxNo, universalCodeTemplate);
-
-            boxCodeList.add(boxCodeTemplate);
-            innerBoxCodeList.add(innerBoxCodeTemplate);
-            bagCodeList.add(bagCodeTemplate);
-            universalCodeList.add(universalCodeTemplate);
-
+            bagCodeTemplateTmp = ReUtil.replaceAll(bagCodeTemplateTmp, RANDOM_STRING_PATTERN, bagCodeRandomString);
+            bagCodeList.add(bagCodeTemplateTmp);
+            log.info("箱号:{} ,随机字符串:{},袋码:{}", currentBoxNo, bagCodeRandomString, bagCodeTemplateTmp);
         }
+//        int a = 1 / 0;
 
         // 写入箱码
         final LocalDateTime now = LocalDateTimeUtil.now();
         final PullCodeVO pullCodeVO = new PullCodeVO();
+        pullCodeVO.setUniversalCode(universalCode);
         if (StrUtil.equals(PullCodeEnums.QR_CODE.getCode(), type)) {
             // 二维码
             // 按照 数量生成二维码
@@ -645,9 +629,8 @@ public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderM
             if (CollUtil.size(qrCodeSet) != qrCodeNum) {
                 throw new BaseException("二维码拉取失败,请联系管理员!");
             }
-            final List<String> qrCodeList = qrCodeSet.stream().map(m -> {
-                return qrCodeUrlPrefix + m;
-            }).toList();
+            final List<String> qrCodeList = qrCodeSet.stream().map(m -> qrCodeUrlPrefix + m).toList();
+
             final PullCodeVO.QrCodeTypeData qrCodeTypeData = new PullCodeVO.QrCodeTypeData();
             pullCodeVO.setQrCodeTypeData(qrCodeTypeData);
             qrCodeTypeData.setQrCodeList(qrCodeList);
@@ -690,13 +673,14 @@ public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderM
             for (int i = 0; i < boxCodeList.size(); i++) {
                 final PullCodeVO.LogisticsTypeData logisticsTypeData = new PullCodeVO.LogisticsTypeData();
                 final String boxCode = boxCodeList.get(i);
+                final String innerBoxCode = innerBoxCodeList.get(i);
                 final String bagCode = bagCodeList.get(i);
                 logisticsTypeData.setBoxCode(boxCode);
                 logisticsTypeData.setBagCode(bagCode);
+                logisticsTypeData.setInnerBoxCode(innerBoxCode);
                 logisticsTypeDataList.add(logisticsTypeData);
             }
             pullCodeVO.setLogisticsTypeDataList(logisticsTypeDataList);
-            pullCodeVO.setUniversalCode(universalCodeStrBuilder.toString());
             final List<RecordBoxCode> recordBoxCodeList = new ArrayList<>();
             final List<RecordBagCode> recordBagCodeList = new ArrayList<>();
 
@@ -803,9 +787,11 @@ public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderM
         final String orderDateStr = erpOrderDTO.getOrderDate();
         // 2025-05-29 00:00:00.0
         // 截取前10位 2025-05-29 转LocalDate
-        final LocalDate orderDate = LocalDateTimeUtil.parseDate(orderDateStr.substring(0, 10), DatePattern.NORM_DATE_PATTERN);
+        final LocalDate orderDate = LocalDateTimeUtil.parseDate(orderDateStr.substring(0, 10),
+                DatePattern.NORM_DATE_PATTERN);
         final String productionDateStr = StrUtil.emptyIfNull(erpOrderDTO.getProductionDate());
-        final LocalDate productionDate = LocalDateTimeUtil.parseDate(productionDateStr.substring(0, 10), DatePattern.NORM_DATE_PATTERN);
+        final LocalDate productionDate = LocalDateTimeUtil.parseDate(productionDateStr.substring(0, 10),
+                DatePattern.NORM_DATE_PATTERN);
         final String productionDepartCode = StrUtil.emptyIfNull(erpOrderDTO.getProductionDepartCode());
         final String productionWorkshopCode = StrUtil.emptyIfNull(erpOrderDTO.getProductionWorkshopCode());
         final String productionShiftCode = StrUtil.emptyIfNull(erpOrderDTO.getProductionShiftCode());

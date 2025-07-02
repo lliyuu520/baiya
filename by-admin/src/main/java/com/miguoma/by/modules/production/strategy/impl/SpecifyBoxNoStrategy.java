@@ -11,10 +11,10 @@ import com.miguoma.by.modules.production.strategy.CodeFieldContext;
 public class SpecifyBoxNoStrategy implements BaseCodeFieldStrategy {
     @Override
     public String apply(CodeFieldContext context) {
-        String specifyBoxNo = context.getSpecifyBoxNo();
-        if (StrUtil.isBlank(specifyBoxNo)) {
+        String constant = context.getConstant();
+        if (StrUtil.isBlank(constant)) {
             return StrUtil.EMPTY;
         }
-        return specifyBoxNo;
+        return constant;
     }
 }
