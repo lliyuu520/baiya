@@ -63,6 +63,7 @@ export const innerBoxCodeSourceFieldList: SourceFieldOption[] = [
 ]
 
 export const bagCodeSourceFieldList: SourceFieldOption[] = [
+    { code: 'FINISHED_PRODUCTION_DATE', name: '成品生产日期' },
     { code: 'SEMI_FINISHED_PRODUCTION_DATE', name: '半成品生产日期' },
     { code: 'FINISHED_ORDER_CODE', name: '成品订单编码' },
     { code: 'FINISHED_PRODUCT_CODE', name: '成品产品编码' },
