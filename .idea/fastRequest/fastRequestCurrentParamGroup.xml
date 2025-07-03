@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="fastRequestCurrentParamGroup">
+    <option name="bodyParamMap">
+      <map>
+        <entry key="equipmentMonitorDTO">
+          <value>
+            <Object />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="clasDescription" value="采集软件控制器" />
+    <option name="className" value="com.miguoma.by.modules.client.controller.ClientController" />
+    <option name="filePath" value="" />
+    <option name="method" value="uploadMonitor" />
+    <option name="methodDescription" value="上传监控信息" />
+    <option name="methodType" value="POST" />
+    <option name="module" value="by-admin" />
+    <option name="originUrl" value="/client/uploadMonitor" />
+    <option name="responseParamMap">
+      <map>
+        <entry key="return">
+          <value>
+            <Object />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="returnDocument" value="{&quot;code&quot;:&quot;No comment,Type =Number&quot;,&quot;msg&quot;:&quot;No comment,Type =String&quot;,&quot;data&quot;:{&quot;java.lang.String&quot;:&quot;No comment,Type =String&quot;}}" />
+    <option name="url" value="/client/uploadMonitor" />
+  </component>
+</project>

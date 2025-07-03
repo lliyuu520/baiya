@@ -32,9 +32,13 @@
                    and a.upload_date_time &lt;= #{query.uploadDateTimeEnd}
                 </if>
               
-                <if test="query.uploadFlag != null">
+                <if test="query.uploadFlag==true">
                    and a.upload_date_time is not null
                 </if>
+                <if test="query.uploadFlag==false">
+                   and a.upload_date_time is null
+                </if>
+
             </where>
         order by a.id desc
     </select>

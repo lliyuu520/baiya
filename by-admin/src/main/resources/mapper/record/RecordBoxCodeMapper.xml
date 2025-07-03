@@ -43,11 +43,17 @@
             <if test="query.pullType != null and query.pullType != ''">
                and a.pull_type = #{query.pullType}
             </if>
-            <if test="query.uploadFlag != null">
+            <if test="query.uploadFlag ==true">
                and a.upload_date_time is not null
             </if>
-            <if test="query.cribFlag != null">
+            <if test="query.uploadFlag ==false">
+               and a.upload_date_time is null
+            </if>
+            <if test="query.cribFlag ==true">
                and a.crib_date_time is not null
+            </if>
+            <if test="query.cribFlag ==false">
+               and a.crib_date_time is null
             </if>
         </where>
 

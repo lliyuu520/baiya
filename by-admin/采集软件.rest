@@ -16,3 +16,16 @@ Content-Type: application/json
   "boxNoBegin": 426,
   "boxCodeNum": 2
 }
+
+# 上传监控
+POST http://localhost:8080/client/uploadMonitor
+token: 1935871861900468225
+Content-Type: application/json
+
+{
+  "finishedProductOrderId": 1934146686250184706,
+  "semiFinishedProductOrderId": 1933005369629536258,
+  "type": "QR_CODE",
+  "boxNoBegin": 426,
+  "boxCodeNum": 2
+}

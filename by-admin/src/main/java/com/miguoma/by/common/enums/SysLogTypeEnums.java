@@ -105,7 +105,10 @@ public enum SysLogTypeEnums {
      * 客户端绑定
      */
     CLIENT_BIND("客户端绑定"),
-    ;
+    /**
+     * 监控上传
+     */
+    UPLOAD_MONITOR("监控上传");
 
     private final String desc;
 

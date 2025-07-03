@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="fastRequestHistoryConfig">
+    <option name="historyList">
+      <list>
+        <ResponseHistory>
+          <option name="className" value="com.miguoma.by.modules.client.controller.ClientController" />
+          <option name="code" value="200" />
+          <option name="enableEnv" value="local" />
+          <option name="enableProject" value="by-admin" />
+          <option name="method" value="uploadMonitor" />
+          <option name="methodType" value="POST" />
+          <option name="name" value="上传监控信息" />
+          <option name="paramGroup">
+            <ParamGroupCollection>
+              <option name="bodyKeyValueListJson" value="{&#10;  &quot;finishedProductOrderId&quot;: 1934146686250184706,&#10;  &quot;uploadBoxCodeNum&quot;: 1,&#10;  &quot;stepName&quot;: &quot;切换订单&quot;&#10;}" />
+              <option name="className" value="com.miguoma.by.modules.client.controller.ClientController" />
+              <option name="jsonDocument" value="{&#10;  &quot;finishedProductOrderId&quot;: &quot;成品订单号&quot;,&#10;  &quot;uploadBoxCodeNum&quot;: &quot;上传箱码数量&quot;,&#10;  &quot;stepName&quot;: &quot;步骤名称&quot;&#10;}" />
+              <option name="method" value="uploadMonitor" />
+              <option name="methodDescription" value="上传监控信息" />
+              <option name="methodType" value="POST" />
+              <option name="multipartKeyValueListJson" value="[]" />
+              <option name="originUrl" value="/client/uploadMonitor" />
+              <option name="pathParamsKeyValueListJson" value="[]" />
+              <option name="returnDocument" value="{&quot;code&quot;:&quot;No comment,Type =Number&quot;,&quot;msg&quot;:&quot;No comment,Type =String&quot;,&quot;data&quot;:{&quot;java.lang.String&quot;:&quot;No comment,Type =String&quot;}}" />
+              <option name="url" value="/client/uploadMonitor" />
+              <option name="urlEncodedKeyValueListJson" value="[]" />
+              <option name="urlParamsKeyValueListJson" value="[]" />
+            </ParamGroupCollection>
+          </option>
+          <option name="requestInfo" value="Request Url: http://localhost:8080/client/uploadMonitor&#13;&#10;Request Headers: &#13;&#10;    Accept: application/json,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8&#13;&#10;    User-Agent: Fast Request/2025.1.5&#13;&#10;    Token: 1940289483244081153&#13;&#10;    Accept-Encoding: gzip, deflate&#13;&#10;    Content-Length: 93&#13;&#10;    Content-Type: application/json;charset=UTF-8&#13;&#10;Request Body: &#13;&#10;    {&quot;finishedProductOrderId&quot;:1934146686250184706,&quot;stepName&quot;:&quot;切换订单&quot;,&quot;uploadBoxCodeNum&quot;:1}&#13;&#10;" />
+          <option name="response" value="{&quot;code&quot;:0,&quot;msg&quot;:&quot;success&quot;,&quot;data&quot;:&quot;上传成功&quot;}" />
+          <option name="url" value="/client/uploadMonitor" />
+        </ResponseHistory>
+        <ResponseHistory>
+          <option name="className" value="com.miguoma.by.modules.client.controller.ClientController" />
+          <option name="code" value="200" />
+          <option name="enableEnv" value="local" />
+          <option name="enableProject" value="by-admin" />
+          <option name="method" value="uploadMonitor" />
+          <option name="methodType" value="POST" />
+          <option name="name" value="上传监控信息" />
+          <option name="paramGroup">
+            <ParamGroupCollection>
+              <option name="bodyKeyValueListJson" value="{&#10;  &quot;finishedProductOrderId&quot;: 1934146686250184706,&#10;  &quot;uploadBoxCodeNum&quot;: 1,&#10;  &quot;stepName&quot;: &quot;切换订单&quot;&#10;}" />
+              <option name="className" value="com.miguoma.by.modules.client.controller.ClientController" />
+              <option name="jsonDocument" value="{&#10;  &quot;finishedProductOrderId&quot;: &quot;成品订单号&quot;,&#10;  &quot;uploadBoxCodeNum&quot;: &quot;上传箱码数量&quot;,&#10;  &quot;stepName&quot;: &quot;步骤名称&quot;&#10;}" />
+              <option name="method" value="uploadMonitor" />
+              <option name="methodDescription" value="上传监控信息" />
+              <option name="methodType" value="POST" />
+              <option name="multipartKeyValueListJson" value="[]" />
+              <option name="originUrl" value="/client/uploadMonitor" />
+              <option name="pathParamsKeyValueListJson" value="[]" />
+              <option name="returnDocument" value="{&quot;code&quot;:&quot;No comment,Type =Number&quot;,&quot;msg&quot;:&quot;No comment,Type =String&quot;,&quot;data&quot;:{&quot;java.lang.String&quot;:&quot;No comment,Type =String&quot;}}" />
+              <option name="url" value="/client/uploadMonitor" />
+              <option name="urlEncodedKeyValueListJson" value="[]" />
+              <option name="urlParamsKeyValueListJson" value="[]" />
+            </ParamGroupCollection>
+          </option>
+          <option name="requestInfo" value="Request Url: http://localhost:8080/client/uploadMonitor&#13;&#10;Request Headers: &#13;&#10;    Accept: application/json,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8&#13;&#10;    User-Agent: Fast Request/2025.1.5&#13;&#10;    Token: 1935871861900468225&#13;&#10;    Accept-Encoding: gzip, deflate&#13;&#10;    Content-Length: 93&#13;&#10;    Content-Type: application/json;charset=UTF-8&#13;&#10;Request Body: &#13;&#10;    {&quot;finishedProductOrderId&quot;:1934146686250184706,&quot;stepName&quot;:&quot;切换订单&quot;,&quot;uploadBoxCodeNum&quot;:1}&#13;&#10;" />
+          <option name="response" value="{&quot;code&quot;:500,&quot;msg&quot;:&quot;设备不存在&quot;}" />
+          <option name="url" value="/client/uploadMonitor" />
+        </ResponseHistory>
+        <ResponseHistory>
+          <option name="className" value="com.miguoma.by.modules.client.controller.ClientController" />
+          <option name="code" value="200" />
+          <option name="enableEnv" value="local" />
+          <option name="enableProject" value="by-admin" />
+          <option name="method" value="uploadMonitor" />
+          <option name="methodType" value="POST" />
+          <option name="name" value="上传监控信息" />
+          <option name="paramGroup">
+            <ParamGroupCollection>
+              <option name="bodyKeyValueListJson" value="{&#10;  &quot;finishedProductOrderId&quot;: 1934146686250184706,&#10;  &quot;uploadBoxCodeNum&quot;: 1,&#10;  &quot;stepName&quot;: &quot;切换订单&quot;&#10;}" />
+              <option name="className" value="com.miguoma.by.modules.client.controller.ClientController" />
+              <option name="jsonDocument" value="{&#10;  &quot;finishedProductOrderId&quot;: &quot;成品订单号&quot;,&#10;  &quot;uploadBoxCodeNum&quot;: &quot;上传箱码数量&quot;,&#10;  &quot;stepName&quot;: &quot;步骤名称&quot;&#10;}" />
+              <option name="method" value="uploadMonitor" />
+              <option name="methodDescription" value="上传监控信息" />
+              <option name="methodType" value="POST" />
+              <option name="multipartKeyValueListJson" value="[]" />
+              <option name="originUrl" value="/client/uploadMonitor" />
+              <option name="pathParamsKeyValueListJson" value="[]" />
+              <option name="returnDocument" value="{&quot;code&quot;:&quot;No comment,Type =Number&quot;,&quot;msg&quot;:&quot;No comment,Type =String&quot;,&quot;data&quot;:{&quot;java.lang.String&quot;:&quot;No comment,Type =String&quot;}}" />
+              <option name="url" value="/client/uploadMonitor" />
+              <option name="urlEncodedKeyValueListJson" value="[]" />
+              <option name="urlParamsKeyValueListJson" value="[]" />
+            </ParamGroupCollection>
+          </option>
+          <option name="requestInfo" value="Request Url: http://localhost:8080/client/uploadMonitor&#13;&#10;Request Headers: &#13;&#10;    Accept: application/json,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8&#13;&#10;    User-Agent: Fast Request/2025.1.5&#13;&#10;    Token: 1935871861900468225&#13;&#10;    Accept-Encoding: gzip, deflate&#13;&#10;    Content-Length: 93&#13;&#10;    Content-Type: application/json;charset=UTF-8&#13;&#10;Request Body: &#13;&#10;    {&quot;finishedProductOrderId&quot;:1934146686250184706,&quot;stepName&quot;:&quot;切换订单&quot;,&quot;uploadBoxCodeNum&quot;:1}&#13;&#10;" />
+          <option name="response" value="{&quot;code&quot;:500,&quot;msg&quot;:&quot;设备不存在&quot;}" />
+          <option name="url" value="/client/uploadMonitor" />
+        </ResponseHistory>
+        <ResponseHistory>
+          <option name="className" value="com.miguoma.by.modules.client.controller.ClientController" />
+          <option name="code" value="200" />
+          <option name="enableEnv" value="local" />
+          <option name="enableProject" value="by-admin" />
+          <option name="method" value="uploadMonitor" />
+          <option name="methodType" value="POST" />
+          <option name="name" value="上传监控信息" />
+          <option name="paramGroup">
+            <ParamGroupCollection>
+              <option name="bodyKeyValueListJson" value="{&#10;  &quot;finishedProductOrderId&quot;: 1934146686250184706,&#10;  &quot;uploadBoxCodeNum&quot;: 1,&#10;  &quot;stepName&quot;: &quot;切换订单&quot;&#10;}" />
+              <option name="className" value="com.miguoma.by.modules.client.controller.ClientController" />
+              <option name="jsonDocument" value="{&#10;  &quot;finishedProductOrderId&quot;: &quot;成品订单号&quot;,&#10;  &quot;uploadBoxCodeNum&quot;: &quot;上传箱码数量&quot;,&#10;  &quot;stepName&quot;: &quot;步骤名称&quot;&#10;}" />
+              <option name="method" value="uploadMonitor" />
+              <option name="methodDescription" value="上传监控信息" />
+              <option name="methodType" value="POST" />
+              <option name="multipartKeyValueListJson" value="[]" />
+              <option name="originUrl" value="/client/uploadMonitor" />
+              <option name="pathParamsKeyValueListJson" value="[]" />
+              <option name="returnDocument" value="{&quot;code&quot;:&quot;No comment,Type =Number&quot;,&quot;msg&quot;:&quot;No comment,Type =String&quot;,&quot;data&quot;:{&quot;java.lang.String&quot;:&quot;No comment,Type =String&quot;}}" />
+              <option name="url" value="/client/uploadMonitor" />
+              <option name="urlEncodedKeyValueListJson" value="[]" />
+              <option name="urlParamsKeyValueListJson" value="[]" />
+            </ParamGroupCollection>
+          </option>
+          <option name="requestInfo" value="Request Url: http://localhost:8080/client/uploadMonitor&#13;&#10;Request Headers: &#13;&#10;    Accept: application/json,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8&#13;&#10;    User-Agent: Fast Request/2025.1.5&#13;&#10;    Accept-Encoding: gzip, deflate&#13;&#10;    Content-Length: 93&#13;&#10;    token: 1935871861900468225&#13;&#10;    Content-Type: application/json;charset=UTF-8&#13;&#10;Request Body: &#13;&#10;    {&quot;finishedProductOrderId&quot;:1934146686250184706,&quot;stepName&quot;:&quot;切换订单&quot;,&quot;uploadBoxCodeNum&quot;:1}&#13;&#10;" />
+          <option name="response" value="{&quot;code&quot;:500,&quot;msg&quot;:&quot;设备不存在&quot;}" />
+          <option name="url" value="/client/uploadMonitor" />
+        </ResponseHistory>
+      </list>
+    </option>
+  </component>
+</project>

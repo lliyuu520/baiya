@@ -18,11 +18,12 @@ public class BoxNoStrategy implements BaseCodeFieldStrategy {
     @Override
     public String apply(CodeFieldContext context) {
         Integer length = context.getLength();
+        String encodeType = context.getEncodeType();
         if (length == null || length <= 0) {
             return StrUtil.EMPTY;
         }
         // 箱号实际给不出来,需要后面来填充,这里预留一个占位符,且把长度给出来
         // 箱号占位符
-        return "{" + "BOX_NO" + ":" + length + "}";
+        return "{" + "BOX_NO" + ":"+encodeType+":" + length + "}";
     }
 }

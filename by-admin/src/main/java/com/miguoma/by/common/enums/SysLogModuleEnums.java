@@ -27,7 +27,7 @@ public enum SysLogModuleEnums {
      * 工厂
      */
     FACTORY("工厂"),
-    
+
     /**
      * 车间
      */
@@ -80,12 +80,12 @@ public enum SysLogModuleEnums {
      * 二维码
      */
     RECORD_QR_CODE("袋二维码"),
-                    
+
     /**
      * 二维码置换记录
      */
     RECORD_QR_CODE_REPLACE("二维码置换记录"),
-    
+
     /**
      * 箱物流码置换记录
      */
@@ -95,8 +95,11 @@ public enum SysLogModuleEnums {
      * APK
      */
     APK("APK"),
-    
 
+    /**
+     * 设备监控
+     */
+    MONITOR("设备监控"),
 
     ;
 

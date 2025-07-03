@@ -1,11 +1,18 @@
 package com.miguoma.by.modules.production.service.impl;
 
-import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.date.DatePattern;
-import cn.hutool.core.date.LocalDateTimeUtil;
-import cn.hutool.core.util.ReUtil;
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.json.JSONUtil;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.miguoma.by.common.base.page.PageVO;
 import com.miguoma.by.common.base.service.impl.BaseServiceImpl;
@@ -24,13 +31,32 @@ import com.miguoma.by.modules.production.entity.ProductionDepartAndWorkshop;
 import com.miguoma.by.modules.production.entity.ProductionOrder;
 import com.miguoma.by.modules.production.entity.ProductionProduct;
 import com.miguoma.by.modules.production.enums.ProductTypeEnum;
-import com.miguoma.by.modules.production.mapper.*;
+import com.miguoma.by.modules.production.mapper.ProductionDepartAndWorkshopMapper;
+import com.miguoma.by.modules.production.mapper.ProductionOrderMapper;
+import com.miguoma.by.modules.production.mapper.ProductionProductMapper;
+import com.miguoma.by.modules.production.mapper.ProductionShiftMapper;
+import com.miguoma.by.modules.production.mapper.ProductionTeamMapper;
 import com.miguoma.by.modules.production.query.ProductionOrderQuery;
 import com.miguoma.by.modules.production.service.ProductionOrderService;
 import com.miguoma.by.modules.production.strategy.BaseCodeFieldStrategy;
 import com.miguoma.by.modules.production.strategy.CodeFieldContext;
 import com.miguoma.by.modules.production.strategy.RandomStringUtil;
-import com.miguoma.by.modules.production.strategy.impl.*;
+import com.miguoma.by.modules.production.strategy.impl.BoxNoStrategy;
+import com.miguoma.by.modules.production.strategy.impl.ConstantStrategy;
+import com.miguoma.by.modules.production.strategy.impl.FinishedDepartCodeStrategy;
+import com.miguoma.by.modules.production.strategy.impl.FinishedOrderCodeStrategy;
+import com.miguoma.by.modules.production.strategy.impl.FinishedProductCodeStrategy;
+import com.miguoma.by.modules.production.strategy.impl.FinishedProductionDateStrategy;
+import com.miguoma.by.modules.production.strategy.impl.FinishedTeamCodeStrategy;
+import com.miguoma.by.modules.production.strategy.impl.FinishedWorkshopCodeStrategy;
+import com.miguoma.by.modules.production.strategy.impl.RandomStringStrategy;
+import com.miguoma.by.modules.production.strategy.impl.SemiFinishedDepartCodeStrategy;
+import com.miguoma.by.modules.production.strategy.impl.SemiFinishedOrderCodeStrategy;
+import com.miguoma.by.modules.production.strategy.impl.SemiFinishedProductCodeStrategy;
+import com.miguoma.by.modules.production.strategy.impl.SemiFinishedProductionDateStrategy;
+import com.miguoma.by.modules.production.strategy.impl.SemiFinishedTeamCodeStrategy;
+import com.miguoma.by.modules.production.strategy.impl.SemiFinishedWorkshopCodeStrategy;
+import com.miguoma.by.modules.production.strategy.impl.SpecifyBoxNoStrategy;
 import com.miguoma.by.modules.production.vo.ProductionOrderVO;
 import com.miguoma.by.modules.record.entity.RecordBagCode;
 import com.miguoma.by.modules.record.entity.RecordBoxCode;
@@ -41,20 +67,15 @@ import com.miguoma.by.modules.record.service.RecordQrCodeService;
 import com.miguoma.by.modules.system.dto.SysCodeRuleDetail;
 import com.miguoma.by.modules.system.entity.SysCodeRule;
 import com.miguoma.by.modules.system.mapper.SysCodeRuleMapper;
+
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.date.DatePattern;
+import cn.hutool.core.date.LocalDateTimeUtil;
+import cn.hutool.core.util.ReUtil;
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * 生产订单服务实现类
@@ -70,8 +91,10 @@ public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderM
     // sourceField 策略注册表
     private static final Map<String, BaseCodeFieldStrategy> CODE_FIELD_STRATEGY_MAP = new HashMap<>();
     // 提取箱号Pattern为类字段
-    private static final Pattern BOX_NO_PATTERN = Pattern.compile("\\{BOX_NO:(\\d+)\\}");
+    private static final Pattern BOX_NO_PATTERN = Pattern.compile("\\{BOX_NO:(\\d+):(\\d+)\\}");
+    // 提取随机字符串Pattern为类字段
     private static final Pattern RANDOM_STRING_PATTERN = Pattern.compile("\\{(RANDOM_STRING:\\w+:\\d+)\\}");
+    // 提取随机字符串Pattern为类字段
     private static final Pattern RANDOM_STRING_GROUP_PATTERN = Pattern.compile("\\{RANDOM_STRING:([A-Z_]+):(\\d+)\\}");
 
     static {
@@ -505,30 +528,36 @@ public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderM
         String universalCodeTemplate = universalCodeStrBuilder.toString();
         log.info("万用码模板:{}", universalCodeTemplate);
 
-        // 处理箱号{BOX_NO:数字}
+        // 处理箱号{BOX_NO:进制:数字}
         final List<String> boxNoTmpList = ReUtil.findAllGroup0(BOX_NO_PATTERN, boxCodeTemplate);
         int boxNoLength = 0;
+        String boxNoEncodeType = BaseEncodeEnums.BASE_10.getCode();
         if (CollUtil.isNotEmpty(boxNoTmpList)) {
             Matcher matcher = BOX_NO_PATTERN.matcher(boxNoTmpList.get(0));
             if (matcher.find()) {
-                boxNoLength = Integer.parseInt(matcher.group(1));
+                boxNoEncodeType = matcher.group(1);
+                boxNoLength = Integer.parseInt(matcher.group(2));
             }
         }
 
         final List<String> innerBoxNoTmpList = ReUtil.findAllGroup0(BOX_NO_PATTERN, innerBoxCodeTemplate);
         int innerBoxNoLength = 0;
+        String innerBoxNoEncodeType = BaseEncodeEnums.BASE_10.getCode();
         if (CollUtil.isNotEmpty(innerBoxNoTmpList)) {
             Matcher matcher = BOX_NO_PATTERN.matcher(innerBoxNoTmpList.get(0));
             if (matcher.find()) {
-                innerBoxNoLength = Integer.parseInt(matcher.group(1));
+                innerBoxNoEncodeType = matcher.group(1);
+                innerBoxNoLength = Integer.parseInt(matcher.group(2));
             }
         }
         final List<String> bagNoTmpList = ReUtil.findAllGroup0(BOX_NO_PATTERN, bagCodeTemplate);
         int bagNoLength = 0;
+        String bagNoEncodeType = BaseEncodeEnums.BASE_10.getCode();
         if (CollUtil.isNotEmpty(bagNoTmpList)) {
             Matcher matcher = BOX_NO_PATTERN.matcher(bagNoTmpList.get(0));
             if (matcher.find()) {
-                bagNoLength = Integer.parseInt(matcher.group(1));
+                bagNoEncodeType = matcher.group(1);
+                bagNoLength = Integer.parseInt(matcher.group(2));
             }
         }
 
@@ -552,7 +581,7 @@ public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderM
             Matcher matcher = RANDOM_STRING_GROUP_PATTERN.matcher(innerBoxCodeRandomStringTmpList.get(0));
             if (matcher.find()) {
                 innerBoxCodeRandomType = matcher.group(1);
-                innerBoxCodeRandomLength = Integer.parseInt(matcher.group(2));
+                innerBoxCodeRandomLength = Integer.parseInt(matcher.group(3));
             }
         }
 
@@ -563,7 +592,7 @@ public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderM
             Matcher matcher = RANDOM_STRING_GROUP_PATTERN.matcher(bagCodeRandomStringTmpList.get(0));
             if (matcher.find()) {
                 bagCodeRandomType = matcher.group(1);
-                bagCodeRandomLength = Integer.parseInt(matcher.group(2));
+                bagCodeRandomLength = Integer.parseInt(matcher.group(3));
             }
         }
 
@@ -575,7 +604,7 @@ public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderM
             Matcher matcher = RANDOM_STRING_GROUP_PATTERN.matcher(universalCodeRandomStringTmpList.get(0));
             if (matcher.find()) {
                 universalCodeRandomType = matcher.group(1);
-                universalCodeRandomLength = Integer.parseInt(matcher.group(2));
+                universalCodeRandomLength = Integer.parseInt(matcher.group(3));
             }
         }
         // 万用码做简单替换就行,不会有箱号的
@@ -591,7 +620,9 @@ public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderM
         for (int currentBoxNo = boxNoBegin; currentBoxNo < boxNoEnd; currentBoxNo++) {
             // 箱
             boxCodeTemplateTmp = boxCodeTemplate;
-            final String currentBoxNoStr = StrUtil.fillBefore(String.valueOf(currentBoxNo), '0', boxNoLength);
+            String currentBoxNoStr = StrUtil.fillBefore(String.valueOf(currentBoxNo), '0', boxNoLength);
+            // 转进制
+            currentBoxNoStr = EncodeConvertUtils.convert(Integer.parseInt(currentBoxNoStr), boxNoEncodeType);
             boxCodeTemplateTmp = ReUtil.replaceAll(boxCodeTemplateTmp, BOX_NO_PATTERN, currentBoxNoStr);
             final String boxCodeRandomString = RandomStringUtil.generate(boxCodeRandomType, boxCodeRandomLength);
             boxCodeTemplateTmp = ReUtil.replaceAll(boxCodeTemplateTmp, RANDOM_STRING_PATTERN, boxCodeRandomString);
@@ -599,7 +630,9 @@ public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderM
             log.info("箱号:{} ,随机字符串:{},箱码:{}", currentBoxNo, boxCodeRandomString, boxCodeTemplateTmp);
             // 内箱
             innerBoxCodeTemplateTmp = innerBoxCodeTemplate;
-            final String currentInnerBoxNoStr = StrUtil.fillBefore(String.valueOf(currentBoxNo), '0', innerBoxNoLength);
+            String currentInnerBoxNoStr = StrUtil.fillBefore(String.valueOf(currentBoxNo), '0', innerBoxNoLength);
+            currentInnerBoxNoStr = EncodeConvertUtils.convert(Integer.parseInt(currentInnerBoxNoStr),
+                    innerBoxNoEncodeType);
             innerBoxCodeTemplateTmp = ReUtil.replaceAll(innerBoxCodeTemplateTmp, BOX_NO_PATTERN, currentInnerBoxNoStr);
             final String innerBoxCodeRandomString = RandomStringUtil.generate(innerBoxCodeRandomType,
                     innerBoxCodeRandomLength);
@@ -609,14 +642,15 @@ public class ProductionOrderServiceImpl extends BaseServiceImpl<ProductionOrderM
             log.info("箱号:{} ,随机字符串:{},内箱码:{}", currentBoxNo, innerBoxCodeRandomString, innerBoxCodeTemplateTmp);
             // 袋
             bagCodeTemplateTmp = bagCodeTemplate;
-            final String currentBagNoStr = StrUtil.fillBefore(String.valueOf(currentBoxNo), '0', bagNoLength);
+            String currentBagNoStr = StrUtil.fillBefore(String.valueOf(currentBoxNo), '0', bagNoLength);
+            currentBagNoStr = EncodeConvertUtils.convert(Integer.parseInt(currentBagNoStr), bagNoEncodeType);
             bagCodeTemplateTmp = ReUtil.replaceAll(bagCodeTemplateTmp, BOX_NO_PATTERN, currentBagNoStr);
             final String bagCodeRandomString = RandomStringUtil.generate(bagCodeRandomType, bagCodeRandomLength);
             bagCodeTemplateTmp = ReUtil.replaceAll(bagCodeTemplateTmp, RANDOM_STRING_PATTERN, bagCodeRandomString);
             bagCodeList.add(bagCodeTemplateTmp);
             log.info("箱号:{} ,随机字符串:{},袋码:{}", currentBoxNo, bagCodeRandomString, bagCodeTemplateTmp);
         }
-//        int a = 1 / 0;
+        // int a = 1 / 0;
 
         // 写入箱码
         final LocalDateTime now = LocalDateTimeUtil.now();

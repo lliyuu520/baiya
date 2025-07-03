@@ -5,8 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * APK管理实体类
- * 用于存储APK版本信息，包括版本号、下载地址等
+ * 采集软件管理实体类
  *
  * @author liliangyu
  */

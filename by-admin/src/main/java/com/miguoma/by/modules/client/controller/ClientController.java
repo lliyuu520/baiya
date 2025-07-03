@@ -12,8 +12,10 @@ import com.miguoma.by.common.utils.Result;
 import com.miguoma.by.modules.client.dto.*;
 import com.miguoma.by.modules.client.vo.PullCodeVO;
 import com.miguoma.by.modules.equipment.dto.EquipmentClientDTO;
+import com.miguoma.by.modules.equipment.dto.EquipmentMonitorDTO;
 import com.miguoma.by.modules.equipment.entity.EquipmentClient;
 import com.miguoma.by.modules.equipment.service.EquipmentClientService;
+import com.miguoma.by.modules.equipment.service.EquipmentMonitorService;
 import com.miguoma.by.modules.production.query.ProductionOrderQuery;
 import com.miguoma.by.modules.production.service.ProductionDepartAndWorkshopService;
 import com.miguoma.by.modules.production.service.ProductionFactoryService;
@@ -45,6 +47,7 @@ public class ClientController {
     private final ProductionDepartAndWorkshopService productionDepartAndWorkshopService;
 
     private final EquipmentClientService equipmentClientService;
+    private final EquipmentMonitorService equipmentMonitorService;
 
     /**
      * 登录
@@ -70,8 +73,7 @@ public class ClientController {
             return Result.error("产线不存在");
         }
 
-        final List<String> deparNameList = productionDepartAndWorkshopService
-                .getDepartNameListByWorkshopName(productionWorkshopCode);
+        final List<String> deparNameList = productionDepartAndWorkshopService.getDepartNameListByWorkshopName(productionWorkshopCode);
         if (CollUtil.isEmpty(deparNameList)) {
             log.error("车间不存在:{}", productionWorkshopCode);
             return Result.error("车间不存在");
@@ -165,6 +167,18 @@ public class ClientController {
 
         orderService.collectUpload(recordCodeUploadDTO);
         return Result.ok("采集上传成功");
+    }
+
+    /**
+     * 上传监控信息
+     */
+    @PostMapping("/uploadMonitor")
+    @SysLogCut(module = SysLogModuleEnums.CLIENT, type = SysLogTypeEnums.UPLOAD_MONITOR)
+    public Result<String> uploadMonitor(@RequestBody EquipmentMonitorDTO equipmentMonitorDTO) {
+
+        equipmentMonitorService.saveOne(equipmentMonitorDTO);
+        return Result.ok("上传成功");
+
     }
 
 }

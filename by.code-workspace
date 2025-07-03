@@ -15,6 +15,7 @@
 			"**/node_modules": true,
 			"**/.classpath": true,
 			"**/dist": true,
+			"**/baiya": true,
 			"**/logs": true
 		},
 		"editor.formatOnSave": true,
